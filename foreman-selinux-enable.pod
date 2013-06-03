@@ -1,0 +1,19 @@
+=head1 NAME
+
+foreman-selinux-enable - enable Foreman SELinux policy
+
+=head1 SYNOPSIS
+
+    foreman-selinux-enable
+
+=head1 DESCRIPTION
+
+The B<foreman-selinux-enable> program will install and enable Foreman SELinux
+module and sets required SELinux bool flags.
+
+The program is called by Foreman package and it is not usually required to
+run it manually.
+
+=head1 SEE ALSO
+
+foreman-selinux-relabel(8), foreman-selinux-disable(8)

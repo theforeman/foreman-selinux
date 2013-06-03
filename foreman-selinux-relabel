@@ -1,0 +1,10 @@
+#!/bin/bash
+
+/sbin/restorecon -rvvi /usr/share/foreman \
+  /var/lib/foreman \
+  /var/log/foreman \
+  /etc/foreman \
+  /etc/sysconfig/foreman \
+  /etc/rc.d/init.d/foreman \
+  /etc/logrotate.d/foreman \
+  /etc/cron.d/foreman

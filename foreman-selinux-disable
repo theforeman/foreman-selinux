@@ -1,0 +1,8 @@
+#!/bin/bash
+
+# uninstall policy modules
+for selinuxvariant in targeted
+do
+  /usr/sbin/semodule -s $selinuxvariant -l > /dev/null 2>&1 \
+    && /usr/sbin/semodule -s $selinuxvariant -r foreman
+done

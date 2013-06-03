@@ -1,0 +1,19 @@
+=head1 NAME
+
+foreman-selinux-relabel - call restorecon on Foreman files
+
+=head1 SYNOPSIS
+
+    foreman-selinux-relabel
+
+=head1 DESCRIPTION
+
+The B<foreman-selinux-relabel> program will call restorecon(8) on all Foreman
+files efectively restoring SELinux context.
+
+The program is called by Foreman package and it is not usually required to
+run it manually.
+
+=head1 SEE ALSO
+
+foreman-selinux-enable(8), restorecon(8)
