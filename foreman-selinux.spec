@@ -7,7 +7,7 @@ restorecon /etc/logrotate.d/foreman; \
 %define selinux_policyver 3.11.1-81
 
 Name:   foreman-selinux
-Version:	1.1
+Version:	1.1.1
 Release:	3%{?dist}
 Summary:	SELinux policy module for foreman
 
