@@ -1,0 +1,19 @@
+=head1 NAME
+
+foreman-selinux-disable - disable Foreman SELinux policy
+
+=head1 SYNOPSIS
+
+    foreman-selinux-disable
+
+=head1 DESCRIPTION
+
+The B<foreman-selinux-disable> program will unload and disable Foreman SELinux
+module.
+
+The program is called by Foreman package and it is not usually required to
+run it manually.
+
+=head1 SEE ALSO
+
+foreman-selinux-relabel(8), foreman-selinux-enable(8)

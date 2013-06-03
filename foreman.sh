@@ -1,4 +1,7 @@
 #!/bin/sh -e
+#
+# This helper script is used in policy development
+#
 
 DIRNAME=`dirname $0`
 cd $DIRNAME
@@ -42,5 +45,4 @@ set -x
 make -f /usr/share/selinux/devel/Makefile || exit
 /usr/sbin/semodule -i foreman.pp
 
-# Fixing the file context on foreman
-/sbin/restorecon -F -R -v foreman
+foreman-selinux-relabel
