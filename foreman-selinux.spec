@@ -7,8 +7,8 @@ restorecon /etc/logrotate.d/foreman; \
 %define selinux_policyver 3.11.1-81
 
 Name:   foreman-selinux
-Version:	1.1.1
-Release:	3%{?dist}
+Version:	1.1.2
+Release:	1%{?dist}
 Summary:	SELinux policy module for foreman
 
 Group:	System Environment/Base
@@ -58,5 +58,8 @@ exit 0
 %{_mandir}/man8/httpd_foreman_script_selinux.8.*
 
 %changelog
+* Mon Jun 03 2013 Lukas Zapletal <lzap+git@redhat.com> 1.1.2-1
+- new package built with tito
+
 * Tue Feb 26 2013 Sam Kottler <shk@redhat.com> 1.1.1-3
 - Initial version
