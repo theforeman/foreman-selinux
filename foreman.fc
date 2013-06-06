@@ -1,5 +1,40 @@
-foreman		                 --	gen_context(system_u:object_r:httpd_foreman_script_exec_t,s0)
-/var/log/foreman(/.*)?                  gen_context(system_u:object_r:httpd_foreman_script_log_t,s0)
-/var/lib/foreman/db/(.*.sqlite3)?       gen_context(system_u:object_r:foreman_db_t,s0)
-/usr/share/foreman(/.*)?                gen_context(system_u:object_r:httpd_foreman_script_exec_t,s0)
+# vim: sw=4:ts=4:et
+#
+# Copyright 2013 Red Hat, Inc.
+#
+# This program and entire repository is free software: you can redistribute it
+# and/or modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+# details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program. If not, see http://www.gnu.org/licenses/.
+#
+
+# Foreman file contexts
+
 /etc/foreman(/.*)?                      gen_context(system_u:object_r:foreman_config_t,s0)
+
+/var/lib/foreman(/.*)?                  gen_context(system_u:object_r:foreman_lib_t,s0)
+/var/lib/foreman/db/(.*.sqlite3)?       gen_context(system_u:object_r:foreman_db_t,s0)
+
+/var/log/foreman(/.*)?                  gen_context(system_u:object_r:foreman_log_t,s0)
+
+/var/run/foreman(/.*)?                  gen_context(system_u:object_r:foreman_var_run_t,s0)
+
+/usr/share/foreman/script(/.*)?         gen_context(system_u:object_r:httpd_foreman_script_exec_t,s0)
+
+# Passenger non-SCL file contexts
+
+/usr/lib/ruby/gems/1.8/gems/passenger-.*/agents/.* -- gen_context(system_u:object_r:passenger_exec_t,s0)
+/usr/lib/ruby/gems/1.8/gems/passenger-.*/helper-scripts/prespawn -- gen_context(system_u:object_r:passenger_exec_t,s0)
+
+# Passenger SCL file contexts
+
+/opt/rh/ruby193/root/usr/share/gems/gems/passenger-.*/agents/.* -- gen_context(system_u:object_r:passenger_exec_t,s0)
+/opt/rh/ruby193/root/usr/share/gems/gems/passenger-.*/helper-scripts/prespawn -- gen_context(system_u:object_r:passenger_exec_t,s0)
