@@ -30,15 +30,20 @@
 %define moduletype apps
 %define modulename foreman
 
+# set and uncomment all three to set alpha tag
+#global alphatag RC1
+#global dotalphatag .%{alphatag}
+#global dashalphatag -%{alphatag}
+
 Name:           %{modulename}-selinux
 Version:        1.2.9999
-Release:        1%{?dist}
+Release:        1%{?dotalphatag}%{?dist}
 Summary:        SELinux policy module for Foreman
 
 Group:          System Environment/Base
 License:        GPLv3+
 URL:            http://www.theforeman.org
-Source0:        %{name}-%{version}.tar.gz
+Source0:        %{name}-%{version}%{?dashalphatag}.tar.gz
 
 BuildRequires:  checkpolicy, selinux-policy-devel, hardlink
 BuildRequires:  policycoreutils >= %{selinux_policycoreutils_ver}
@@ -56,7 +61,7 @@ Requires(pre):      %{modulename}
 SELinux policy module for Foreman
 
 %prep
-%setup -q
+%setup -q -n %{name}-%{version}%{?dashalphatag}
 
 %build
 # create selinux-friendly version from VR and replace it inplace
