@@ -45,6 +45,9 @@ apache_content_template(foreman)
 
 # Some basic aliases for different aspects of the filesystem to make things
 # more clear.
+require{
+    type etc_t;
+}
 typealias etc_t alias foreman_config_t;
 
 type foreman_db_t;
