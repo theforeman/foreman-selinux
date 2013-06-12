@@ -36,7 +36,7 @@
 #global dashalphatag -%{alphatag}
 
 Name:           %{modulename}-selinux
-Version:        1.2.9999
+Version:        1.2.10000
 Release:        1%{?dotalphatag}%{?dist}
 Summary:        SELinux policy module for Foreman
 
@@ -135,6 +135,9 @@ fi
 %attr(0755,root,root) %{_sbindir}/%{name}-relabel
 
 %changelog
+* Wed Jun 12 2013 Jordan OMara <jomara@redhat.com> 1.2.10000-1
+- new package built with tito
+
 * Mon Jun 03 2013 Lukas Zapletal <lzap+rpm[@]redhat.com> - 1.2.9999-1
 - Brand new SPEC adopted from Katello project
 - Changes to the policy to get SCL working
