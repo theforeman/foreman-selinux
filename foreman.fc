@@ -18,16 +18,16 @@
 
 # Foreman file contexts
 
-/etc/foreman(/.*)?                      gen_context(system_u:object_r:foreman_config_t,s0)
+/opt/rh/ruby193/root/etc/foreman(/.*)?                      gen_context(system_u:object_r:foreman_config_t,s0)
 
-/var/lib/foreman(/.*)?                  gen_context(system_u:object_r:foreman_lib_t,s0)
-/var/lib/foreman/db/(.*.sqlite3)?       gen_context(system_u:object_r:foreman_db_t,s0)
+/opt/rh/ruby193/root/var/lib/foreman(/.*)?                  gen_context(system_u:object_r:foreman_lib_t,s0)
+/opt/rh/ruby193/root/var/lib/foreman/db/(.*.sqlite3)?       gen_context(system_u:object_r:foreman_db_t,s0)
 
-/var/log/foreman(/.*)?                  gen_context(system_u:object_r:foreman_log_t,s0)
+/opt/rh/ruby193/root/var/log/foreman(/.*)?                  gen_context(system_u:object_r:foreman_log_t,s0)
 
-/var/run/foreman(/.*)?                  gen_context(system_u:object_r:foreman_var_run_t,s0)
+/opt/rh/ruby193/root/var/run/foreman(/.*)?                  gen_context(system_u:object_r:foreman_var_run_t,s0)
 
-/usr/share/foreman/script(/.*)?         gen_context(system_u:object_r:httpd_foreman_script_exec_t,s0)
+/opt/rh/ruby193/root/usr/share/foreman/script(/.*)?         gen_context(system_u:object_r:httpd_foreman_script_exec_t,s0)
 
 # Passenger non-SCL file contexts
 

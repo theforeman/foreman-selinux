@@ -1,15 +1,15 @@
 #!/bin/bash
 
 # relabel foreman
-/sbin/restorecon -rvvi /usr/share/foreman \
-  /var/lib/foreman \
-  /var/run/foreman \
-  /var/log/foreman \
-  /etc/foreman \
-  /etc/sysconfig/foreman \
-  /etc/rc.d/init.d/foreman \
-  /etc/logrotate.d/foreman \
-  /etc/cron.d/foreman
+/sbin/restorecon -rvvi /opt/rh/ruby193/root/usr/share/foreman \
+  /opt/rh/ruby193/root/var/lib/foreman \
+  /opt/rh/ruby193/root/var/run/foreman \
+  /opt/rh/ruby193/root/var/log/foreman \
+  /opt/rh/ruby193/root/etc/foreman \
+  /opt/rh/ruby193/root/etc/sysconfig/foreman \
+  /opt/rh/ruby193/root/etc/rc.d/init.d/foreman \
+  /opt/rh/ruby193/root/etc/logrotate.d/foreman \
+  /opt/rh/ruby193/root/etc/cron.d/foreman
 
 # relabel SCL mod_passenger if found
 [ -d /opt/rh/ruby193/ ] && /sbin/restorecon -rvvi \
