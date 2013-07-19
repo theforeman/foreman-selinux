@@ -65,6 +65,7 @@ files_pid_file(foreman_var_run_t)
 
 require{
     type httpd_t;
+    type httpd_tmp_t;
     type passenger_t;
     type passenger_tmp_t;
     type puppetmaster_exec_t;
@@ -102,6 +103,10 @@ miscfiles_read_localization(passenger_t)
 
 corenet_tcp_connect_postgresql_port(passenger_t)
 corenet_tcp_connect_ssh_port(passenger_t)
+
+optional_policy(`
+    postgresql_stream_connect(passenger_t)
+')
 
 # The read the code (and potentially modules) from /usr/share.
 files_read_usr_files(passenger_t)
@@ -146,6 +151,12 @@ tunable_policy(`httpd_run_foreman', `
     allow httpd_t passenger_tmp_t:sock_file write;
 ')
 
+tunable_policy(`httpd_run_foreman', `
+    manage_dirs_pattern(passenger_t, httpd_tmp_t, httpd_tmp_t)
+    manage_files_pattern(passenger_t, httpd_tmp_t, httpd_tmp_t)
+    manage_sock_files_pattern(passenger_t, httpd_tmp_t, httpd_tmp_t)
+')
+
 optional_policy(`
     # Allow sending of email reports.
     mta_send_mail(passenger_t)
@@ -165,4 +176,3 @@ optional_policy(`
     corecmd_search_bin(passenger_t)
     domtrans_pattern(passenger_t, puppetmaster_exec_t, puppetmaster_t)
 ')
-
