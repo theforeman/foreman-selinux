@@ -3,7 +3,10 @@
 # simple script to create a release without tito
 # it works in-place, so take care!
 #
-# Usage: release 1.2 el6
+# Usage:
+#
+#   release 1.3.0-RC1 .el6
+#   release 1.3.0 .el6
 #
 
 [ -z "$1" -o -z "$2" ] && echo "Usage: release version_tag dist" && exit 42
