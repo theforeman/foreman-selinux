@@ -1,0 +1,25 @@
+2013-09-05	Lukas Zapletal <lzap+git@redhat.com>
+	* Bump version to 1.3-develop
+	* fixing comment in the release script
+
+2013-07-24	Lukas Zapletal <lzap+git@redhat.com>
+	* fixes #2789 - selinux denials, httpd_tmp_t, rlimits, postgresql sockets
+
+2013-06-12	Lukas Zapletal <lzap+git@redhat.com>
+	* adding ctags
+	* fixing f18 compiler error
+
+2013-06-07	Dominic Cleal <dcleal@redhat.com>
+	* Add alphatag support to spec file
+
+2013-06-07	Miroslav Grepl <mgrepl@redhat.com>
+	* refactoring and adding SCL passenger support
+
+2013-06-05	Lukas Zapletal <lzap+git@redhat.com>
+	* adopting SPEC file from Katello project
+	* adding SPEC file for RHEL6
+	* initial import of the policy from foreman-rpm git repo
+
+2013-05-30	Lukas Zapletal <lzap+git@redhat.com>
+	* first commit
+
