@@ -6,12 +6,12 @@
 # and/or modify it under the terms of the GNU General Public License as
 # published by the Free Software Foundation, either version 3 of the License,
 # or any later version.
-# 
+#
 # This program is distributed in the hope that it will be useful, but WITHOUT
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 # FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
 # details.
-# 
+#
 # You should have received a copy of the GNU General Public License along with
 # this program.  If not, see <http://www.gnu.org/licenses/>.
 #
@@ -36,7 +36,7 @@
 #global dashalphatag -%{alphatag}
 
 Name:           %{modulename}-selinux
-Version:        1.2.9999
+Version:        1.3.9999
 Release:        1%{?dotalphatag}%{?dist}
 Summary:        SELinux policy module for Foreman
 
@@ -126,7 +126,7 @@ fi
 %{_sbindir}/%{name}-relabel >/dev/null
 
 %files
-%doc %{modulename}.fc %{modulename}.if %{modulename}.te %{modulename}.sh
+%doc Contributors CHANGELOG %{modulename}.fc %{modulename}.if %{modulename}.te %{modulename}.sh
 %attr(0600,root,root) %{_datadir}/selinux/*/%{modulename}.pp.bz2
 %{_datadir}/selinux/devel/include/%{moduletype}/%{modulename}.if
 %{_mandir}/man8/*
@@ -135,6 +135,9 @@ fi
 %attr(0755,root,root) %{_sbindir}/%{name}-relabel
 
 %changelog
+* Thu Sep 05 2013 Lukas Zapletal <lzap+rpm[@]redhat.com> - 1.3.9999-1
+- Bump to version 1.3-develop
+
 * Mon Jun 03 2013 Lukas Zapletal <lzap+rpm[@]redhat.com> - 1.2.9999-1
 - Brand new SPEC adopted from Katello project
 - Changes to the policy to get SCL working
