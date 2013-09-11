@@ -31,13 +31,13 @@
 %define modulename foreman
 
 # set and uncomment all three to set alpha tag
-#global alphatag RC1
-#global dotalphatag .%{alphatag}
-#global dashalphatag -%{alphatag}
+%global alphatag RC1
+%global dotalphatag .%{alphatag}
+%global dashalphatag -%{alphatag}
 
 Name:           %{modulename}-selinux
-Version:        1.2.9999
-Release:        1%{?dotalphatag}%{?dist}
+Version:        1.3.0
+Release:        0.1%{?dotalphatag}%{?dist}
 Summary:        SELinux policy module for Foreman
 
 Group:          System Environment/Base
@@ -135,6 +135,9 @@ fi
 %attr(0755,root,root) %{_sbindir}/%{name}-relabel
 
 %changelog
+* Wed Sep 11 2013 Lukas Zapletal <lzap+rpm[@]redhat.com> - 1.3.0-0.1.RC1
+- Release 1.3.0-RC1
+
 * Mon Jun 03 2013 Lukas Zapletal <lzap+rpm[@]redhat.com> - 1.2.9999-1
 - Brand new SPEC adopted from Katello project
 - Changes to the policy to get SCL working
