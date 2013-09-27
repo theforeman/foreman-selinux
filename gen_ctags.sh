@@ -1,6 +1,6 @@
 #!/bin/bash
 
-/usr/bin/rpm -q ctags > /dev/null
+/bin/rpm -q ctags > /dev/null
 
 if [ $? == 0 ]; then
     if [ -d /usr/share/selinux/devel ]; then
