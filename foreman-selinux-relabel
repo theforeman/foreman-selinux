@@ -6,6 +6,7 @@
   /var/run/foreman \
   /var/log/foreman \
   /etc/foreman \
+  /etc/puppet/node.rb \
   /etc/sysconfig/foreman \
   /etc/rc.d/init.d/foreman \
   /etc/logrotate.d/foreman \
