@@ -34,6 +34,13 @@ policy_module(foreman, @@VERSION@@)
 gen_tunable(passenger_run_foreman, true)
 
 ## <desc>
+### <p>
+### Allow passenger to run the puppetmaster.
+### </p>
+### </desc>
+gen_tunable(passenger_run_puppetmaster, true)
+
+## <desc>
 ## <p>
 ## Allow passenger (httpd_t domain) to run foreman.
 ## </p>
@@ -53,6 +60,9 @@ typealias etc_t alias foreman_config_t;
 type foreman_db_t;
 files_type(foreman_db_t)
 
+type foreman_enc_t;
+files_config_file(foreman_enc_t)
+
 type foreman_lib_t;
 files_type(foreman_lib_t)
 
@@ -66,10 +76,18 @@ files_pid_file(foreman_var_run_t)
 require{
     type httpd_t;
     type httpd_tmp_t;
+    type ifconfig_exec_t;
+    type init_t;
     type passenger_t;
     type passenger_tmp_t;
+    type proc_net_t;
+    type puppet_etc_t;
+    type puppet_log_t;
+    type puppet_port_t;
+    type puppet_var_lib_t;
     type puppetmaster_exec_t;
     type puppetmaster_t;
+    type sysctl_net_t;
 }
 
 #######################################
@@ -155,6 +173,24 @@ tunable_policy(`httpd_run_foreman', `
     manage_dirs_pattern(passenger_t, httpd_tmp_t, httpd_tmp_t)
     manage_files_pattern(passenger_t, httpd_tmp_t, httpd_tmp_t)
     manage_sock_files_pattern(passenger_t, httpd_tmp_t, httpd_tmp_t)
+')
+
+optional_policy(`
+    tunable_policy(`passenger_run_puppetmaster', `
+        allow passenger_t foreman_enc_t:file { execute execute_no_trans };
+	      allow passenger_t ifconfig_exec_t:file { read getattr open execute execute_no_trans };
+        allow passenger_t init_t:unix_stream_socket { getattr ioctl };
+	      allow passenger_t proc_net_t:file { read getattr open };
+	      allow passenger_t puppet_log_t:file { write relabelfrom relabelto };
+	      allow passenger_t puppet_var_lib_t:dir { relabelfrom relabelto create rmdir setattr };
+	      allow passenger_t puppet_var_lib_t:file { relabelfrom relabelto };
+	      allow passenger_t sysctl_net_t:dir search;
+        # Allow basic httpd processes to access puppet_etc_t and
+        # puppet_port_t before passenger is initialized. This is for
+        # Fedora.
+        allow httpd_t puppet_etc_t:dir getattr;
+        allow httpd_t puppet_port_t:tcp_socket name_connect;
+    ')
 ')
 
 optional_policy(`
