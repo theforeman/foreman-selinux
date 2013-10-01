@@ -19,6 +19,7 @@
 # Foreman file contexts
 
 /etc/foreman(/.*)?                      gen_context(system_u:object_r:foreman_config_t,s0)
+/etc/puppet/node.rb                     gen_context(system_u:object_r:foreman_enc_t, s0)
 
 /var/lib/foreman(/.*)?                  gen_context(system_u:object_r:foreman_lib_t,s0)
 /var/lib/foreman/db/(.*.sqlite3)?       gen_context(system_u:object_r:foreman_db_t,s0)
