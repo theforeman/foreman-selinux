@@ -126,7 +126,7 @@ fi
 %{_sbindir}/%{name}-relabel >/dev/null
 
 %files
-%doc Contributors CHANGELOG %{modulename}.fc %{modulename}.if %{modulename}.te %{modulename}.sh
+%doc Contributors CHANGELOG LICENSE %{modulename}.fc %{modulename}.if %{modulename}.te %{modulename}.sh
 %attr(0600,root,root) %{_datadir}/selinux/*/%{modulename}.pp.bz2
 %{_datadir}/selinux/devel/include/%{moduletype}/%{modulename}.if
 %{_mandir}/man8/*
