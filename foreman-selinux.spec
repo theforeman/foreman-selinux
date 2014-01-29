@@ -31,13 +31,13 @@
 %define modulename foreman
 
 # set and uncomment all three to set alpha tag
-%global alphatag RC2
-%global dotalphatag .%{alphatag}
-%global dashalphatag -%{alphatag}
+#global alphatag RC2
+#global dotalphatag .%{alphatag}
+#global dashalphatag -%{alphatag}
 
 Name:           %{modulename}-selinux
 Version:        1.4.0
-Release:        0.2%{?dotalphatag}%{?dist}
+Release:        1%{?dotalphatag}%{?dist}
 Summary:        SELinux policy module for Foreman
 
 Group:          System Environment/Base
@@ -135,6 +135,9 @@ fi
 %attr(0755,root,root) %{_sbindir}/%{name}-relabel
 
 %changelog
+* Wed Jan 29 2014 Dominic Cleal <dcleal@redhat.com> - 1.4.0-1
+- Release 1.4.0
+
 * Thu Jan 23 2014 Dominic Cleal <dcleal@redhat.com> - 1.4.0-0.2.RC2
 - Release 1.4.0-RC2
 
