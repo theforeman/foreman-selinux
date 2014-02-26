@@ -135,6 +135,11 @@ term_search_ptys(passenger_t)
 # For memory-statistics script which executes /usr/bin/free
 files_exec_usr_files(passenger_t)
 
+# For memory-statistics and agent which executes /bin/ps (#3465)
+dev_read_sysfs(passenger_t)
+dev_search_sysfs(passenger_t)
+dev_read_rand(passenger_t)
+
 optional_policy(`
     tunable_policy(`passenger_run_foreman', `
         read_files_pattern(httpd_t, foreman_lib_t, foreman_lib_t)
