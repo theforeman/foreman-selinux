@@ -1,3 +1,12 @@
+2014-02-26	Lukas Zapletal <lzap+git@redhat.com>
+	* fixes #3465 - passanger spawns /bin/ps
+
+2014-01-22	Lukas Zapletal <lzap+git@redhat.com>
+	* fixes #4117 - added missing LICENSE file
+
+2014-01-16	Dominic Cleal <dcleal@redhat.com>
+	* Bump version to 1.5-develop
+
 2013-11-21	Dominic Cleal <dcleal@redhat.com>
 	* fixes #3712 - change develop versioning scheme to indicate next version
 
