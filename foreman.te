@@ -264,3 +264,10 @@ logging_send_syslog_msg(websockify_t)
 miscfiles_read_localization(websockify_t)
 sysnet_read_config(websockify_t)
 abrt_stream_connect(websockify_t)
+
+######################################
+#
+# Foreman Bootdisk plugin
+#
+
+# no rules necessary
