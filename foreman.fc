@@ -40,3 +40,7 @@
 
 /opt/rh/ruby193/root/usr/share/gems/gems/passenger-.*/agents/.* -- gen_context(system_u:object_r:passenger_exec_t,s0)
 /opt/rh/ruby193/root/usr/share/gems/gems/passenger-.*/helper-scripts/prespawn -- gen_context(system_u:object_r:passenger_exec_t,s0)
+
+# Foreman Hooks plugin
+
+/usr/share/foreman/config/hooks(/.*)?   gen_context(system_u:object_r:foreman_hook_t,s0)
