@@ -201,13 +201,13 @@ tunable_policy(`httpd_run_foreman', `
 optional_policy(`
     tunable_policy(`passenger_run_puppetmaster', `
         allow passenger_t foreman_enc_t:file { execute execute_no_trans };
-	      allow passenger_t ifconfig_exec_t:file { read getattr open execute execute_no_trans };
+        allow passenger_t ifconfig_exec_t:file { read getattr open execute execute_no_trans };
         allow passenger_t init_t:unix_stream_socket { getattr ioctl };
-	      allow passenger_t proc_net_t:file { read getattr open };
-	      allow passenger_t puppet_log_t:file { write relabelfrom relabelto };
-	      allow passenger_t puppet_var_lib_t:dir { relabelfrom relabelto create rmdir setattr };
-	      allow passenger_t puppet_var_lib_t:file { relabelfrom relabelto };
-	      allow passenger_t sysctl_net_t:dir search;
+        allow passenger_t proc_net_t:file { read getattr open };
+        allow passenger_t puppet_log_t:file { write relabelfrom relabelto };
+        allow passenger_t puppet_var_lib_t:dir { relabelfrom relabelto create rmdir setattr };
+        allow passenger_t puppet_var_lib_t:file { relabelfrom relabelto };
+        allow passenger_t sysctl_net_t:dir search;
         # Allow basic httpd processes to access puppet_etc_t and
         # puppet_port_t before passenger is initialized. This is for
         # Fedora.
