@@ -272,3 +272,9 @@ abrt_stream_connect(websockify_t)
 
 # no rules necessary
 
+######################################
+#
+# Foreman Hooks plugin
+#
+
+typealias bin_t alias foreman_hook_t;
