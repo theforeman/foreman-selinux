@@ -1,3 +1,15 @@
+2014-04-28	Dominic Cleal <dcleal@redhat.com>
+	* Release 1.5.0-RC2
+
+2014-04-28	Lukas Zapletal <lzap+git@redhat.com>
+	* fixes #5466 - added new passenger file context path
+	* Reformatting puppetmaster rules
+	* fixes #4278 - policy for foreman_discovery
+	* fixes #4280 - policy for foreman_setup
+	* fixes #4279 - policy for foreman_hooks
+	* fixes #4277 - policy for foreman_bookdisk
+	* Fixes #4569 - websockify rules
+
 2014-04-17	Dominic Cleal <dcleal@redhat.com>
 	* Release 1.5.0-RC1
 
