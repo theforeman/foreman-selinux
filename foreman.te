@@ -47,6 +47,14 @@ gen_tunable(passenger_run_puppetmaster, true)
 ## </desc>
 gen_tunable(httpd_run_foreman, true)
 
+## <desc>
+## <p>
+## Determine whether passenger can connect to TCP ports
+## other than specified in the policy.
+## </p>
+## </desc>
+gen_tunable(passenger_can_connect_all, false)
+
 # define types for foreman scripts
 apache_content_template(foreman)
 
@@ -119,11 +127,15 @@ allow passenger_t self:tcp_socket listen;
 
 miscfiles_read_localization(passenger_t)
 
+# Allow Foreman to connect to PostgreSQL
 corenet_tcp_connect_postgresql_port(passenger_t)
-corenet_tcp_connect_ssh_port(passenger_t)
-
 optional_policy(`
     postgresql_stream_connect(passenger_t)
+')
+
+# Allow Foreman to connect anywhere when bool is set
+tunable_policy(`passenger_can_connect_all',`
+    corenet_tcp_connect_all_ports(passenger_t)
 ')
 
 # The read the code (and potentially modules) from /usr/share.
@@ -147,6 +159,11 @@ optional_policy(`
         manage_dirs_pattern(passenger_t, foreman_lib_t, foreman_lib_t)
         manage_files_pattern(passenger_t, foreman_var_run_t, foreman_var_run_t)
         manage_dirs_pattern(passenger_t, foreman_var_run_t, foreman_var_run_t)
+
+        # Allow Foreman to connect to hosts and guests
+        corenet_tcp_connect_virt_port(passenger_t)
+        corenet_tcp_connect_ssh_port(passenger_t)
+
         # Allow Foreman to write to the SQlite databases
         read_files_pattern(passenger_t, foreman_db_t, foreman_db_t)
         write_files_pattern(passenger_t, foreman_db_t, foreman_db_t)
@@ -183,13 +200,13 @@ tunable_policy(`httpd_run_foreman', `
 optional_policy(`
     tunable_policy(`passenger_run_puppetmaster', `
         allow passenger_t foreman_enc_t:file { execute execute_no_trans };
-	      allow passenger_t ifconfig_exec_t:file { read getattr open execute execute_no_trans };
+        allow passenger_t ifconfig_exec_t:file { read getattr open execute execute_no_trans };
         allow passenger_t init_t:unix_stream_socket { getattr ioctl };
-	      allow passenger_t proc_net_t:file { read getattr open };
-	      allow passenger_t puppet_log_t:file { write relabelfrom relabelto };
-	      allow passenger_t puppet_var_lib_t:dir { relabelfrom relabelto create rmdir setattr };
-	      allow passenger_t puppet_var_lib_t:file { relabelfrom relabelto };
-	      allow passenger_t sysctl_net_t:dir search;
+        allow passenger_t proc_net_t:file { read getattr open };
+        allow passenger_t puppet_log_t:file { write relabelfrom relabelto };
+        allow passenger_t puppet_var_lib_t:dir { relabelfrom relabelto create rmdir setattr };
+        allow passenger_t puppet_var_lib_t:file { relabelfrom relabelto };
+        allow passenger_t sysctl_net_t:dir search;
         # Allow basic httpd processes to access puppet_etc_t and
         # puppet_port_t before passenger is initialized. This is for
         # Fedora.
@@ -217,3 +234,62 @@ optional_policy(`
     corecmd_search_bin(passenger_t)
     domtrans_pattern(passenger_t, puppetmaster_exec_t, puppetmaster_t)
 ')
+
+#######################################
+#
+# Websockify
+#
+
+type websockify_t;
+type websockify_exec_t;
+role system_r types websockify_t;
+
+application_domain(websockify_t, websockify_exec_t)
+domtrans_pattern(passenger_t, websockify_exec_t, websockify_t)
+
+require {
+    type vnc_port_t;
+}
+
+allow websockify_t self:netlink_route_socket { bind create getattr nlmsg_read };
+allow websockify_t self:tcp_socket { setopt bind create listen accept connect shutdown };
+allow websockify_t self:udp_socket { getattr ioctl create connect };
+
+corenet_tcp_bind_generic_node(websockify_t)
+corenet_tcp_connect_vnc_port(websockify_t)
+corenet_tcp_bind_vnc_port(websockify_t)
+dev_read_urand(websockify_t)
+kernel_read_system_state(websockify_t)
+logging_send_syslog_msg(websockify_t)
+miscfiles_read_localization(websockify_t)
+sysnet_read_config(websockify_t)
+abrt_stream_connect(websockify_t)
+
+######################################
+#
+# Foreman Bootdisk plugin
+#
+
+# no rules necessary
+
+######################################
+#
+# Foreman Hooks plugin
+#
+
+typealias bin_t alias foreman_hook_t;
+
+######################################
+#
+# Foreman Setup plugin
+#
+
+# no rules necessary
+
+######################################
+#
+# Foreman Discovery plugin
+#
+
+# no rules necessary
+
