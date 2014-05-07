@@ -1,3 +1,10 @@
+2014-05-07	Dominic Cleal <dcleal@redhat.com>
+	* Release 1.4.4
+
+2014-05-07	Lukas Zapletal <lzap+git@redhat.com>
+	* fixes #5487 - fixed paths in selinux-relabel script
+	* fixes #5466 - added new passenger file context path
+
 2014-01-29	Dominic Cleal <dcleal@redhat.com>
 	* Release 1.4.0
 

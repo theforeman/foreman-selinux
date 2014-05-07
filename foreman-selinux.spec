@@ -36,7 +36,7 @@
 #global dashalphatag -%{alphatag}
 
 Name:           %{modulename}-selinux
-Version:        1.4.0
+Version:        1.4.4
 Release:        1%{?dotalphatag}%{?dist}
 Summary:        SELinux policy module for Foreman
 
@@ -135,6 +135,9 @@ fi
 %attr(0755,root,root) %{_sbindir}/%{name}-relabel
 
 %changelog
+* Wed May 07 2014 Dominic Cleal <dcleal@redhat.com> - 1.4.4-1
+- Release 1.4.4
+
 * Wed Jan 29 2014 Dominic Cleal <dcleal@redhat.com> - 1.4.0-1
 - Release 1.4.0
 
