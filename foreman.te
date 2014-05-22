@@ -168,6 +168,11 @@ optional_policy(`
         # Allow Foreman to write to the SQlite databases
         read_files_pattern(passenger_t, foreman_db_t, foreman_db_t)
         write_files_pattern(passenger_t, foreman_db_t, foreman_db_t)
+
+        # Allow Foreman to reach Dynflow engine
+        allow passenger_t foreman_var_run_t:sock_file write;
+        init_stream_connect_script(passenger_t)
+        unconfined_stream_connect(passenger_t)
     ')
 ')
 
@@ -213,6 +218,10 @@ optional_policy(`
         # Fedora.
         allow httpd_t puppet_etc_t:dir getattr;
         allow httpd_t puppet_port_t:tcp_socket name_connect;
+        # Puppet master does touch xattr which SELinux sees as relabelto
+        allow passenger_t puppet_log_t:file relabelto;
+        allow passenger_t puppet_var_lib_t:file relabelto;
+        allow passenger_t puppet_var_lib_t:dir relabelto;
     ')
 ')
 
