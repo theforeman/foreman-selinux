@@ -45,3 +45,8 @@
 # Foreman Hooks plugin
 
 /usr/share/foreman/config/hooks(/.*)?   gen_context(system_u:object_r:foreman_hook_t,s0)
+
+# Foreman Tasks plugin
+
+/usr/share/gems/gems/foreman-tasks-*/bin/foreman-tasks -- gen_context(system_u:object_r:foreman_tasks_exec_t,s0)
+/opt/rh/ruby193/root/usr/share/gems/gems/foreman-tasks-.*/bin/foreman-tasks -- gen_context(system_u:object_r:foreman_tasks_exec_t,s0)

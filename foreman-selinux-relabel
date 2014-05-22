@@ -1,20 +1,21 @@
 #!/bin/bash
 
 # relabel foreman
-/sbin/restorecon -rvvi /usr/share/foreman \
+/sbin/restorecon -ri $* /usr/share/foreman \
   /var/lib/foreman \
   /var/run/foreman \
   /var/log/foreman \
   /etc/foreman \
   /etc/puppet/node.rb \
-  /etc/sysconfig/foreman \
-  /etc/rc.d/init.d/foreman \
-  /etc/logrotate.d/foreman \
-  /etc/cron.d/foreman
-
-# relabel SCL mod_passenger if found
-[ -d /opt/rh/ruby193/ ] && /sbin/restorecon -rvvi \
-  /opt/rh/ruby193/root/usr/share/gems/gems/passenger-* \
-  /opt/rh/ruby193/root/usr/lib64/gems/exts/passenger-*/agents \
+  /etc/sysconfig/foreman* \
+  /etc/rc.d/init.d/foreman* \
+  /etc/logrotate.d/foreman* \
+  /etc/cron.d/foreman* \
   /usr/lib/ruby/gems/1.8/gems/passenger-* \
   /usr/lib64/ruby/site_ruby/1.8/x86_64-linux/agents
+
+# relabel SCL mod_passenger and foreman plugins if SCL is found
+[ -d /opt/rh/ruby193/ ] && /sbin/restorecon -ri $* \
+  /opt/rh/ruby193/root/usr/share/gems/gems/passenger-* \
+  /opt/rh/ruby193/root/usr/lib64/gems/exts/passenger-*/agents \
+  /opt/rh/ruby193/root/usr/share/gems/gems/foreman*
