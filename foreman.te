@@ -81,6 +81,9 @@ logging_log_file(foreman_log_t)
 type foreman_var_run_t;
 files_pid_file(foreman_var_run_t)
 
+type foreman_proxy_port_t;
+corenet_port(foreman_proxy_port_t)
+
 require{
     type bin_t;
     type httpd_t;
@@ -97,6 +100,7 @@ require{
     type puppetmaster_exec_t;
     type puppetmaster_t;
     type sysctl_net_t;
+    type websm_port_t;
 }
 
 #######################################
@@ -127,6 +131,12 @@ allow passenger_t self:process signull;
 allow passenger_t self:tcp_socket listen;
 
 miscfiles_read_localization(passenger_t)
+
+# Allow Foreman to connect to Foreman Proxy on port 9090 (Katello)
+allow passenger_t websm_port_t:tcp_socket name_connect;
+
+# Allow Foreman to connect to Foreman Proxy on a defined port
+allow passenger_t foreman_proxy_port_t:tcp_socket name_connect;
 
 # Allow Foreman to connect to PostgreSQL
 corenet_tcp_connect_postgresql_port(passenger_t)
