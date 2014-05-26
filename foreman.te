@@ -214,6 +214,12 @@ optional_policy(`
     ')
 ')
 
+# Puppetmaster touches file contexts of some files which causes issues when apache2 httpd
+# is started from command line (under unconfined_u). This rule makes sure it does not
+# go into unconfined_u. This is only needed for RHEL6 (upstart). This rule MUST NOT be
+# in an optional_policy block!
+domain_obj_id_change_exemption(passenger_t)
+
 optional_policy(`
     # Allow sending of email reports.
     mta_send_mail(passenger_t)
