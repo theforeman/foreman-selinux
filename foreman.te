@@ -81,6 +81,9 @@ logging_log_file(foreman_log_t)
 type foreman_var_run_t;
 files_pid_file(foreman_var_run_t)
 
+type foreman_proxy_port_t;
+corenet_port(foreman_proxy_port_t)
+
 require{
     type bin_t;
     type httpd_t;
@@ -97,6 +100,7 @@ require{
     type puppetmaster_exec_t;
     type puppetmaster_t;
     type sysctl_net_t;
+    type websm_port_t;
 }
 
 #######################################
@@ -128,6 +132,12 @@ allow passenger_t self:tcp_socket listen;
 
 miscfiles_read_localization(passenger_t)
 
+# Allow Foreman (Satellite) to connect to Foreman Proxy (Capsule) on port 9090
+allow passenger_t websm_port_t:tcp_socket name_connect;
+
+# Allow Foreman to connect to Foreman Proxy on a defined port
+allow passenger_t foreman_proxy_port_t:tcp_socket name_connect;
+
 # Allow Foreman to connect to PostgreSQL
 corenet_tcp_connect_postgresql_port(passenger_t)
 optional_policy(`
@@ -155,11 +165,9 @@ dev_read_rand(passenger_t)
 
 optional_policy(`
     tunable_policy(`passenger_run_foreman', `
-        read_files_pattern(httpd_t, foreman_lib_t, foreman_lib_t)
-        manage_files_pattern(passenger_t, foreman_lib_t, foreman_lib_t)
-        manage_dirs_pattern(passenger_t, foreman_lib_t, foreman_lib_t)
-        manage_files_pattern(passenger_t, foreman_var_run_t, foreman_var_run_t)
-        manage_dirs_pattern(passenger_t, foreman_var_run_t, foreman_var_run_t)
+        admin_pattern(httpd_t, foreman_lib_t, foreman_lib_t)
+        admin_pattern(passenger_t, foreman_lib_t, foreman_lib_t)
+        admin_pattern(passenger_t, foreman_var_run_t, foreman_var_run_t)
 
         # Allow Foreman to connect to hosts and guests
         corenet_tcp_connect_virt_port(passenger_t)
@@ -215,6 +223,12 @@ optional_policy(`
         allow httpd_t puppet_port_t:tcp_socket name_connect;
     ')
 ')
+
+# Puppetmaster touches file contexts of some files which causes issues when apache2 httpd
+# is started from command line (under unconfined_u). This rule makes sure it does not
+# go into unconfined_u. This is only needed for RHEL6 (upstart). This rule MUST NOT be
+# in an optional_policy block!
+domain_obj_id_change_exemption(passenger_t)
 
 optional_policy(`
     # Allow sending of email reports.
@@ -293,3 +307,12 @@ typealias bin_t alias foreman_hook_t;
 #
 
 # no rules necessary
+
+######################################
+#
+# Foreman Tasks plugin
+#
+
+# the plugin daemon uses daemon gem for the backround job
+type foreman_tasks_exec_t;
+init_daemon_domain(passenger_t, foreman_tasks_exec_t)
