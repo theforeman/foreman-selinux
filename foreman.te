@@ -183,7 +183,8 @@ optional_policy(`
     tunable_policy(`passenger_run_foreman', `
         read_files_pattern(passenger_t, httpd_foreman_script_exec_t, httpd_foreman_script_exec_t)
         read_lnk_files_pattern(passenger_t, httpd_foreman_script_exec_t, httpd_foreman_script_exec_t)
-        append_files_pattern(passenger_t, foreman_log_t, foreman_log_t)
+        # unfortunately rails does not only append but also read and write
+        rw_files_pattern(passenger_t, foreman_log_t, foreman_log_t)
         ')
 ')
 
@@ -279,6 +280,30 @@ logging_send_syslog_msg(websockify_t)
 miscfiles_read_localization(websockify_t)
 sysnet_read_config(websockify_t)
 abrt_stream_connect(websockify_t)
+
+######################################
+#
+# Elasticsearch
+#
+
+# We carry elasticsearch policy until it is delivered to RHEL6:
+# https://bugzilla.redhat.com/show_bug.cgi?id=1102119
+type elasticsearch_port_t;
+corenet_port(elasticsearch_port_t)
+
+######################################
+#
+# Foreman Katello plugin
+#
+
+# System status (ping) controller checks for service status using sysvinit scripts
+# This is temporary solution until https://bugzilla.redhat.com/show_bug.cgi?id=1105085
+# is fixed.
+init_exec_script_files(passenger_t)
+consoletype_exec(passenger_t)
+
+# Katello does connect to Elasticsearch services
+allow passenger_t elasticsearch_port_t:tcp_socket name_connect;
 
 ######################################
 #

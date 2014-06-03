@@ -1,11 +1,16 @@
 #!/bin/bash
 
-# install policy modules in one transaction
 for selinuxvariant in targeted
 do
-  /usr/sbin/semodule -s $selinuxvariant -l >/dev/null 2>&1 && \
-  /usr/sbin/semanage -S $selinuxvariant -i - << _EOF
-  module -a /usr/share/selinux/${selinuxvariant}/foreman.pp.bz2
-  boolean -m --on httpd_setrlimit
-_EOF
+  if /usr/sbin/semodule -s $selinuxvariant -l >/dev/null; then
+    # TRANSACTION 1
+    /usr/sbin/semanage -S $selinuxvariant -i - << _EOT1
+      module -a /usr/share/selinux/${selinuxvariant}/foreman.pp.bz2
+      boolean -m --on httpd_setrlimit
+_EOT1
+    # TRANSACTION 2
+    /usr/sbin/semanage -S $selinuxvariant -i - << _EOT2
+      port -a -t elasticsearch_port_t -p tcp 9200-9300
+_EOT2
+  fi
 done
