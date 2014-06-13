@@ -256,10 +256,11 @@ require {
     type vnc_port_t;
 }
 
-allow websockify_t self:netlink_route_socket { bind create getattr nlmsg_read };
-allow websockify_t self:tcp_socket { setopt bind create listen accept connect shutdown };
-allow websockify_t self:udp_socket { getattr ioctl create connect };
+allow websockify_t self:netlink_route_socket { all_netlink_route_socket_perms };
+allow websockify_t self:tcp_socket { all_tcp_socket_perms };
+allow websockify_t self:udp_socket { all_udp_socket_perms };
 
+apache_search_config(websockify_t)
 corenet_tcp_bind_generic_node(websockify_t)
 corenet_tcp_connect_vnc_port(websockify_t)
 corenet_tcp_bind_vnc_port(websockify_t)
