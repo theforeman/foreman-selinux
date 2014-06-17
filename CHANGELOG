@@ -1,3 +1,17 @@
+2014-06-17	Dominic Cleal <dcleal@redhat.com>
+	* Release 1.5.1
+
+2014-06-10	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #5870 - Foreman-tasks selinux policy added
+	* Fixes #5910 - Puppetmaster allowed to set file contexts
+	* Fixes #5808 - Allowed rails to read symlinks
+
+2014-05-09	Dominic Cleal <dcleal@redhat.com>
+	* Release 1.5.0
+
+2014-05-07	Lukas Zapletal <lzap+git@redhat.com>
+	* fixes #5487 - fixed paths in selinux-relabel script
+
 2014-04-28	Dominic Cleal <dcleal@redhat.com>
 	* Release 1.5.0-RC2
 
