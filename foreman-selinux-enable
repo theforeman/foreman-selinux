@@ -12,5 +12,8 @@ _EOT1
     /usr/sbin/semanage -S $selinuxvariant -i - << _EOT2
       port -a -t elasticsearch_port_t -p tcp 9200-9300
 _EOT2
+    # OPTIONAL COMMANDS
+    # If pulp-selinux is installed, turn on puppet management
+    semanage boolean -l | grep ^pulp_manage_puppet && semanage boolean -m --on pulp_manage_puppet
   fi
 done
