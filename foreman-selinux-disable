@@ -1,8 +1,17 @@
 #!/bin/bash
 
-# uninstall policy modules
+# Unload foreman policy and set booleans. Dependant booleans must be managed in
+# a separate transaction. Do not forget to edit countepart file
+# (enable/disable) when updating this script.
 for selinuxvariant in targeted
 do
-  /usr/sbin/semodule -s $selinuxvariant -l > /dev/null 2>&1 \
-    && /usr/sbin/semodule -s $selinuxvariant -r foreman
+  if /usr/sbin/semodule -s $selinuxvariant -l >/dev/null; then
+    # Remove all user defined ports (including the default one)
+    /usr/sbin/semanage port -E | \
+      grep elasticsearch_port_t | \
+      sed s/-a/-d/g | \
+      /usr/sbin/semanage -S $selinuxvariant -i -
+    # Unload policy
+    /usr/sbin/semodule -s $selinuxvariant -r foreman
+  fi
 done

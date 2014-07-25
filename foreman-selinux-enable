@@ -1,16 +1,18 @@
 #!/bin/bash
 
+# Load foreman policy and set booleans. Dependant booleans must be managed in a
+# separate transaction. Do not forget to edit countepart file (enable/disable)
+# when updating this script.
 for selinuxvariant in targeted
 do
   if /usr/sbin/semodule -s $selinuxvariant -l >/dev/null; then
-    # TRANSACTION 1
-    /usr/sbin/semanage -S $selinuxvariant -i - << _EOT1
-      module -a /usr/share/selinux/${selinuxvariant}/foreman.pp.bz2
+    # Load policy
+    /usr/sbin/semanage module -S $selinuxvariant \
+      -a /usr/share/selinux/${selinuxvariant}/foreman.pp.bz2
+    # Set booleans
+    /usr/sbin/semanage -S $selinuxvariant -i - << ____EOT
       boolean -m --on httpd_setrlimit
-_EOT1
-    # TRANSACTION 2
-    /usr/sbin/semanage -S $selinuxvariant -i - << _EOT2
       port -a -t elasticsearch_port_t -p tcp 9200-9300
-_EOT2
+____EOT
   fi
 done
