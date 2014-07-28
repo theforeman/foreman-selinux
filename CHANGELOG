@@ -1,3 +1,6 @@
+2014-07-28	Lukas Zapletal <lzap+git@redhat.com>
+	* fixes #6162 - fixed websockify hidden denial
+
 2014-06-17	Dominic Cleal <dcleal@redhat.com>
 	* Release 1.5.1
 
