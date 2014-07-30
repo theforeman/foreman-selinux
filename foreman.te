@@ -281,6 +281,7 @@ logging_send_syslog_msg(websockify_t)
 miscfiles_read_localization(websockify_t)
 sysnet_read_config(websockify_t)
 abrt_stream_connect(websockify_t)
+read_files_pattern(websockify_t, puppet_var_lib_t, puppet_var_lib_t)
 
 ######################################
 #
