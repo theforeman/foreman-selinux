@@ -1,4 +1,28 @@
 Foreman SELinux poclicy
+=======================
+
+SELinux policies for Foreman and subcomponents
+
+Compiling
+---------
+
+To locally compile the policy do something like:
+
+    PCY=foreman
+    sed -i s/@@VERSION@@/99.9/ $PCY.te
+    make -f /usr/share/selinux/devel/Makefile load DISTRO=rhel7 NAME=$PCY
+
+Make sure you provide the correct distribution. Possible values are:
+
+* fedoraN (defines m4 macro `distro_fedoraN`)
+* rhelN (defines m4 macro `distro_rhelN`)
+
+There's a Rake task to do this on remote system via ssh:
+
+    rake pkg:load host=my.host.lan distro=rhel7 name=foreman
+
+License
+-------
 
 Copyright (c) 2013 Red Hat, Inc.
 

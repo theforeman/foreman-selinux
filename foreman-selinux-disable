@@ -1,4 +1,5 @@
 #!/bin/bash
+set +e
 
 # Unload foreman policy and set booleans. Dependant booleans must be managed in
 # a separate transaction. Do not forget to edit countepart file
