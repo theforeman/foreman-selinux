@@ -1,3 +1,41 @@
+2014-08-06	Lukas Zapletal <lzap+git@redhat.com>
+	* fixes #6961 - Allow websockify to read puppet cert
+	* Fixes #6780 - Remove elasticsearch port on uninstall
+
+2014-06-24	Lukas Zapletal <lzap+git@redhat.com>
+	* fixes #5930 - fix katello-jobs domain
+
+2014-06-19	Lukas Zapletal <lzap+git@redhat.com>
+	* fixes #6162 - fixed websockify hidden denial
+	* fixes #5930 - implement katello selinux policy
+
+2014-05-30	Dominic Cleal <dcleal@redhat.com>
+	* refs #5987 - remove unused packaging files
+
+2014-05-30	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #5827 - Allowed port 9090 and new foreman_proxy_port_t introduced
+	* Fixes #5910 - Puppetmaster allowed to set file contexts
+	* Fixes #5808 - Allowed rails to read symlinks
+	* Fixes #5870 - Foreman-tasks selinux policy added
+
+2014-05-29	Dominic Cleal <dcleal@redhat.com>
+	* refs #5793 - add pkg:generate_source rake task to create tar.bz2
+
+2014-04-30	Lukas Zapletal <lzap+git@redhat.com>
+	* fixes #5487 - fixed paths in selinux-relabel script
+
+2014-04-28	Lukas Zapletal <lzap+git@redhat.com>
+	* fixes #5466 - added new passenger file context path
+	* Reformatting puppetmaster rules
+	* fixes #4278 - policy for foreman_discovery
+	* fixes #4280 - policy for foreman_setup
+	* fixes #4279 - policy for foreman_hooks
+	* fixes #4277 - policy for foreman_bookdisk
+	* Fixes #4569 - websockify rules
+
+2014-04-16	Dominic Cleal <dcleal@redhat.com>
+	* Bump version to 1.6-develop
+
 2014-02-26	Lukas Zapletal <lzap+git@redhat.com>
 	* fixes #3465 - passanger spawns /bin/ps
 
