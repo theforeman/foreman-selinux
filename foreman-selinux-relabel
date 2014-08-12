@@ -5,6 +5,7 @@
   /usr/share/katello \
   /var/lib/foreman \
   /var/run/foreman \
+  /run/foreman \
   /var/log/foreman \
   /etc/foreman \
   /etc/puppet/node.rb \
@@ -13,6 +14,7 @@
   /etc/logrotate.d/foreman* \
   /etc/cron.d/foreman* \
   /usr/lib/ruby/gems/1.8/gems/passenger-* \
+  /usr/lib64/gems/ruby/passenger-*/agents \
   /usr/lib64/ruby/site_ruby/1.8/x86_64-linux/agents
 
 # relabel SCL mod_passenger and foreman plugins if SCL is found
