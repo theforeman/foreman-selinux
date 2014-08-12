@@ -183,8 +183,7 @@ optional_policy(`
     tunable_policy(`passenger_run_foreman', `
         read_files_pattern(passenger_t, httpd_foreman_script_exec_t, httpd_foreman_script_exec_t)
         read_lnk_files_pattern(passenger_t, httpd_foreman_script_exec_t, httpd_foreman_script_exec_t)
-        # unfortunately rails does not only append but also read and write
-        rw_files_pattern(passenger_t, foreman_log_t, foreman_log_t)
+        manage_files_pattern(passenger_t, foreman_log_t , foreman_log_t)
         ')
 ')
 
