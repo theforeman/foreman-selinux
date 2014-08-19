@@ -1,0 +1,11 @@
+#!/bin/bash
+
+/sbin/restorecon -ri $* \
+  /usr/share/foreman-proxy/bin/smart-proxy \
+  /etc/foreman-proxy \
+  /usr/share/foreman-proxy \
+  /var/lib/foreman-proxy \
+  /var/log/foreman-proxy \
+  /var/run/foreman-proxy
+
+exit 0

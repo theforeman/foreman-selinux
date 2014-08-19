@@ -1,2 +1,10 @@
 TAGS
 pkg/
+tmp/
+local-tmp/
+*.pp
+*.pp.bz2
+*.pod
+*.8
+foreman-proxy-selinux-enable
+foreman-proxy-selinux-disable
