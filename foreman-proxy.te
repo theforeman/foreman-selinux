@@ -1,0 +1,276 @@
+# vim: sw=4:ts=4:et
+#
+# Copyright 2013 Red Hat, Inc.
+#
+# This program and entire repository is free software: you can redistribute it
+# and/or modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+# FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
+# details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program. If not, see http://www.gnu.org/licenses/.
+#
+
+policy_module(foreman-proxy, @@VERSION@@)
+
+## <desc>
+## <p>
+## Generic support of DHCP plugin
+## </p>
+## </desc>
+gen_tunable(foreman_proxy_manage_dhcp_generic, true)
+
+## <desc>
+## <p>
+## ISC DHCP provider support
+## </p>
+## </desc>
+gen_tunable(foreman_proxy_manage_dhcp_isc, true)
+
+## <desc>
+## <p>
+## ISC DNS nsupdate provider support
+## </p>
+## </desc>
+gen_tunable(foreman_proxy_manage_dns_nsupdate, true)
+
+## <desc>
+## <p>
+## Generic support of TFTP plugin
+## </p>
+## </desc>
+gen_tunable(foreman_proxy_manage_tftp, true)
+
+## <desc>
+## <p>
+## Use Puppet API to load environments and classes
+## </p>
+## </desc>
+gen_tunable(foreman_proxy_manage_puppet, true)
+
+## <desc>
+## <p>
+## Puppet CA manipulation support
+## </p>
+## </desc>
+gen_tunable(foreman_proxy_manage_puppetca, true)
+
+## <desc>
+## <p>
+## Allow sudo or setuid for proxy (usually needed for puppet CA management)
+## </p>
+## </desc>
+gen_tunable(foreman_proxy_use_sudo, true)
+
+# FOREMAN PROXY POLICY
+
+# basic types
+type foreman_proxy_t;
+type foreman_proxy_exec_t;
+type foreman_proxy_tmp_t;
+files_tmp_file(foreman_proxy_tmp_t)
+
+# system service transition
+init_daemon_domain(foreman_proxy_t, foreman_proxy_exec_t)
+
+# PID file support
+type foreman_proxy_var_run_t;
+files_pid_file(foreman_proxy_var_run_t)
+admin_pattern(foreman_proxy_t, foreman_proxy_var_run_t, foreman_proxy_var_run_t)
+
+# logging support
+type foreman_proxy_log_t;
+logging_log_file(foreman_proxy_log_t)
+manage_files_pattern(foreman_proxy_t, foreman_proxy_log_t , foreman_proxy_log_t)
+
+# temp files support
+manage_dirs_pattern(foreman_proxy_t, foreman_proxy_tmp_t, foreman_proxy_tmp_t)
+manage_files_pattern(foreman_proxy_t, foreman_proxy_tmp_t, foreman_proxy_tmp_t)
+manage_fifo_files_pattern(foreman_proxy_t, foreman_proxy_tmp_t, foreman_proxy_tmp_t)
+files_tmp_filetrans(foreman_proxy_t, foreman_proxy_tmp_t, { file fifo_file dir })
+
+# starting via /bin/env
+corecmd_read_bin_symlinks(foreman_proxy_t)
+
+# ruby runtime
+corecmd_search_bin(foreman_proxy_t)
+corecmd_exec_bin(foreman_proxy_t)
+kernel_read_system_state(foreman_proxy_t)
+dev_search_sysfs(foreman_proxy_t)
+dev_read_rand(foreman_proxy_t)
+dev_read_urand(foreman_proxy_t)
+corecmd_exec_shell(foreman_proxy_t)
+
+# ruby runtime - don't audit candidates
+corenet_udp_bind_generic_port(foreman_proxy_t)
+corenet_udp_bind_generic_node(foreman_proxy_t)
+mta_sendmail_exec(foreman_proxy_t)
+ifdef(`distro_rhel6', `
+    gen_require(`
+        type sendmail_exec_t;
+    ')
+    allow foreman_proxy_t sendmail_exec_t:file { getattr_file_perms execute };
+',`
+    mta_sendmail_access_check(foreman_proxy_t)
+')
+
+# gettext support
+miscfiles_read_localization(foreman_proxy_t)
+
+# generic networking support
+corenet_tcp_connect_http_port(foreman_proxy_t)
+sysnet_dns_name_resolve(foreman_proxy_t)
+corenet_tcp_bind_generic_node(foreman_proxy_t)
+allow foreman_proxy_t self:udp_socket { getattr ioctl create connect };
+logging_send_syslog_msg(foreman_proxy_t)
+
+# server networking
+allow foreman_proxy_t self:tcp_socket { listen accept };
+corenet_tcp_bind_http_port(foreman_proxy_t)
+corenet_tcp_bind_websm_port(foreman_proxy_t)
+
+# x509 certificates
+hostname_exec(foreman_proxy_t)
+puppet_read_lib(foreman_proxy_t)
+ifdef(`distro_rhel6', `
+    miscfiles_read_certs(foreman_proxy_t)
+',`
+    miscfiles_read_generic_certs(foreman_proxy_t)
+')
+
+# generic support for plugins
+# executes sudo
+optional_policy(`
+    tunable_policy(`foreman_proxy_use_sudo', `
+        sudo_exec(foreman_proxy_t)
+        allow foreman_proxy_t self:process { setsched setrlimit };
+        allow foreman_proxy_t self:capability { sys_resource setuid setgid };
+        logging_send_audit_msgs(foreman_proxy_t)
+    ')
+')
+
+# PUPPET PROXY SUPPORT
+tunable_policy(`foreman_proxy_manage_puppet', `
+    gen_require(`
+        type puppet_etc_t, puppet_var_lib_t;
+    ')
+    # connect to puppet
+    corenet_tcp_connect_puppet_port(foreman_proxy_t)
+    # read configs and manage puppet files
+    puppet_read_config(foreman_proxy_t)
+    puppet_manage_lib(foreman_proxy_t)
+')
+
+# PUPPET CA SUPPORT
+
+# This line will not be effective until puppetca/start-puppet-ca wrappers has
+# the correct file labels:
+# RHEL6: https://bugzilla.redhat.com/show_bug.cgi?id=1131400
+# RHEL7: https://bugzilla.redhat.com/show_bug.cgi?id=1160727
+#puppet_domtrans_puppetca(foreman_proxy_t)
+
+# Once the above RFEs are delivered, we can drop the following block which is
+# o copy of puppetca policy. This can be removed once wrappers are available.
+# <copy of puppetca_t policy>
+tunable_policy(`foreman_proxy_manage_puppetca', `
+    gen_require(`
+        type puppet_etc_t, puppet_var_lib_t, puppet_log_t, puppet_var_run_t;
+        type passwd_exec_t, useradd_exec_t;
+    ')
+    allow foreman_proxy_t passwd_exec_t:file { getattr_file_perms execute };
+    allow foreman_proxy_t useradd_exec_t:file { getattr_file_perms execute };
+    allow foreman_proxy_t self:capability { dac_override setgid setuid };
+    allow foreman_proxy_t self:fifo_file rw_fifo_file_perms;
+    allow foreman_proxy_t puppet_var_lib_t:dir list_dir_perms;
+    manage_files_pattern(foreman_proxy_t, puppet_var_lib_t, puppet_var_lib_t)
+    manage_dirs_pattern(foreman_proxy_t, puppet_var_lib_t, puppet_var_lib_t)
+    allow foreman_proxy_t puppet_log_t:dir search_dir_perms;
+    allow foreman_proxy_t puppet_var_run_t:dir search_dir_perms;
+    kernel_read_kernel_sysctls(foreman_proxy_t)
+    corecmd_exec_bin(foreman_proxy_t)
+    corecmd_exec_shell(foreman_proxy_t)
+    dev_read_urand(foreman_proxy_t)
+    dev_search_sysfs(foreman_proxy_t)
+    files_search_var_lib(foreman_proxy_t)
+    selinux_validate_context(foreman_proxy_t)
+    logging_search_logs(foreman_proxy_t)
+    miscfiles_read_certs(foreman_proxy_t)
+    seutil_read_file_contexts(foreman_proxy_t)
+    # signing support
+    manage_files_pattern(foreman_proxy_t, puppet_etc_t, puppet_etc_t)
+    usermanage_access_check_groupadd(foreman_proxy_t)
+')
+# for technical reasons, the following interfaces cannot be used in tunable_policy
+kernel_read_system_state(foreman_proxy_t)
+# </copy of puppetca_t policy>
+
+# TFTP PLUGIN
+tunable_policy(`foreman_proxy_manage_tftp', `
+    tftp_read_content(foreman_proxy_t)
+    tftp_manage_rw_content(foreman_proxy_t)
+
+    # PXELinux configuration files has cobbler_var_lib_t type
+    # <cobblerd_admin>
+    gen_require(`
+        type cobbler_var_lib_t, cobbler_var_log_t;
+    ')
+    files_search_var_lib(foreman_proxy_t)
+    admin_pattern(foreman_proxy_t, cobbler_var_lib_t)
+    # </cobblerd_admin>
+')
+
+tunable_policy(`foreman_proxy_manage_dns_nsupdate', `
+    # Since nsupdate has bin_t and there are no suitable interfaces
+    # in the core policy, we do not transition.
+    allow foreman_proxy_t self:process signal;
+    bind_read_config(foreman_proxy_t)
+    bind_read_dnssec_keys(foreman_proxy_t)
+    bind_search_cache(foreman_proxy_t)
+    bind_manage_cache(foreman_proxy_t)
+    bind_read_zone(foreman_proxy_t)
+    bind_manage_zone(foreman_proxy_t)
+')
+
+# DHCP PLUGIN
+tunable_policy(`foreman_proxy_manage_dhcp_generic', `
+    # ping support via ECHO TCP service
+    ifdef(`distro_rhel6', `
+        corenet_tcp_connect_inetd_child_port(foreman_proxy_t)
+    ',`
+        corenet_tcp_connect_echo_port(foreman_proxy_t)
+    ')
+    # ping support via ICMP /usr/bin/ping (it has suid)
+    ifndef(`distro_rhel6', `
+        auth_read_passwd(foreman_proxy_t)
+    ')
+    netutils_domtrans_ping(foreman_proxy_t)
+')
+
+tunable_policy(`foreman_proxy_manage_dhcp_isc', `
+    # read /etc/dhcp configs
+    sysnet_rw_dhcp_config(foreman_proxy_t)
+
+    # <dhcpd_admin>
+    gen_require(`
+        type dhcpd_t, dhcpd_tmp_t, dhcpd_state_t;
+        type dhcpd_var_run_t, dhcpd_initrc_exec_t;
+    ')
+
+    files_list_var_lib(foreman_proxy_t)
+    admin_pattern(foreman_proxy_t, dhcpd_state_t)
+
+    files_list_pids(foreman_proxy_t)
+    admin_pattern(foreman_proxy_t, dhcpd_var_run_t)
+    # </dhcpd_admin>
+
+    # Since omshell has bin_t and there are no suitable interfaces
+    # in the core policy, we do not transition.
+    allow foreman_proxy_t self:unix_dgram_socket { create connect };
+    corenet_tcp_connect_dhcpd_port(foreman_proxy_t)
+    corenet_udp_sendrecv_dhcpd_port(foreman_proxy_t)
+')
