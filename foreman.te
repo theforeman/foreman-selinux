@@ -347,3 +347,7 @@ typealias bin_t alias foreman_hook_t;
 # the plugin daemon uses daemon gem for the backround job
 type foreman_tasks_exec_t;
 init_daemon_domain(passenger_t, foreman_tasks_exec_t)
+# dynflow executor currently runs in foreman_t because
+# it boots the whole rails environment
+# http://projects.theforeman.org/issues/7178
+allow passenger_t self:process execmem;
