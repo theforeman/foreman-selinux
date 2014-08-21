@@ -308,6 +308,16 @@ ifndef(`distro_rhel7', `
     consoletype_exec(passenger_t)
 ')
 
+# fix for RHEL 7.0 - https://bugzilla.redhat.com/show_bug.cgi?id=1130086
+ifdef(`distro_rhel7', `
+    optional_policy(`
+        require {
+                type qpidd_t;
+        }
+        auth_read_passwd(qpidd_t)
+    ')
+')
+
 # Katello does connect to Elasticsearch services
 allow passenger_t elasticsearch_port_t:tcp_socket name_connect;
 
