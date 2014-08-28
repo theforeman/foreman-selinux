@@ -1,3 +1,9 @@
+2014-08-28	Dominic Cleal <dcleal@redhat.com>
+	* Release 1.6.0-RC2
+
+2014-08-13	Dominic Cleal <dcleal@redhat.com>
+	* Release 1.6.0-RC1
+
 2014-08-13	Lukas Zapletal <lzap+git@redhat.com>
 	* Fixes #7036 - allow log files creation for Rails app
 	* Fixes #7034 - added RHEL7 support to relabel script
