@@ -55,6 +55,13 @@ gen_tunable(httpd_run_foreman, true)
 ## </desc>
 gen_tunable(passenger_can_connect_all, false)
 
+## <desc>
+## <p>
+## Determine whether passenger can connect to OpenStack
+## </p>
+## </desc>
+gen_tunable(passenger_can_connect_openstack, true)
+
 # define types for foreman scripts
 apache_content_template(foreman)
 
@@ -250,6 +257,19 @@ optional_policy(`
     # Transition to puppet_master
     corecmd_search_bin(passenger_t)
     domtrans_pattern(passenger_t, puppetmaster_exec_t, puppetmaster_t)
+')
+
+#######################################
+#
+# OpenStack Compute Resource
+#
+
+tunable_policy(`passenger_can_connect_openstack',`
+    ifdef(`distro_rhel6', `
+        corenet_tcp_connect_commplex_port(passenger_t)
+    ',`
+        corenet_tcp_connect_commplex_main_port(passenger_t)
+    ')
 ')
 
 #######################################
