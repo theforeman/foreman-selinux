@@ -1,3 +1,9 @@
+2014-09-10	Dominic Cleal <dcleal@redhat.com>
+	* Release 1.6.0
+
+2014-09-09	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #7198 - allowed httpd_t to read/write to passenger socket
+
 2014-08-28	Dominic Cleal <dcleal@redhat.com>
 	* Release 1.6.0-RC2
 
