@@ -1,19 +1,27 @@
 #!/bin/bash
 set +e
 
-# Load foreman policy and set booleans. Dependant booleans must be managed in a
-# separate transaction. Do not forget to edit countepart file (enable/disable)
-# when updating this script.
+TMP=$(mktemp -t foreman-selinux-enable.XXXXXXXXXX)
+trap "rm -rf '$TMP'" EXIT INT TERM
+
+# Load or upgrade foreman policy and set booleans.
+#
+# Dependant booleans must be managed in a separate transaction.
+# Do not forget to edit counterpart file (disable) when updating this script.
+# Remember this will be run on upgrade too.
+#
 for selinuxvariant in targeted
 do
   if /usr/sbin/semodule -s $selinuxvariant -l >/dev/null; then
     # Load policy
     /usr/sbin/semanage module -S $selinuxvariant \
       -a /usr/share/selinux/${selinuxvariant}/foreman.pp.bz2
-    # Set booleans
-    /usr/sbin/semanage -S $selinuxvariant -i - << ____EOT
-      boolean -m --on httpd_setrlimit
-      port -a -t elasticsearch_port_t -p tcp 9200-9300
-____EOT
+
+    echo "boolean -m --on httpd_setrlimit" > $TMP
+
+    /usr/sbin/semanage port -E | grep -q elasticsearch_port_t || \
+      echo "port -a -t elasticsearch_port_t -p tcp 9200-9300" >> $TMP
+
+    /usr/sbin/semanage -S $selinuxvariant -i $TMP
   fi
 done
