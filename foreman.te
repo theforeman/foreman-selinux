@@ -331,6 +331,9 @@ ifndef(`distro_rhel7', `
 # Katello does connect to Elasticsearch services
 allow passenger_t elasticsearch_port_t:tcp_socket name_connect;
 
+# Katello uses certs in /etc/pki/katello for websockets
+miscfiles_read_certs(websockify_t)
+
 ######################################
 #
 # Foreman Bootdisk plugin
