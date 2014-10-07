@@ -1,3 +1,13 @@
+2014-10-07	Dominic Cleal <dcleal@redhat.com>
+	* Release 1.6.1
+	* refs #7388 - make foreman-selinux-enable upgrade-safe
+
+2014-10-07	Stephen Benjamin <stbenjam@redhat.com>
+	* fixes #7729 - allow websockify to read certs
+
+2014-10-07	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #7346 - Added OpenStack port 5000 via boolean
+
 2014-09-10	Dominic Cleal <dcleal@redhat.com>
 	* Release 1.6.0
 
