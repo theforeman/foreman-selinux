@@ -323,11 +323,13 @@ domtrans_pattern(passenger_t, websockify_exec_t, websockify_t)
 
 require {
     type vnc_port_t;
+    class process { siginh rlimitinh noatsecure };
 }
 
 allow websockify_t self:netlink_route_socket { all_netlink_route_socket_perms };
 allow websockify_t self:tcp_socket { all_tcp_socket_perms };
 allow websockify_t self:udp_socket { all_udp_socket_perms };
+allow passenger_t websockify_t:process { siginh noatsecure rlimitinh };
 
 apache_search_config(websockify_t)
 corenet_tcp_bind_generic_node(websockify_t)
@@ -339,6 +341,7 @@ logging_send_syslog_msg(websockify_t)
 miscfiles_read_localization(websockify_t)
 sysnet_read_config(websockify_t)
 abrt_stream_connect(websockify_t)
+files_search_var_lib(websockify_t)
 read_files_pattern(websockify_t, puppet_var_lib_t, puppet_var_lib_t)
 
 ######################################
