@@ -69,6 +69,13 @@ gen_tunable(passenger_can_connect_all, false)
 ## </desc>
 gen_tunable(passenger_can_connect_openstack, true)
 
+## <desc>
+## <p>
+## Determine whether passenger can execute ssh (needed for qemu+ssh libvirt connection).
+## </p>
+## </desc>
+gen_tunable(passenger_can_spawn_ssh, true)
+
 # define types for foreman scripts
 apache_content_template(foreman)
 
@@ -282,6 +289,23 @@ tunable_policy(`passenger_can_connect_openstack',`
         corenet_tcp_connect_commplex_port(passenger_t)
     ',`
         corenet_tcp_connect_commplex_main_port(passenger_t)
+    ')
+')
+
+#######################################
+#
+# Libvirt Compute Resource
+#
+
+optional_policy(`
+    tunable_policy(`passenger_can_spawn_ssh',`
+        require {
+            class process { getcap setcap };
+        }
+        allow passenger_t self:process { getcap setcap };
+
+        ssh_exec(passenger_t)
+        ssh_read_user_home_files(passenger_t)
     ')
 ')
 
