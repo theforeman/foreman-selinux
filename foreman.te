@@ -49,6 +49,13 @@ gen_tunable(httpd_run_foreman, true)
 
 ## <desc>
 ## <p>
+## Determine whether passenger can connect to LDAP ports.
+## </p>
+## </desc>
+gen_tunable(passenger_can_connect_ldap, true)
+
+## <desc>
+## <p>
 ## Determine whether passenger can connect to TCP ports
 ## other than specified in the policy.
 ## </p>
@@ -257,6 +264,12 @@ optional_policy(`
     # Transition to puppet_master
     corecmd_search_bin(passenger_t)
     domtrans_pattern(passenger_t, puppetmaster_exec_t, puppetmaster_t)
+')
+
+optional_policy(`
+    tunable_policy(`passenger_can_connect_ldap', `
+        corenet_tcp_connect_ldap_port(passenger_t)
+    ')
 ')
 
 #######################################
