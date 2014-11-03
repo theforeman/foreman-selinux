@@ -1,0 +1,10 @@
+#!/bin/bash
+set +e
+
+# This helper is used in downstream product to do additional SELinux
+# configuration. It's a wrapper around *-selinux-{enable,disable}
+# scripts.
+
+# TODO move Satellite 6.0 rules (e.g. websm port) into separate te file and load here
+
+foreman-selinux-enable

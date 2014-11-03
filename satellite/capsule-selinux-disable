@@ -1,0 +1,8 @@
+#!/bin/bash
+set +e
+
+# This helper is used in downstream product to do additional SELinux
+# configuration. It's a wrapper around *-selinux-{enable,disable}
+# scripts.
+
+foreman-proxy-selinux-disable
