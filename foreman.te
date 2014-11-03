@@ -197,6 +197,10 @@ optional_policy(`
         # Allow Foreman to write to the SQlite databases
         read_files_pattern(passenger_t, foreman_db_t, foreman_db_t)
         write_files_pattern(passenger_t, foreman_db_t, foreman_db_t)
+
+        # Allow Foreman to do DNS queries via Ruby stdlib net package
+        # http://projects.theforeman.org/issues/8030
+        corenet_udp_bind_generic_port(passenger_t)
     ')
 ')
 
