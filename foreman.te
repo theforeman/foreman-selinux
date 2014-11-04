@@ -76,6 +76,13 @@ gen_tunable(passenger_can_connect_openstack, true)
 ## </desc>
 gen_tunable(passenger_can_spawn_ssh, true)
 
+## <desc>
+## <p>
+## Determine whether passenger can connect to local or remote libvirt.
+## </p>
+## </desc>
+gen_tunable(passenger_can_connect_libvirt, true)
+
 # define types for foreman scripts
 apache_content_template(foreman)
 
@@ -310,6 +317,14 @@ optional_policy(`
 
         ssh_exec(passenger_t)
         ssh_read_user_home_files(passenger_t)
+    ')
+')
+
+optional_policy(`
+    tunable_policy(`passenger_can_connect_libvirt',`
+        virt_getattr_exec(passenger_t)
+        virt_read_pid_symlinks(passenger_t)
+        virt_stream_connect(passenger_t)
     ')
 ')
 
