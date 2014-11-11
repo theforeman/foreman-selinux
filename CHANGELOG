@@ -1,3 +1,38 @@
+2014-11-11	Dominic Cleal <dcleal@redhat.com>
+	* Release 1.7.0-RC1
+
+2014-10-21	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #7932 - added LDAP support for passenger
+	* Refs #7719 - added websockify rules for VNC console
+	* Fixes #7719 - added ssh rules for libvirt CR
+
+2014-09-30	Dominic Cleal <dcleal@redhat.com>
+	* refs #7388 - make foreman-selinux-enable upgrade-safe
+
+2014-09-29	Stephen Benjamin <stbenjam@redhat.com>
+	* fixes #7729 - allow websockify to read certs
+
+2014-09-26	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #7346 - Added OpenStack port 5000 via boolean
+	* Refs #7178 - removed passenger_t execmem rule
+
+2014-09-09	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #7198 - allowed httpd_t to read/write to passenger socket
+
+2014-08-20	Lukáš Zapletal <lzap@redhat.com>
+	* Merge pull request #28 from lzap/execmem-7178
+
+2014-08-20	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #7178 - allowed passenger_t to execmem
+
+2014-08-12	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #7036 - allow log files creation for Rails app
+	* Fixes #7034 - added RHEL7 support to relabel script
+	* Fixes #6013, #6014, #6979 - changes for RHEL7
+
+2014-08-11	Dominic Cleal <dcleal@redhat.com>
+	* Bump version to 1.7-develop
+
 2014-08-06	Lukas Zapletal <lzap+git@redhat.com>
 	* fixes #6961 - Allow websockify to read puppet cert
 	* Fixes #6780 - Remove elasticsearch port on uninstall
