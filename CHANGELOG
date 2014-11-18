@@ -1,4 +1,13 @@
+2014-11-18	Dominic Cleal <dcleal@redhat.com>
+	* Release 1.6.3
+
+2014-11-18	Lukas Zapletal <lzap+git@redhat.com>
+	* Refs #7719 - added websockify rules for VNC console
+	* Fixes #7719 - added ssh rules for libvirt CR
+	* Fixes #7932 - added LDAP support for passenger
+
 2014-10-07	Dominic Cleal <dcleal@redhat.com>
+	* Fix version number
 	* Release 1.6.1
 	* refs #7388 - make foreman-selinux-enable upgrade-safe
 
