@@ -1,3 +1,10 @@
+2014-12-16	Dominic Cleal <dcleal@redhat.com>
+	* Release 1.7.1
+
+2014-12-15	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #8241 - added rules for local sockets libvirt connections
+	* Fixes #8030 - allow UDP port binds for ruby net package
+
 2014-12-02	Dominic Cleal <dcleal@redhat.com>
 	* Release 1.7.0
 
