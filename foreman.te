@@ -393,6 +393,13 @@ allow passenger_t elasticsearch_port_t:tcp_socket name_connect;
 # Katello uses certs in /etc/pki/katello for websockets
 miscfiles_read_certs(websockify_t)
 
+# Katello installer configures Pulp to listen on port 5000
+ifdef(`distro_rhel6', `
+    corenet_tcp_bind_commplex_port(passenger_t)
+',`
+    corenet_tcp_bind_commplex_main_port(passenger_t)
+')
+
 ######################################
 #
 # Foreman Bootdisk plugin
