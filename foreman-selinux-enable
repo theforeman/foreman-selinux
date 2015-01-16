@@ -22,6 +22,9 @@ do
     /usr/sbin/semanage port -E | grep -q elasticsearch_port_t || \
       echo "port -a -t elasticsearch_port_t -p tcp 9200-9300" >> $TMP
 
+    /usr/sbin/semanage port -E | grep -q docker_port_t || \
+      echo "port -a -t docker_port_t -p tcp 2375-2376" >> $TMP
+
     /usr/sbin/semanage -S $selinuxvariant -i $TMP
   fi
 done
