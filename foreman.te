@@ -64,6 +64,20 @@ gen_tunable(passenger_can_connect_all, false)
 
 ## <desc>
 ## <p>
+## Determine whether passenger can connect to Docker via TCP
+## </p>
+## </desc>
+gen_tunable(passenger_can_connect_docker_tcp, true)
+
+## <desc>
+## <p>
+## Determine whether passenger can connect to Docker via local socket
+## </p>
+## </desc>
+gen_tunable(passenger_can_connect_docker_unix, true)
+
+## <desc>
+## <p>
 ## Determine whether passenger can connect to OpenStack
 ## </p>
 ## </desc>
@@ -362,6 +376,24 @@ sysnet_read_config(websockify_t)
 abrt_stream_connect(websockify_t)
 files_search_var_lib(websockify_t)
 read_files_pattern(websockify_t, puppet_var_lib_t, puppet_var_lib_t)
+
+######################################
+#
+# Docker
+#
+
+type docker_port_t;
+corenet_port(docker_port_t)
+
+tunable_policy(`passenger_can_connect_docker_tcp',`
+    allow passenger_t docker_port_t:tcp_socket name_connect;
+')
+
+tunable_policy(`passenger_can_connect_docker_unix',`
+    ifndef(`distro_rhel6', `
+        docker_stream_connect(passenger_t)
+    ')
+')
 
 ######################################
 #
