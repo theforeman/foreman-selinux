@@ -1,8 +1,10 @@
 #!/bin/bash
 set +e
 
-TMP=$(mktemp -t foreman-selinux-enable.XXXXXXXXXX)
-trap "rm -rf '$TMP'" EXIT INT TERM
+TMP_EXEC_BEFORE=$(mktemp -t foreman-selinux-enable.XXXXX)
+TMP_EXEC_AFTER=$(mktemp -t foreman-selinux-enable.XXXXX)
+TMP_PORTS=$(mktemp -t foreman-selinux-enable.XXXXX)
+trap "rm -rf '$TMP_EXEC_BEFORE' '$TMP_EXEC_AFTER' '$TMP_PORTS'" EXIT INT TERM
 
 is_redhat_6() {
   test x$(rpm -q --whatprovides redhat-release --qf '%{version}') = x6
@@ -17,23 +19,24 @@ is_redhat_6() {
 for selinuxvariant in targeted
 do
   if /usr/sbin/semodule -s $selinuxvariant -l >/dev/null; then
-    # Load policy
-    /usr/sbin/semanage module -S $selinuxvariant \
-      -a /usr/share/selinux/${selinuxvariant}/foreman.pp.bz2
+    /usr/sbin/semanage port -E > $TMP_PORTS
 
-    echo "boolean -m --on httpd_setrlimit" > $TMP
+    # Remove previously defined elasticsearch_port_t
+    # (this can be removed in future release)
+    grep elasticsearch_port_t $TMP_PORTS | sed s/-a/-d/g >> $TMP_EXEC_BEFORE
 
-    /usr/sbin/semanage port -E | grep -q elasticsearch_port_t || \
-      echo "port -a -t elasticsearch_port_t -p tcp 9200-9300" >> $TMP
+    echo "boolean -m --on httpd_setrlimit" >> $TMP_EXEC_AFTER
 
-    /usr/sbin/semanage port -E | grep -q docker_port_t || \
-      echo "port -a -t docker_port_t -p tcp 2375-2376" >> $TMP
+    grep -q docker_port_t $TMP_PORTS || echo "port -a -t docker_port_t -p tcp 2375-2376" >> $TMP_EXEC_AFTER
 
     if is_redhat_6; then
-      /usr/sbin/semanage port -E | grep -q foreman_osapi_compute_port_t || \
-        echo "port -a -t foreman_osapi_compute_port_t -p tcp 8774" >> $TMP
+      grep -q foreman_osapi_compute_port_t $TMP_PORTS || \
+        echo "port -a -t foreman_osapi_compute_port_t -p tcp 8774" >> $TMP_EXEC_AFTER
     fi
 
-    /usr/sbin/semanage -S $selinuxvariant -i $TMP
+    # Execute port management commands and load policy
+    test -s $TMP_EXEC_BEFORE && /usr/sbin/semanage -S $selinuxvariant -i $TMP_EXEC_BEFORE
+    /usr/sbin/semanage module -S $selinuxvariant -a /usr/share/selinux/${selinuxvariant}/foreman.pp.bz2
+    test -s $TMP_EXEC_AFTER && /usr/sbin/semanage -S $selinuxvariant -i $TMP_EXEC_AFTER
   fi
 done
