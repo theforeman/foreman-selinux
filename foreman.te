@@ -406,36 +406,6 @@ optional_policy(`
 
 ######################################
 #
-# Elasticsearch
-#
-
-# We carry elasticsearch policy until it is delivered to RHEL6:
-# https://bugzilla.redhat.com/show_bug.cgi?id=1102119
-type elasticsearch_port_t;
-corenet_port(elasticsearch_port_t)
-
-######################################
-#
-# Foreman Katello plugin
-#
-
-# System status (ping) controller checks for service status using sysvinit scripts
-# This is temporary solution until https://bugzilla.redhat.com/show_bug.cgi?id=1105085
-# is fixed.
-init_exec_script_files(passenger_t)
-
-ifndef(`distro_rhel7', `
-    consoletype_exec(passenger_t)
-')
-
-# Katello does connect to Elasticsearch services
-allow passenger_t elasticsearch_port_t:tcp_socket name_connect;
-
-# Katello uses certs in /etc/pki/katello for websockets
-miscfiles_read_certs(websockify_t)
-
-######################################
-#
 # Foreman Bootdisk plugin
 #
 

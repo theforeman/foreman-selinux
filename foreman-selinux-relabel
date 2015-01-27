@@ -2,7 +2,6 @@
 
 # relabel foreman
 /sbin/restorecon -ri $* /usr/share/foreman \
-  /usr/share/katello \
   /var/lib/foreman \
   /var/run/foreman \
   /run/foreman \
