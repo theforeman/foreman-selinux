@@ -142,6 +142,9 @@ files_pid_file(foreman_var_run_t)
 type foreman_proxy_port_t;
 corenet_port(foreman_proxy_port_t)
 
+type foreman_osapi_compute_port_t;
+corenet_port(foreman_osapi_compute_port_t)
+
 require{
     type bin_t;
     type httpd_t;
@@ -308,9 +311,15 @@ optional_policy(`
 
 tunable_policy(`passenger_can_connect_openstack',`
     ifdef(`distro_rhel6', `
+        # keystone (identity service)
         corenet_tcp_connect_commplex_port(passenger_t)
+        # all other ports not yet defined on rhel6
+        allow passenger_t foreman_osapi_compute_port_t:tcp_socket name_connect;
     ',`
+        # keystone (identity service)
         corenet_tcp_connect_commplex_main_port(passenger_t)
+        # nova (compute service)
+        corenet_tcp_connect_osapi_compute_port(passenger_t)
     ')
 ')
 
