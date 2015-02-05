@@ -4,6 +4,10 @@ set +e
 TMP=$(mktemp -t foreman-selinux-enable.XXXXXXXXXX)
 trap "rm -rf '$TMP'" EXIT INT TERM
 
+is_redhat_6() {
+  test x$(rpm -q --whatprovides redhat-release --qf '%{version}') = x6
+}
+
 # Load or upgrade foreman policy and set booleans.
 #
 # Dependant booleans must be managed in a separate transaction.
@@ -24,6 +28,11 @@ do
 
     /usr/sbin/semanage port -E | grep -q docker_port_t || \
       echo "port -a -t docker_port_t -p tcp 2375-2376" >> $TMP
+
+    if is_redhat_6; then
+      /usr/sbin/semanage port -E | grep -q foreman_osapi_compute_port_t || \
+        echo "port -a -t foreman_osapi_compute_port_t -p tcp 8774" >> $TMP
+    fi
 
     /usr/sbin/semanage -S $selinuxvariant -i $TMP
   fi
