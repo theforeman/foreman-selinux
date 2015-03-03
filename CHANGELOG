@@ -1,3 +1,16 @@
+2015-02-19	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #8989 - Add docker_port_t port and boolean
+
+2014-12-15	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #8241 - added rules for local sockets libvirt connections
+	* Fixes #8030 - allow UDP port binds for ruby net package
+
+2014-11-28	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #4464 - policy for foreman-proxy
+
+2014-10-28	Dominic Cleal <dcleal@redhat.com>
+	* Bump version to 1.8-develop
+
 2014-10-21	Lukas Zapletal <lzap+git@redhat.com>
 	* Fixes #7932 - added LDAP support for passenger
 	* Refs #7719 - added websockify rules for VNC console
