@@ -97,6 +97,13 @@ gen_tunable(passenger_can_spawn_ssh, true)
 ## </desc>
 gen_tunable(passenger_can_connect_libvirt, true)
 
+## <desc>
+## <p>
+## Determine whether passenger can connect to remote SMTP services
+## </p>
+## </desc>
+gen_tunable(passenger_can_connect_smtp, true)
+
 # define types for foreman scripts
 apache_content_template(foreman)
 
@@ -281,6 +288,10 @@ domain_obj_id_change_exemption(passenger_t)
 optional_policy(`
     # Allow sending of email reports.
     mta_send_mail(passenger_t)
+')
+
+tunable_policy(`passenger_can_connect_smtp',`
+    corenet_tcp_connect_smtp_port(passenger_t)
 ')
 
 optional_policy(`
