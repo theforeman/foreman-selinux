@@ -104,9 +104,6 @@ gen_tunable(passenger_can_connect_libvirt, true)
 ## </desc>
 gen_tunable(passenger_can_connect_smtp, true)
 
-# define types for foreman scripts
-apache_content_template(foreman)
-
 # Some basic aliases for different aspects of the filesystem to make things
 # more clear.
 require{
@@ -124,7 +121,6 @@ type foreman_lib_t;
 files_type(foreman_lib_t)
 
 type foreman_log_t;
-typealias foreman_log_t alias httpd_foreman_script_log_t;
 logging_log_file(foreman_log_t)
 
 type foreman_var_run_t;
@@ -151,24 +147,6 @@ require{
     type sysctl_net_t;
     type websm_port_t;
 }
-
-#######################################
-#
-# Foreman local policy
-#
-
-manage_dirs_pattern(httpd_foreman_script_t, foreman_lib_t , foreman_lib_t)
-manage_dirs_pattern(httpd_foreman_script_t, foreman_lib_t , foreman_lib_t)
-
-manage_files_pattern(httpd_foreman_script_t, foreman_log_t , foreman_log_t)
-
-manage_files_pattern(httpd_foreman_script_t, foreman_var_run_t , foreman_var_run_t)
-
-files_read_etc_files(httpd_foreman_script_t)
-
-logging_send_syslog_msg(httpd_foreman_script_t)
-
-miscfiles_read_localization(httpd_foreman_script_t)
 
 #######################################
 #
@@ -234,14 +212,6 @@ optional_policy(`
 
 optional_policy(`
     tunable_policy(`passenger_run_foreman', `
-        read_files_pattern(passenger_t, httpd_foreman_script_exec_t, httpd_foreman_script_exec_t)
-        read_lnk_files_pattern(passenger_t, httpd_foreman_script_exec_t, httpd_foreman_script_exec_t)
-        manage_files_pattern(passenger_t, foreman_log_t , foreman_log_t)
-        ')
-')
-
-optional_policy(`
-    tunable_policy(`passenger_run_foreman', `
         allow passenger_t self:process getsession;
         fs_rw_anon_inodefs_files(passenger_t)
         allow passenger_t httpd_t:unix_stream_socket { read write getattr };
@@ -260,6 +230,7 @@ tunable_policy(`httpd_run_foreman', `
     manage_dirs_pattern(passenger_t, httpd_tmp_t, httpd_tmp_t)
     manage_files_pattern(passenger_t, httpd_tmp_t, httpd_tmp_t)
     manage_sock_files_pattern(passenger_t, httpd_tmp_t, httpd_tmp_t)
+    manage_files_pattern(passenger_t, foreman_log_t , foreman_log_t)
 ')
 
 optional_policy(`

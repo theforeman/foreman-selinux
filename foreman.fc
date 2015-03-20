@@ -30,7 +30,6 @@
 
 /usr/share/foreman/.ssh(/.*)?           gen_context(system_u:object_r:ssh_home_t,s0)
 /usr/share/foreman/extras/noVNC/websockify\.py gen_context(system_u:object_r:websockify_exec_t,s0)
-/usr/share/foreman/script(/.*)?         gen_context(system_u:object_r:httpd_foreman_script_exec_t,s0)
 
 # Passenger non-SCL file contexts
 
