@@ -1,3 +1,13 @@
+2015-04-23	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #9791 - removed unused apache_template macro and types
+	* Fixes #9825 - foreman can connect to remote SMTP
+
+2015-03-09	Gerwin Krist <gerwin@linqhost.nl>
+	* fixes #9523 - Allow passenger_t access to puppet_log_t
+
+2015-03-03	Dominic Cleal <dcleal@redhat.com>
+	* Bump version to 1.9-develop
+
 2015-02-19	Lukas Zapletal <lzap+git@redhat.com>
 	* Fixes #8989 - Add docker_port_t port and boolean
 
