@@ -18,9 +18,9 @@
   /usr/lib64/ruby/site_ruby/1.8/x86_64-linux/agents
 
 # relabel SCL mod_passenger and foreman plugins if SCL is found
-[ -d /opt/rh/ruby193/ ] && /sbin/restorecon -ri $* \
-  /opt/rh/ruby193/root/usr/share/gems/gems/passenger-* \
-  /opt/rh/ruby193/root/usr/lib64/gems/exts/passenger-*/agents \
-  /opt/rh/ruby193/root/usr/share/gems/gems/foreman*
+[ -d /opt/theforeman/tfm/ ] && /sbin/restorecon -ri $* \
+  /opt/theforeman/tfm/root/usr/share/gems/gems/passenger-* \
+  /opt/theforeman/tfm/root/usr/lib64/gems/exts/passenger-*/agents \
+  /opt/theforeman/tfm/root/usr/share/gems/gems/foreman*
 
 exit 0
