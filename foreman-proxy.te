@@ -67,6 +67,13 @@ gen_tunable(foreman_proxy_manage_puppetca, true)
 ## </desc>
 gen_tunable(foreman_proxy_use_sudo, true)
 
+## <desc>
+## <p>   
+## Support for Openscap plugin
+## </p>                       
+## </desc>                    
+gen_tunable(foreman_proxy_manage_openscap, true)
+
 # FOREMAN PROXY POLICY
 
 # basic types
@@ -273,4 +280,15 @@ tunable_policy(`foreman_proxy_manage_dhcp_isc', `
     allow foreman_proxy_t self:unix_dgram_socket { create connect };
     corenet_tcp_connect_dhcpd_port(foreman_proxy_t)
     corenet_udp_sendrecv_dhcpd_port(foreman_proxy_t)
+')
+
+tunable_policy(`foreman_proxy_manage_openscap', `
+    gen_require(`
+        type foreman_proxy_t;
+        type var_spool_t;
+    ')
+
+    # Allow foreman_proxy_t to var_spool_t
+    allow foreman_proxy_t var_spool_t:dir { write create add_name };
+    allow foreman_proxy_t var_spool_t:file { write create open };
 ')
