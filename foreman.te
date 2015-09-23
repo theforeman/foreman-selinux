@@ -372,9 +372,11 @@ tunable_policy(`passenger_can_connect_docker_tcp',`
     allow passenger_t docker_port_t:tcp_socket name_connect;
 ')
 
-tunable_policy(`passenger_can_connect_docker_unix',`
-    ifndef(`distro_rhel6', `
-        docker_stream_connect(passenger_t)
+optional_policy(`
+    tunable_policy(`passenger_can_connect_docker_unix',`
+        ifndef(`distro_rhel6', `
+            docker_stream_connect(passenger_t)
+        ')
     ')
 ')
 
