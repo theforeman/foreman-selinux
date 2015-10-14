@@ -1,3 +1,18 @@
+2015-10-14	Dominic Cleal <dcleal@redhat.com>
+	* Release 1.10.0-RC1
+
+2015-09-28	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #11934 - docker rules are in optional block now
+
+2015-09-21	Dominic Cleal <dcleal@redhat.com>
+	* fixes #11608 - permit Foreman/passenger_t to bind to VNC ports
+
+2015-08-27	Dominic Cleal <dcleal@redhat.com>
+	* refs #4841 - change ruby193 SCL paths to tfm SCL
+
+2015-06-26	Dominic Cleal <dcleal@redhat.com>
+	* Bump version to 1.10-develop
+
 2015-04-23	Lukas Zapletal <lzap+git@redhat.com>
 	* Fixes #9791 - removed unused apache_template macro and types
 	* Fixes #9825 - foreman can connect to remote SMTP
