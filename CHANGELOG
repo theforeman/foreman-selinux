@@ -1,3 +1,9 @@
+2015-11-03	Dominic Cleal <dcleal@redhat.com>
+	* Release 1.9.3
+
+2015-11-02	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #11934 - docker rules are in optional block now
+
 2015-09-22	Dominic Cleal <dcleal@redhat.com>
 	* Release 1.9.2
 	* fixes #11608 - permit Foreman/passenger_t to bind to VNC ports
