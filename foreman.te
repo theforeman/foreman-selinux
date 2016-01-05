@@ -243,9 +243,11 @@ optional_policy(`
         allow passenger_t puppet_var_lib_t:dir { relabelfrom relabelto create rmdir setattr };
         allow passenger_t puppet_var_lib_t:file { relabelfrom relabelto };
         allow passenger_t sysctl_net_t:dir search;
+        read_lnk_files_pattern(passenger_t, puppet_etc_t, puppet_etc_t)
         # Allow basic httpd processes to access puppet_etc_t and
         # puppet_port_t before passenger is initialized.
         read_files_pattern(httpd_t, puppet_etc_t, puppet_etc_t)
+        read_lnk_files_pattern(httpd_t, puppet_etc_t, puppet_etc_t)
         allow httpd_t puppet_port_t:tcp_socket name_connect;
     ')
 ')
