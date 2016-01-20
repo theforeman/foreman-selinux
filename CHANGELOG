@@ -1,3 +1,9 @@
+2016-01-20	Dominic Cleal <dcleal@redhat.com>
+	* Release 1.10.1
+
+2016-01-19	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #12990 - allow reading of puppet symlinks
+
 2015-12-23	Dominic Cleal <dcleal@redhat.com>
 	* Release 1.10.0
 
