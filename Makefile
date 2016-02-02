@@ -1,4 +1,4 @@
-.PHONY: clean remote-load
+.PHONY: clean remote-load load reload
 
 INSTPREFIX=
 VARIANT=targeted
@@ -8,10 +8,22 @@ MANCHAPTER=Foreman
 TMPDIR=local-tmp-foreman
 
 ifndef DISTRO
-$(error Set the DISTRO variable e.g. rhel7 or fedora21)
+$(error *** Set the DISTRO variable e.g. rhel7 or fedora21 ***)
+endif
+
+ifneq ("$(wildcard /usr/share/selinux/devel/include/*/docker.if)","")
+export M4PARAM += -D has_docker
+else
+ifneq ($(DISTRO),rhel6)
+$(error *** Interface docker.if not present, cannot continue ***)
+endif
 endif
 
 all: policies all-data
+
+load: \
+	foreman.pp.load.tmp \
+	foreman-proxy.pp.load.tmp
 
 policies: \
 	foreman.pp.bz2 \
@@ -62,11 +74,19 @@ foreman-proxy-selinux-disable: common/selinux-disable.sh
 	bash $< "foreman-proxy" > $@
 
 %.pp: %.te
-	-mkdir ${TMPDIR} || rm -rf ${TMPDIR}/*
-	cp $< ${<:.te=.fc} $< ${<:.te=.if} ${TMPDIR}/
+	-rm -rf ${TMPDIR} 2>/dev/null
+	-mkdir ${TMPDIR} 2>/dev/null
+	cp $< ${<:.te=.fc} ${<:.te=.if} ${TMPDIR}/
 	sed -i 's/@@VERSION@@/${VERSION}/' ${TMPDIR}/*.te
-	make -C ${TMPDIR} -f /usr/share/selinux/devel/Makefile NAME=${VARIANT} DISTRO=$(DISTRO)
+	$(MAKE) -C ${TMPDIR} -f /usr/share/selinux/devel/Makefile NAME=${VARIANT} DISTRO=$(DISTRO)
 	mv ${TMPDIR}/$@ .
+
+%.pp.load.tmp: %.pp
+	$(info ************ LOADING MODULE $< ************)
+	semodule -i $<
+	touch $@
+
+reload: clean load
 
 %.pp.bz2: %.pp
 	bzip2 -c9 ${@:.bz2=} > $@
@@ -98,10 +118,10 @@ consolidate-installation:
 remote-load:
 ifdef HOST
 	-rsync -qrav . --delete -e ssh --exclude .git ${HOST}:${TMPDIR}/
-	ssh ${HOST} 'cd ${TMPDIR} && sed -i s/@@VERSION@@/${VERSION}/ *.te && make -f /usr/share/selinux/devel/Makefile load DISTRO=${DISTRO}'
+	ssh ${HOST} 'cd ${TMPDIR} && sed -i s/@@VERSION@@/${VERSION}/ *.te && make reload DISTRO=${DISTRO}'
 else
 	$(error You need to define your remote ssh hostname as HOST)
 endif
 
 clean:
-	rm -rf *.pp *.pp.bz2 tmp/ local-tmp/ *.8 foreman-*-selinux-enable foreman-*-selinux-disable
+	rm -rf *.pp* *.pp.bz2 tmp/ local-tmp/ *.8 foreman-*-selinux-enable foreman-*-selinux-disable
