@@ -2,8 +2,7 @@ TAGS
 pkg/
 tmp/
 local-tmp/
-*.pp
-*.pp.bz2
+*.pp*
 *.pod
 *.8
 foreman-proxy-selinux-enable
