@@ -1,3 +1,9 @@
+2016-02-23	Dominic Cleal <dominic@cleal.org>
+	* Release 1.10.2
+
+2016-02-23	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #13041 - passenger var context fix
+
 2016-01-20	Dominic Cleal <dcleal@redhat.com>
 	* Release 1.10.1
 
