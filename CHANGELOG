@@ -1,3 +1,12 @@
+2016-04-19	Dominic Cleal <dominic@cleal.org>
+	* Release 1.11.1
+
+2016-04-18	Lukas Zapletal <lzap+git@redhat.com>
+	* fixes #13502 - introduced has_docker definition
+
+2016-03-31	Dominic Cleal <dominic@cleal.org>
+	* Release 1.11.0
+
 2016-03-22	Dominic Cleal <dominic@cleal.org>
 	* Release 1.11.0-RC3
 
