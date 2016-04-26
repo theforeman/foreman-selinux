@@ -13,15 +13,18 @@
   /etc/rc.d/init.d/foreman* \
   /etc/logrotate.d/foreman* \
   /etc/cron.d/foreman* \
-  /usr/lib/ruby/gems/1.8/gems/passenger-* \
-  /usr/lib64/gems/ruby/passenger-*/agents \
-  /usr/lib64/ruby/site_ruby/1.8/x86_64-linux/agents \
+  /usr/lib{64,}/ruby/gems/1.8/gems/passenger-* \
+  /usr/lib{64,}/gems/ruby/passenger-*/agents \
+  /usr/lib{64,}/ruby/site_ruby/1.8/x86_64-linux/agents \
+  /usr/share/passenger/helper-scripts \
+  /usr/lib{64,}exec/passenger \
   /var/run/rubygem-passenger
 
 # relabel SCL mod_passenger and foreman plugins if SCL is found
 [ -d /opt/theforeman/tfm/ ] && /sbin/restorecon -ri $* \
   /opt/theforeman/tfm/root/usr/share/gems/gems/passenger-* \
-  /opt/theforeman/tfm/root/usr/lib64/gems/exts/passenger-*/agents \
+  /opt/theforeman/tfm/root/usr/lib{64,}/gems/exts/passenger-*/agents \
+  /opt/theforeman/tfm/root/usr/lib{64,}/gems/ruby/passenger-*/agents \
   /opt/theforeman/tfm/root/usr/share/gems/gems/foreman*
 
 exit 0
