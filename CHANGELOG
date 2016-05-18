@@ -1,3 +1,10 @@
+2016-05-18	Dominic Cleal <dominic@cleal.org>
+	* Release 1.11.2
+
+2016-05-16	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #10443 - added OpenStack nova rules
+	* Fixes #14811 - passenger paths for EPEL7 fixed
+
 2016-04-19	Dominic Cleal <dominic@cleal.org>
 	* Release 1.11.1
 
