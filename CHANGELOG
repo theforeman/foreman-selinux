@@ -1,3 +1,9 @@
+2016-05-20	Dominic Cleal <dominic@cleal.org>
+	* Release 1.10.4
+
+2016-05-19	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #14811 - passenger paths for EPEL7 fixed
+
 2016-03-30	Dominic Cleal <dominic@cleal.org>
 	* Release 1.10.3
 
