@@ -404,6 +404,13 @@ optional_policy(`
     ')
 ')
 
+# Katello installer configures Pulp to listen on port 5000
+ifdef(`distro_rhel6', `
+    corenet_tcp_bind_commplex_port(passenger_t)
+',`
+    corenet_tcp_bind_commplex_main_port(passenger_t)
+')
+
 ######################################
 #
 # Foreman Bootdisk plugin
