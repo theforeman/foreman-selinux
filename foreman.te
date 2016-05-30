@@ -440,3 +440,6 @@ typealias bin_t alias foreman_hook_t;
 # the plugin daemon uses daemon gem for the backround job
 type foreman_tasks_exec_t;
 init_daemon_domain(passenger_t, foreman_tasks_exec_t)
+
+# foreman-tasks does connect to AMQP service
+corenet_tcp_connect_amqp_port(passenger_t)
