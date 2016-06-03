@@ -1,3 +1,19 @@
+2016-06-03	Dominic Cleal <dominic@cleal.org>
+	* Release 1.12.0-RC1
+
+2016-05-04	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #9126 - moved Katello policy to a separate repo
+
+2016-05-03	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #10443 - added OpenStack nova rules
+	* Fixes #14811 - passenger paths for EPEL7 fixed
+
+2016-03-17	Lukas Zapletal <lzap+git@redhat.com>
+	* fixes #13502 - introduced has_docker definition
+
+2016-02-19	Dominic Cleal <dominic@cleal.org>
+	* Bump version to 1.12-develop
+
 2016-02-08	Lukas Zapletal <lzap+git@redhat.com>
 	* Fixes #13041 - passenger var context fix
 
