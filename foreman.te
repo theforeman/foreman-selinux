@@ -321,6 +321,7 @@ tunable_policy(`passenger_can_connect_openstack',`
         # nova (compute service)
         corenet_tcp_connect_osapi_compute_port(passenger_t)
     ')
+    corenet_tcp_connect_neutron_port(passenger_t)
 ')
 
 #######################################
