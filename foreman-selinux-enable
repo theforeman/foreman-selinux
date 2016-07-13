@@ -5,7 +5,7 @@ TMP=$(mktemp -t foreman-selinux-enable.XXXXXXXXXX)
 trap "rm -rf '$TMP'" EXIT INT TERM
 
 is_redhat_6() {
-  test x$(rpm -q --whatprovides redhat-release --qf '%{version}') = x6
+  [[ $(rpm -q --whatprovides redhat-release --qf '%{version}') == 6* ]]
 }
 
 # Load or upgrade foreman policy and set booleans.
