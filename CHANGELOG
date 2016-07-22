@@ -1,3 +1,9 @@
+2016-07-22	Dominic Cleal <dominic@cleal.org>
+	* Release 1.12.1
+
+2016-07-22	Lukáš Zapletal <lzap@redhat.com>
+	* Fixes #15639 - OpenStack port assigned on RHEL6 (#58)
+
 2016-07-08	Dominic Cleal <dominic@cleal.org>
 	* Release 1.12.0
 
