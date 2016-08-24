@@ -1,3 +1,9 @@
+2016-08-24	Dominic Cleal <dominic@cleal.org>
+	* Release 1.12.2
+
+2016-08-23	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #15640 - added neutron port
+
 2016-07-22	Dominic Cleal <dominic@cleal.org>
 	* Release 1.12.1
 
