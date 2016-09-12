@@ -1,3 +1,15 @@
+2016-09-12	Dominic Cleal <dominic@cleal.org>
+	* Release 1.13.0-RC1
+
+2016-08-10	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #15640 - added neutron port
+
+2016-07-13	Lukáš Zapletal <lzap@redhat.com>
+	* Fixes #15639 - OpenStack port assigned on RHEL6 (#58)
+
+2016-05-31	Dominic Cleal <dominic@cleal.org>
+	* Bump version to 1.13-develop
+
 2016-05-04	Lukas Zapletal <lzap+git@redhat.com>
 	* Fixes #9126 - moved Katello policy to a separate repo
 
