@@ -315,13 +315,19 @@ tunable_policy(`passenger_can_connect_openstack',`
         corenet_tcp_connect_commplex_port(passenger_t)
         # all other ports not yet defined on rhel6
         allow passenger_t foreman_osapi_compute_port_t:tcp_socket name_connect;
+        # neutron (network service)
+        gen_require(`
+            type quantum_port_t;
+        ')
+        allow passenger_t quantum_port_t:tcp_socket name_connect;
     ',`
         # keystone (identity service)
         corenet_tcp_connect_commplex_main_port(passenger_t)
         # nova (compute service)
         corenet_tcp_connect_osapi_compute_port(passenger_t)
+        # neutron (network service)
+        corenet_tcp_connect_neutron_port(passenger_t)
     ')
-    corenet_tcp_connect_neutron_port(passenger_t)
 ')
 
 #######################################
