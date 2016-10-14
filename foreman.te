@@ -240,6 +240,9 @@ optional_policy(`
 
 tunable_policy(`httpd_run_foreman', `
     allow httpd_t passenger_tmp_t:sock_file write;
+    manage_files_pattern(httpd_t, foreman_log_t, foreman_log_t)
+    manage_dirs_pattern(httpd_t, foreman_var_run_t, foreman_var_run_t)
+    manage_files_pattern(httpd_t, foreman_var_run_t, forman_var_run_t)
 ')
 
 tunable_policy(`httpd_run_foreman', `
