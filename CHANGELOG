@@ -1,3 +1,9 @@
+2016-10-26	Dominic Cleal <dominic@cleal.org>
+	* Release 1.13.1
+
+2016-10-25	Dominic Cleal <dominic@cleal.org>
+	* fixes #16492 - add Gemfile to install rake (#60)
+
 2016-10-05	Dominic Cleal <dominic@cleal.org>
 	* Release 1.13.0
 
