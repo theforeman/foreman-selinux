@@ -13,10 +13,10 @@ endif
 
 ifneq ("$(wildcard /usr/share/selinux/devel/include/*/docker.if)","")
 export M4PARAM += -D has_docker
-else
-ifneq ($(DISTRO),rhel6)
-$(error *** Interface docker.if not present, cannot continue ***)
-endif
+else ifneq ("$(wildcard /usr/share/selinux/devel/include/*/container.if)","")
+export M4PARAM += -D has_docker
+else ifneq ($(DISTRO),rhel6)
+$(error *** Interface container.if or docker.if not present, cannot continue ***)
 endif
 
 all: policies all-data
