@@ -1,3 +1,7 @@
+2016-11-25	Dominic Cleal <dominic@cleal.org>
+	* Release 1.13.2
+	* fixes #17324 - set has_docker when container.if is found
+
 2016-10-26	Dominic Cleal <dominic@cleal.org>
 	* Release 1.13.1
 
