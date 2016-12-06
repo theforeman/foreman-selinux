@@ -1,3 +1,21 @@
+2016-12-06	Dominic Cleal <dominic@cleal.org>
+	* Bump version to 1.15-develop
+
+2016-11-25	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #17460 - added puppet4 node.rb context
+
+2016-11-24	Dominic Cleal <dominic@cleal.org>
+	* fixes #17324 - set has_docker when container.if is found
+
+2016-10-20	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #16263 - fixed corenet_tcp_connect_neutron_port for 6.5
+
+2016-09-09	Dominic Cleal <dominic@cleal.org>
+	* fixes #16492 - add Gemfile to install rake (#60)
+
+2016-09-07	Dominic Cleal <dominic@cleal.org>
+	* Bump version to 1.14-develop
+
 2016-08-10	Lukas Zapletal <lzap+git@redhat.com>
 	* Fixes #15640 - added neutron port
 
