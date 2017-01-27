@@ -396,9 +396,6 @@ read_files_pattern(websockify_t, puppet_var_lib_t, puppet_var_lib_t)
 # Docker
 #
 
-type docker_port_t;
-corenet_port(docker_port_t)
-
 tunable_policy(`passenger_can_connect_docker_tcp',`
     allow passenger_t docker_port_t:tcp_socket name_connect;
 ')
