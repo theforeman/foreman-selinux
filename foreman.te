@@ -265,6 +265,8 @@ optional_policy(`
         read_files_pattern(httpd_t, puppet_etc_t, puppet_etc_t)
         read_lnk_files_pattern(httpd_t, puppet_etc_t, puppet_etc_t)
         allow httpd_t puppet_port_t:tcp_socket name_connect;
+        # http://projects.theforeman.org/issues/9805
+        selinux_validate_context(passenger_t)
     ')
 ')
 
