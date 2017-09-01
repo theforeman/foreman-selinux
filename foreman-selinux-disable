@@ -8,8 +8,9 @@ for selinuxvariant in targeted
 do
   if /usr/sbin/semodule -s $selinuxvariant -l >/dev/null; then
     # Remove all user defined ports (including the default one)
+    # (docker and elastic can be removed in future release)
     /usr/sbin/semanage port -E | \
-      grep -E '(docker|foreman_osapi_compute)_port_t' | \
+      grep -E '(elasticsearch|docker|foreman_osapi_compute)_port_t' | \
       sed s/-a/-d/g | \
       /usr/sbin/semanage -S $selinuxvariant -i -
     # Unload policy
