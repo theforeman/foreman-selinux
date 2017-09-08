@@ -21,13 +21,11 @@ do
   if /usr/sbin/semodule -s $selinuxvariant -l >/dev/null; then
     /usr/sbin/semanage port -E > $TMP_PORTS
 
-    # Remove previously defined elasticsearch_port_t
+    # Remove previously defined docker_port_t
     # (this can be removed in future release)
-    grep elasticsearch_port_t $TMP_PORTS | sed s/-a/-d/g >> $TMP_EXEC_BEFORE
+    grep docker_port_t $TMP_PORTS | sed s/-a/-d/g >> $TMP_EXEC_BEFORE
 
     echo "boolean -m --on httpd_setrlimit" >> $TMP_EXEC_AFTER
-
-    grep -q docker_port_t $TMP_PORTS || echo "port -a -t docker_port_t -p tcp 2375-2376" >> $TMP_EXEC_AFTER
 
     if is_redhat_6; then
       grep -q foreman_osapi_compute_port_t $TMP_PORTS || \
