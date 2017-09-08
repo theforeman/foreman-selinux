@@ -20,19 +20,6 @@ policy_module(foreman, @@VERSION@@)
 
 #######################################
 #
-# Definitions
-#
-# This defines set of special (unused) types which are used for easier detection
-# what definitions the policy was compiled with. Use seinfo -tTYPE to find
-# particular flag.
-#
-
-ifdef(`has_docker', `
-    type foreman_has_docker_defined_t;
-')
-
-#######################################
-#
 # Declarations
 #
 # Note: Some mod_passanger 4.0+ processes are running under httpd_t domain,
@@ -393,21 +380,18 @@ read_files_pattern(websockify_t, puppet_var_lib_t, puppet_var_lib_t)
 
 ######################################
 #
-# Docker
+# Container / Docker
 #
 
-type docker_port_t;
-corenet_port(docker_port_t)
-
-tunable_policy(`passenger_can_connect_docker_tcp',`
-    allow passenger_t docker_port_t:tcp_socket name_connect;
+optional_policy(`
+    tunable_policy(`passenger_can_connect_docker_tcp',`
+        container_stream_connect(passenger_t)
+    ')
 ')
 
 optional_policy(`
     tunable_policy(`passenger_can_connect_docker_unix',`
-        ifdef(`has_docker', `
-            docker_stream_connect(passenger_t)
-        ')
+        container_spc_stream_connect(passenger_t)
     ')
 ')
 
