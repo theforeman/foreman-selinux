@@ -402,7 +402,14 @@ optional_policy(`
             container_spc_stream_connect(passenger_t)
         ')
         ifdef(`has_docker', `
-            docker_spc_stream_connect(passenger_t)
+            #docker_spc_stream_connect(passenger_t)
+            gen_require(`
+                type spc_t, spc_var_run_t;
+                attribute pidfile;
+            ')
+            files_search_pids(passenger_t)
+            allow passenger_t pidfile:sock_file write_sock_file_perms;
+            allow passenger_t spc_t:unix_stream_socket connectto;
         ')
     ')
 ')
