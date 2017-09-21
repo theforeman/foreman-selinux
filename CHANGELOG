@@ -1,3 +1,9 @@
+2017-09-21	Lukáš Zapletal <lzap@redhat.com>
+	* Fixes #21052 - compile policy with docker macros
+
+2017-09-20	Daniel Lobato Garcia <me@daniellobato.me>
+	* Release 1.16.0-RC1
+
 2017-09-08	Lukáš Zapletal <lzap@redhat.com>
 	* Fixes #18284 - removed docker_t port
 
