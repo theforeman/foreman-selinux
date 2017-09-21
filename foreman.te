@@ -387,13 +387,23 @@ read_files_pattern(websockify_t, puppet_var_lib_t, puppet_var_lib_t)
 
 optional_policy(`
     tunable_policy(`passenger_can_connect_docker_tcp',`
-        container_stream_connect(passenger_t)
+        ifdef(`has_container', `
+            container_stream_connect(passenger_t)
+        ')
+        ifdef(`has_docker', `
+            docker_stream_connect(passenger_t)
+        ')
     ')
 ')
 
 optional_policy(`
     tunable_policy(`passenger_can_connect_docker_unix',`
-        container_spc_stream_connect(passenger_t)
+        ifdef(`has_container', `
+            container_spc_stream_connect(passenger_t)
+        ')
+        ifdef(`has_docker', `
+            docker_spc_stream_connect(passenger_t)
+        ')
     ')
 ')
 
