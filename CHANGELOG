@@ -1,3 +1,6 @@
+2017-10-06	Daniel Lobato Garcia <me@daniellobato.me>
+	* Release 1.15.5
+
 2017-10-04	Lukas Zapletal <lzap+git@redhat.com>
 	* Refs #21052 - workaround missing docker macro
 
