@@ -1,8 +1,9 @@
+2017-09-21	Daniel Lobato Garcia <me@daniellobato.me>
+	* Release 1.16.0-RC1 v3
+	* Release 1.16.0-RC1
+
 2017-09-21	Lukas Zapletal <lzap+git@redhat.com>
 	* Refs #21052 - workaround missing docker macro
-
-2017-09-21	Daniel Lobato Garcia <me@daniellobato.me>
-	* Release 1.16.0-RC1
 
 2017-09-21	Lukáš Zapletal <lzap@redhat.com>
 	* Fixes #21052 - compile policy with docker macros
