@@ -6,10 +6,6 @@ TMP_EXEC_AFTER=$(mktemp -t foreman-selinux-enable.XXXXX)
 TMP_PORTS=$(mktemp -t foreman-selinux-enable.XXXXX)
 trap "rm -rf '$TMP_EXEC_BEFORE' '$TMP_EXEC_AFTER' '$TMP_PORTS'" EXIT INT TERM
 
-is_redhat_6() {
-  [[ $(rpm -q --whatprovides redhat-release --qf '%{version}') == 6* ]]
-}
-
 # Load or upgrade foreman policy and set booleans.
 #
 # Dependant booleans must be managed in a separate transaction.
@@ -21,16 +17,16 @@ do
   if /usr/sbin/semodule -s $selinuxvariant -l >/dev/null; then
     /usr/sbin/semanage port -E > $TMP_PORTS
 
-    # Remove previously defined docker_port_t
-    # (this can be removed in future release)
+    # Remove previously defined conflicting docker_port_t (this can be removed in future release)
     grep docker_port_t $TMP_PORTS | sed s/-a/-d/g >> $TMP_EXEC_BEFORE
 
-    echo "boolean -m --on httpd_setrlimit" >> $TMP_EXEC_AFTER
+    # Assign docker/container port only and only if it's undefined
+    grep -qE 'tcp 2375' $TMP_PORTS || \
+      echo "port -a -t foreman_container_port_t -p tcp 2375" >> $TMP_EXEC_AFTER
+    grep -qE 'tcp 2376' $TMP_PORTS || \
+      echo "port -a -t foreman_container_port_t -p tcp 2376" >> $TMP_EXEC_AFTER
 
-    if is_redhat_6; then
-      grep -q foreman_osapi_compute_port_t $TMP_PORTS || \
-        echo "port -a -t foreman_osapi_compute_port_t -p tcp 8774" >> $TMP_EXEC_AFTER
-    fi
+    echo "boolean -m --on httpd_setrlimit" >> $TMP_EXEC_AFTER
 
     # Execute port management commands and load policy
     test -s $TMP_EXEC_BEFORE && /usr/sbin/semanage -S $selinuxvariant -i $TMP_EXEC_BEFORE

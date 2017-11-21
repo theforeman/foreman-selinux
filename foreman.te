@@ -64,17 +64,10 @@ gen_tunable(passenger_can_connect_all, false)
 
 ## <desc>
 ## <p>
-## Determine whether passenger can connect to Docker via TCP
-## </p>
-## </desc>
-gen_tunable(passenger_can_connect_docker_tcp, true)
-
-## <desc>
-## <p>
 ## Determine whether passenger can connect to Docker via local socket
 ## </p>
 ## </desc>
-gen_tunable(passenger_can_connect_docker_unix, true)
+gen_tunable(passenger_can_connect_container_unix, true)
 
 ## <desc>
 ## <p>
@@ -131,6 +124,9 @@ corenet_port(foreman_proxy_port_t)
 
 type foreman_osapi_compute_port_t;
 corenet_port(foreman_osapi_compute_port_t)
+
+type foreman_container_port_t;
+corenet_port(foreman_container_port_t)
 
 require{
     type bin_t;
@@ -385,23 +381,16 @@ read_files_pattern(websockify_t, puppet_var_lib_t, puppet_var_lib_t)
 # Container / Docker
 #
 
-optional_policy(`
-    tunable_policy(`passenger_can_connect_docker_tcp',`
-        ifdef(`has_container', `
-            container_stream_connect(passenger_t)
-        ')
-        ifdef(`has_docker', `
-            docker_stream_connect(passenger_t)
-        ')
-    ')
-')
+allow passenger_t foreman_container_port_t:tcp_socket name_connect;
 
 optional_policy(`
-    tunable_policy(`passenger_can_connect_docker_unix',`
+    tunable_policy(`passenger_can_connect_container_unix',`
         ifdef(`has_container', `
+            container_stream_connect(passenger_t)
             container_spc_stream_connect(passenger_t)
         ')
         ifdef(`has_docker', `
+            docker_stream_connect(passenger_t)
             #docker_spc_stream_connect(passenger_t)
             gen_require(`
                 type spc_t, spc_var_run_t;
