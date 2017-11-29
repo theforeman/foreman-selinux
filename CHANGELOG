@@ -1,3 +1,9 @@
+2017-11-21	Lukas Zapletal <lzap+git@redhat.com>
+	* Refs #18284 - added foreman_container_port_t
+
+2017-10-24	Daniel Lobato Garcia <me@daniellobato.me>
+	* Release 1.16.0-RC2
+
 2017-09-21	Daniel Lobato Garcia <me@daniellobato.me>
 	* Release 1.16.0-RC1 v3
 	* Release 1.16.0-RC1
