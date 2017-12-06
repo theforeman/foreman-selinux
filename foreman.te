@@ -85,6 +85,20 @@ gen_tunable(passenger_can_spawn_ssh, true)
 
 ## <desc>
 ## <p>
+## Determine whether passenger can connect to http_port_t when preloading app.
+## </p>
+## </desc>
+gen_tunable(passenger_can_connect_http, true)
+
+## <desc>
+## <p>
+## Determine whether passenger can connect to puppet_port_t when preloading app.
+## </p>
+## </desc>
+gen_tunable(passenger_can_connect_puppetmaster, true)
+
+## <desc>
+## <p>
 ## Determine whether passenger can connect to local or remote libvirt.
 ## </p>
 ## </desc>
@@ -247,9 +261,22 @@ optional_policy(`
         # puppet_port_t before passenger is initialized.
         read_files_pattern(httpd_t, puppet_etc_t, puppet_etc_t)
         read_lnk_files_pattern(httpd_t, puppet_etc_t, puppet_etc_t)
-        allow httpd_t puppet_port_t:tcp_socket name_connect;
         # http://projects.theforeman.org/issues/9805
         selinux_validate_context(passenger_t)
+    ')
+')
+
+optional_policy(`
+    tunable_policy(`passenger_can_connect_puppetmaster', `
+        corenet_tcp_connect_puppet_port(httpd_t)
+        corenet_tcp_connect_puppet_port(passenger_t)
+    ')
+')
+
+optional_policy(`
+    tunable_policy(`passenger_can_connect_http', `
+        corenet_tcp_connect_http_port(httpd_t)
+        corenet_tcp_connect_http_port(passenger_t)
     ')
 ')
 
