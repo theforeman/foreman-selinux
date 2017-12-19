@@ -142,6 +142,12 @@ hostname_exec(foreman_proxy_t)
 puppet_read_lib(foreman_proxy_t)
 miscfiles_read_generic_certs(foreman_proxy_t)
 
+# Logrotate in RHEL7 does not allow signals, RHBZ#1527522
+gen_require(`
+    type logrotate_t;
+')
+systemd_config_generic_services(logrotate_t)
+
 # generic support for plugins
 # executes sudo
 optional_policy(`

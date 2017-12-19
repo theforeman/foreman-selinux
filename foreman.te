@@ -236,6 +236,12 @@ miscfiles_manage_generic_cert_files(passenger_t)
 # /tmp/passenger-native-support-XXXXXX/passenger_native_support.so
 can_exec(passenger_t, passenger_tmp_t)
 
+# Logrotate in RHEL7 does not allow signals, RHBZ#1527522
+gen_require(`
+    type logrotate_t;
+')
+systemd_config_generic_services(logrotate_t)
+
 optional_policy(`
     tunable_policy(`passenger_run_foreman', `
         admin_pattern(httpd_t, foreman_lib_t, foreman_lib_t)
