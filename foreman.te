@@ -466,3 +466,14 @@ typealias bin_t alias foreman_hook_t;
 # the plugin daemon uses daemon gem for the backround job
 type foreman_tasks_exec_t;
 init_daemon_domain(passenger_t, foreman_tasks_exec_t)
+
+######################################
+#
+# Foreman Memcache plugin
+#
+
+optional_policy(`
+    tunable_policy(`passenger_run_foreman', `
+        corenet_tcp_connect_memcache_port(passenger_t)
+    ')
+')
