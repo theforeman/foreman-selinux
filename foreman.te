@@ -64,6 +64,13 @@ gen_tunable(passenger_can_connect_all, false)
 
 ## <desc>
 ## <p>
+## Determine whether websockify can connect to all TCP ports.
+## </p>
+## </desc>
+gen_tunable(websockify_can_connect_all, false)
+
+## <desc>
+## <p>
 ## Determine whether passenger can connect to Docker via local socket
 ## </p>
 ## </desc>
@@ -409,6 +416,10 @@ sysnet_read_config(websockify_t)
 abrt_stream_connect(websockify_t)
 files_search_var_lib(websockify_t)
 read_files_pattern(websockify_t, puppet_var_lib_t, puppet_var_lib_t)
+
+tunable_policy(`websockify_can_connect_all',`
+    corenet_tcp_connect_all_ports(websockify_t)
+')
 
 ######################################
 #
