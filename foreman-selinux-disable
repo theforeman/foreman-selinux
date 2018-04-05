@@ -1,6 +1,11 @@
 #!/bin/bash
 set +e
 
+LIBEXEC_DIR=/usr/libexec/foreman-selinux
+
+# Run hooks
+find ${LIBEXEC_DIR} -name \*-before-disable.sh -type f -executable -exec /usr/bin/bash '{}' \;
+
 # Unload foreman policy and set booleans. Dependant booleans must be managed in
 # a separate transaction. Do not forget to edit countepart file
 # (enable/disable) when updating this script.
@@ -17,3 +22,8 @@ do
     /usr/sbin/semodule -s $selinuxvariant -r foreman
   fi
 done
+
+# Run hooks
+find ${LIBEXEC_DIR} -name \*-after-disable.sh -type f -executable -exec /usr/bin/bash '{}' \;
+
+exit 0
