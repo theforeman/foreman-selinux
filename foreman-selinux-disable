@@ -2,6 +2,7 @@
 set +e
 
 LIBEXEC_DIR=/usr/libexec/foreman-selinux
+LOG=/var/log/foreman-selinux-install.log
 
 # Run hooks
 find ${LIBEXEC_DIR} -name \*-before-disable.sh -type f -executable -exec /usr/bin/bash '{}' \;
@@ -12,11 +13,15 @@ find ${LIBEXEC_DIR} -name \*-before-disable.sh -type f -executable -exec /usr/bi
 for selinuxvariant in targeted
 do
   if /usr/sbin/semodule -s $selinuxvariant -l >/dev/null; then
+    # Create log entry
+    echo "$(date) $0" >> $LOG
+
     # Remove all user defined ports (including the default one)
     # (docker and elastic can be removed in future release)
     /usr/sbin/semanage port -E | \
       grep -E '(elasticsearch|docker|foreman_.*)_port_t' | \
       sed s/-a/-d/g | \
+      tee -a $LOG | \
       /usr/sbin/semanage -S $selinuxvariant -i -
     # Unload policy
     /usr/sbin/semodule -s $selinuxvariant -r foreman
