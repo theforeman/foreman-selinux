@@ -5,6 +5,10 @@ TMP_EXEC_BEFORE=$(mktemp -t foreman-selinux-enable.XXXXX)
 TMP_EXEC_AFTER=$(mktemp -t foreman-selinux-enable.XXXXX)
 TMP_PORTS=$(mktemp -t foreman-selinux-enable.XXXXX)
 trap "rm -rf '$TMP_EXEC_BEFORE' '$TMP_EXEC_AFTER' '$TMP_PORTS'" EXIT INT TERM
+LIBEXEC_DIR=/usr/libexec/foreman-selinux
+
+# Run hooks
+find ${LIBEXEC_DIR} -name \*-before-disable.sh -type f -executable -exec /usr/bin/bash '{}' \;
 
 # Load or upgrade foreman policy and set booleans.
 #
@@ -34,3 +38,8 @@ do
     test -s $TMP_EXEC_AFTER && /usr/sbin/semanage -S $selinuxvariant -i $TMP_EXEC_AFTER
   fi
 done
+
+# Run hooks
+find ${LIBEXEC_DIR} -name \*-after-enable.sh -type f -executable -exec /usr/bin/bash '{}' \;
+
+exit 0
