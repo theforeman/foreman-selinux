@@ -220,6 +220,9 @@ optional_policy(`
         # Allow Foreman to do DNS queries via Ruby stdlib net package
         # http://projects.theforeman.org/issues/8030
         corenet_udp_bind_generic_port(passenger_t)
+
+        # Templates plugin manages symlinks in tmp dir
+        manage_lnk_files_pattern(passenger_t, passenger_tmp_t, passenger_tmp_t)
     ')
 ')
 
@@ -236,7 +239,11 @@ optional_policy(`
 ')
 
 tunable_policy(`httpd_run_foreman', `
-    allow httpd_t passenger_tmp_t:sock_file write;
+    manage_dirs_pattern(httpd_t, passenger_tmp_t, passenger_tmp_t)
+    manage_files_pattern(httpd_t, passenger_tmp_t, passenger_tmp_t)
+    manage_sock_files_pattern(httpd_t, passenger_tmp_t, passenger_tmp_t)
+    # Templates plugin manages symlinks in tmp dir
+    manage_lnk_files_pattern(httpd_t, passenger_tmp_t, passenger_tmp_t)
 ')
 
 tunable_policy(`httpd_run_foreman', `
