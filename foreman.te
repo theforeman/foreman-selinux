@@ -242,6 +242,14 @@ optional_policy(`
         ifdef(`distro_rhel7', `
             allow passenger_t self:capability2 block_suspend;
         ')
+        apache_search_config(passenger_t)
+        fs_list_hugetlbfs(passenger_t)
+        fs_list_pstore(passenger_t)
+        fs_read_configfs_dirs(passenger_t)
+        fs_search_cgroup_dirs(passenger_t)
+        fs_search_fusefs(passenger_t)
+        fs_search_nfs(passenger_t)
+        storage_getattr_fixed_disk_dev(passenger_t)
     ')
 ')
 
@@ -284,6 +292,8 @@ optional_policy(`
     tunable_policy(`passenger_can_connect_puppetmaster', `
         corenet_tcp_connect_puppet_port(httpd_t)
         corenet_tcp_connect_puppet_port(passenger_t)
+        corenet_tcp_connect_soundd_port(httpd_t)
+        corenet_tcp_connect_soundd_port(passenger_t)
     ')
 ')
 
