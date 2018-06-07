@@ -1,3 +1,11 @@
+2018-05-30	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #22317 - introduced websockify_can_connect_all
+	* Fixes #23619 - disable script removes foreman ports
+	* Fixes #23700 - passenger/http can manage symlinks
+
+2018-01-17	Sean O'Keeffe <seanokeeffe797@gmail.com>
+	* Fixes #9407 - add Foreman Memcache support
+
 2018-01-08	Lukas Zapletal <lzap+git@redhat.com>
 	* Bump to version 1.18-develop
 
