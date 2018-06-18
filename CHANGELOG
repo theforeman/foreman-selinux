@@ -1,3 +1,6 @@
+2018-06-07	Ondrej Prazak <oprazak@redhat.com>
+	* Release 1.18.0-RC1
+
 2018-05-30	Lukas Zapletal <lzap+git@redhat.com>
 	* Fixes #22317 - introduced websockify_can_connect_all
 	* Fixes #23619 - disable script removes foreman ports
