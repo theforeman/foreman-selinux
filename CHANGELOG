@@ -1,3 +1,15 @@
+2018-06-29	Dirk Goetz <dirk.goetz@netways.de>
+	* Fixes #11572 - add support for spool files
+
+2018-06-28	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #23127 - docker upgrade path is correct
+
+2018-06-01	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #23134 - support for plugin hooks
+
+2018-05-31	Ondrej Prazak <oprazak@redhat.com>
+	* Bump version to 1.19.0-develop
+
 2018-05-30	Lukas Zapletal <lzap+git@redhat.com>
 	* Fixes #22317 - introduced websockify_can_connect_all
 	* Fixes #23619 - disable script removes foreman ports
