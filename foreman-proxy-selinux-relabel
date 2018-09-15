@@ -3,7 +3,9 @@
 LIBEXEC_DIR=/usr/libexec/foreman-selinux
 
 # Run hooks
-find ${LIBEXEC_DIR} -name \*-before-relabel.sh -type f -executable -exec /usr/bin/bash '{}' \;
+if [[ -d $LIBEXEC_DIR ]] ; then
+	find ${LIBEXEC_DIR} -name \*-before-relabel.sh -type f -executable -exec /usr/bin/bash '{}' \;
+fi
 
 /sbin/restorecon -ri $* \
   /usr/share/foreman-proxy/bin/smart-proxy \
@@ -14,6 +16,8 @@ find ${LIBEXEC_DIR} -name \*-before-relabel.sh -type f -executable -exec /usr/bi
   /var/run/foreman-proxy
 
 # Run hooks
-find ${LIBEXEC_DIR} -name \*-after-relabel.sh -type f -executable -exec /usr/bin/bash '{}' \;
+if [[ -d $LIBEXEC_DIR ]] ; then
+	find ${LIBEXEC_DIR} -name \*-after-relabel.sh -type f -executable -exec /usr/bin/bash '{}' \;
+fi
 
 exit 0
