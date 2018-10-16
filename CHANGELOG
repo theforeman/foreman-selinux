@@ -1,3 +1,15 @@
+2018-10-16	Tomer Brisker <tbrisker@gmail.com>
+	* Bump version to 1.21-develop
+
+2018-09-21	Ewoud Kohl van Wijngaarden <ewoud@kohlvanwijngaarden.nl>
+	* Fixes #24952 - Check if the directory exists before executing
+
+2018-08-01	Eric Helms <eric.d.helms@gmail.com>
+	* Generate source with the actual version specified in VERSION (#85)
+
+2018-07-17	Tomer Brisker <tbrisker@users.noreply.github.com>
+	* Bump version to 1.20-develop (#83)
+
 2018-06-29	Dirk Goetz <dirk.goetz@netways.de>
 	* Fixes #11572 - add support for spool files
 
