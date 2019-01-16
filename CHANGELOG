@@ -1,4 +1,10 @@
-2018-10-16	Tomer Brisker <tbrisker@gmail.com>
+2019-01-16	Tomer Brisker <tbrisker@gmail.com>
+	* Release 1.21.0-RC1
+
+2019-01-08	Ben Meekhof <bmeekhof@users.noreply.github.com>
+	* Fixes #25783: Allow websockify to read puppet_etc_t
+
+2018-10-17	Tomer Brisker <tbrisker@gmail.com>
 	* Bump version to 1.21-develop
 
 2018-09-21	Ewoud Kohl van Wijngaarden <ewoud@kohlvanwijngaarden.nl>
