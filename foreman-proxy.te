@@ -104,6 +104,9 @@ files_spool_filetrans(foreman_proxy_t, foreman_proxy_spool_t, { dir file })
 # starting via /bin/env
 corecmd_read_bin_symlinks(foreman_proxy_t)
 
+# FFI library callbacks - see RM#26520 for more info
+allow foreman_proxy_t self:process execmem;
+
 # ruby runtime
 corecmd_search_bin(foreman_proxy_t)
 corecmd_exec_bin(foreman_proxy_t)
