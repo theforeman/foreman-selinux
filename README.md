@@ -17,9 +17,14 @@ Make sure you provide the correct distribution. Possible values are:
 * fedoraN (defines m4 macro `distro_fedoraN`)
 * rhelN (defines m4 macro `distro_rhelN`)
 
-There's a Rake task to do this on remote system via ssh:
+There's a target to do compile and load policy on a remote system via ssh:
 
-    rake pkg:load host=my.host.lan distro=rhel7 name=foreman
+    make remote-load host=my.host.lan distro=rhel7 name=foreman
+
+Often it is necessary to relabel relevant files and directories:
+
+    ssh my.host.lan
+    my# ./foreman-selinux-relabel
 
 License
 -------

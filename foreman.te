@@ -191,6 +191,15 @@ optional_policy(`
     postgresql_stream_connect(passenger_t)
 ')
 
+# Allow Foreman to access log files (but not delete or truncate them). Ideally
+# only create and append should be allowed, however rake tasks also fall into
+# the same domain and those tasks often simply writes to log files.
+logging_search_logs(passenger_t)
+logging_list_logs(passenger_t)
+write_files_pattern(passenger_t, foreman_log_t, foreman_log_t)
+allow passenger_t foreman_log_t:dir { create_file_perms append_file_perms list_dir_perms search_dir_perms };
+allow passenger_t foreman_log_t:file { create_file_perms append_file_perms };
+
 # Allow Foreman to connect anywhere when bool is set
 tunable_policy(`passenger_can_connect_all',`
     corenet_tcp_connect_all_ports(passenger_t)
@@ -210,6 +219,18 @@ dev_read_sysfs(passenger_t)
 dev_search_sysfs(passenger_t)
 dev_read_rand(passenger_t)
 
+# Passenger 6 is setting socket context explicitly in
+# https://github.com/phusion/passenger/blob/master/src/agent/Core/CoreMain.cpp#L376-L406
+allow passenger_t self:process setsockcreate;
+
+# Passenger 6 reads and writes in /etc/pki/nssdb
+miscfiles_manage_cert_dirs(passenger_t)
+miscfiles_manage_generic_cert_files(passenger_t)
+
+# Passenger 6 compiles and executes during start file named
+# /tmp/passenger-native-support-XXXXXX/passenger_native_support.so
+can_exec(passenger_t, passenger_tmp_t)
+
 optional_policy(`
     tunable_policy(`passenger_run_foreman', `
         admin_pattern(httpd_t, foreman_lib_t, foreman_lib_t)
@@ -228,8 +249,7 @@ optional_policy(`
         # http://projects.theforeman.org/issues/8030
         corenet_udp_bind_generic_port(passenger_t)
 
-        # Templates plugin manages symlinks in tmp dir
-        manage_lnk_files_pattern(passenger_t, passenger_tmp_t, passenger_tmp_t)
+        admin_pattern(passenger_t, passenger_tmp_t, passenger_tmp_t)
     ')
 ')
 
@@ -246,18 +266,8 @@ optional_policy(`
 ')
 
 tunable_policy(`httpd_run_foreman', `
-    manage_dirs_pattern(httpd_t, passenger_tmp_t, passenger_tmp_t)
-    manage_files_pattern(httpd_t, passenger_tmp_t, passenger_tmp_t)
-    manage_sock_files_pattern(httpd_t, passenger_tmp_t, passenger_tmp_t)
-    # Templates plugin manages symlinks in tmp dir
-    manage_lnk_files_pattern(httpd_t, passenger_tmp_t, passenger_tmp_t)
-')
-
-tunable_policy(`httpd_run_foreman', `
-    manage_dirs_pattern(passenger_t, httpd_tmp_t, httpd_tmp_t)
-    manage_files_pattern(passenger_t, httpd_tmp_t, httpd_tmp_t)
-    manage_sock_files_pattern(passenger_t, httpd_tmp_t, httpd_tmp_t)
-    manage_files_pattern(passenger_t, foreman_log_t , foreman_log_t)
+    admin_pattern(httpd_t, passenger_tmp_t, passenger_tmp_t)
+    admin_pattern(passenger_t, httpd_tmp_t, httpd_tmp_t)
 ')
 
 optional_policy(`
