@@ -41,6 +41,8 @@
 /usr/lib/ruby/gems/1.8/gems/passenger-.*/helper-scripts/prespawn -- gen_context(system_u:object_r:passenger_exec_t,s0)
 /usr/share/passenger/helper-scripts/prespawn -- gen_context(system_u:object_r:passenger_exec_t,s0)
 
+/usr/lib6?4?/passenger/support-binaries/.* -- gen_context(system_u:object_r:passenger_exec_t,s0)
+
 /var/run/rubygem-passenger(.*)?         gen_context(system_u:object_r:passenger_var_run_t,s0)
 
 # Passenger SCL file contexts (/opt/*/root prefix is distribution equivalence)

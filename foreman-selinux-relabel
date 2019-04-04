@@ -17,6 +17,7 @@
   /usr/lib{64,}/gems/ruby/passenger-*/agents \
   /usr/lib{64,}/ruby/site_ruby/1.8/x86_64-linux/agents \
   /usr/share/passenger/helper-scripts \
+  /usr/lib{64,}/passenger/support-binaries \
   /usr/lib{64,}exec/passenger \
   /var/run/rubygem-passenger
 
