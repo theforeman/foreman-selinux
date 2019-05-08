@@ -247,6 +247,9 @@ tunable_policy(`foreman_proxy_manage_dns_nsupdate', `
 ')
 
 # DHCP PLUGIN
+ifndef(`distro_rhel6', `
+    auth_read_passwd(foreman_proxy_t)
+')
 tunable_policy(`foreman_proxy_manage_dhcp_generic', `
     # ping support via ECHO TCP service
     ifdef(`distro_rhel6', `
@@ -255,9 +258,6 @@ tunable_policy(`foreman_proxy_manage_dhcp_generic', `
         corenet_tcp_connect_echo_port(foreman_proxy_t)
     ')
     # ping support via ICMP /usr/bin/ping (it has suid)
-    ifndef(`distro_rhel6', `
-        auth_read_passwd(foreman_proxy_t)
-    ')
     netutils_domtrans_ping(foreman_proxy_t)
 ')
 
