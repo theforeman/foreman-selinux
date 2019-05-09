@@ -120,14 +120,7 @@ corecmd_exec_shell(foreman_proxy_t)
 corenet_udp_bind_generic_port(foreman_proxy_t)
 corenet_udp_bind_generic_node(foreman_proxy_t)
 mta_sendmail_exec(foreman_proxy_t)
-ifdef(`distro_rhel6', `
-    gen_require(`
-        type sendmail_exec_t;
-    ')
-    allow foreman_proxy_t sendmail_exec_t:file { getattr_file_perms execute };
-',`
-    mta_sendmail_access_check(foreman_proxy_t)
-')
+mta_sendmail_access_check(foreman_proxy_t)
 
 # gettext support
 miscfiles_read_localization(foreman_proxy_t)
@@ -147,11 +140,7 @@ corenet_tcp_bind_websm_port(foreman_proxy_t)
 # x509 certificates
 hostname_exec(foreman_proxy_t)
 puppet_read_lib(foreman_proxy_t)
-ifdef(`distro_rhel6', `
-    miscfiles_read_certs(foreman_proxy_t)
-',`
-    miscfiles_read_generic_certs(foreman_proxy_t)
-')
+miscfiles_read_generic_certs(foreman_proxy_t)
 
 # generic support for plugins
 # executes sudo
@@ -209,7 +198,7 @@ tunable_policy(`foreman_proxy_manage_puppetca', `
     files_search_var_lib(foreman_proxy_t)
     selinux_validate_context(foreman_proxy_t)
     logging_search_logs(foreman_proxy_t)
-    miscfiles_read_certs(foreman_proxy_t)
+    miscfiles_read_generic_certs(foreman_proxy_t)
     seutil_read_file_contexts(foreman_proxy_t)
     # signing support
     manage_files_pattern(foreman_proxy_t, puppet_etc_t, puppet_etc_t)
@@ -247,16 +236,10 @@ tunable_policy(`foreman_proxy_manage_dns_nsupdate', `
 ')
 
 # DHCP PLUGIN
-ifndef(`distro_rhel6', `
-    auth_read_passwd(foreman_proxy_t)
-')
+auth_read_passwd(foreman_proxy_t)
 tunable_policy(`foreman_proxy_manage_dhcp_generic', `
     # ping support via ECHO TCP service
-    ifdef(`distro_rhel6', `
-        corenet_tcp_connect_inetd_child_port(foreman_proxy_t)
-    ',`
-        corenet_tcp_connect_echo_port(foreman_proxy_t)
-    ')
+    corenet_tcp_connect_echo_port(foreman_proxy_t)
     # ping support via ICMP /usr/bin/ping (it has suid)
     netutils_domtrans_ping(foreman_proxy_t)
 ')
