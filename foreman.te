@@ -173,6 +173,8 @@ require{
 # Passanger/httpd local policy
 #
 
+# https://bugzilla.redhat.com/show_bug.cgi?id=1716944
+allow passenger_t self:capability dac_override;
 allow passenger_t self:capability sys_resource;
 allow passenger_t self:process signull;
 allow passenger_t self:tcp_socket listen;
