@@ -179,6 +179,9 @@ allow passenger_t self:capability sys_resource;
 allow passenger_t self:process signull;
 allow passenger_t self:tcp_socket listen;
 
+# rubygem FFI is used in foreman-tasks (BZ#1670109 / RM#26951)
+allow passenger_t self:process execmem;
+
 miscfiles_read_localization(passenger_t)
 
 # Allow Foreman to connect to Foreman Proxy on port 9090 (Katello)
