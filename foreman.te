@@ -185,6 +185,7 @@ allow passenger_t self:process execmem;
 miscfiles_read_localization(passenger_t)
 
 # Allow Foreman to connect to Foreman Proxy on port 9090 (Katello)
+# or to connect to Foreman Cockpit on port 19090 (Remote Execution)
 allow passenger_t websm_port_t:tcp_socket name_connect;
 
 # Allow Foreman to connect to Foreman Proxy on a defined port
