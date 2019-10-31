@@ -1,4 +1,39 @@
-2018-10-16	Tomer Brisker <tbrisker@gmail.com>
+2019-10-31	Tomer Brisker <tbrisker@gmail.com>
+	* Release 1.24.0-RC1
+
+2019-10-29	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #28115 - policy for foreman-cockpit service
+
+2019-07-30	Tomer Brisker <tbrisker@gmail.com>
+	* bump version to 1.24-develop
+
+2019-06-26	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #19053 - allow logrotate to send signals
+
+2019-06-06	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #26951 - allow execmem in passenger too
+	* Fixes #26948 - added dac_override capability back
+
+2019-05-09	Evgeni Golov <evgeni@golov.de>
+	* Drop RHEL6 statements, EL7+ only
+	* Fixes #26762 - move auth_read_passwd ouside the tunable_policy
+
+2019-04-18	Tomer Brisker <tbrisker@gmail.com>
+	* Bump version to 1.23-develop
+
+2019-04-09	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #26534 - policy is now passenger6 compatible
+
+2019-04-03	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #16273 - allow execmem
+
+2019-01-14	Tomer Brisker <tbrisker@gmail.com>
+	* Bump version to 1.22-develop
+
+2019-01-08	Ben Meekhof <bmeekhof@users.noreply.github.com>
+	* Fixes #25783: Allow websockify to read puppet_etc_t
+
+2018-10-17	Tomer Brisker <tbrisker@gmail.com>
 	* Bump version to 1.21-develop
 
 2018-09-21	Ewoud Kohl van Wijngaarden <ewoud@kohlvanwijngaarden.nl>
