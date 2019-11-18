@@ -166,6 +166,9 @@ require{
     type puppetmaster_t;
     type sysctl_net_t;
     type websm_port_t;
+    type cockpit_ws_t;
+    type cockpit_session_t;
+    type cockpit_session_exec_t;
 }
 
 #######################################
@@ -185,7 +188,7 @@ allow passenger_t self:process execmem;
 miscfiles_read_localization(passenger_t)
 
 # Allow Foreman to connect to Foreman Proxy on port 9090 (Katello)
-# or to connect to Foreman Cockpit on port 19090 (Remote Execution)
+# or to connect to remote Cockpit instance (via Remote Execution)
 allow passenger_t websm_port_t:tcp_socket name_connect;
 
 # Allow Foreman to connect to Foreman Proxy on a defined port
@@ -349,6 +352,24 @@ optional_policy(`
         corenet_tcp_connect_ldap_port(passenger_t)
     ')
 ')
+
+#######################################
+#
+# Remote Execution
+#
+
+# File /usr/sbin/foreman-cockpit-session is a symlink
+read_lnk_files_pattern(cockpit_ws_t, cockpit_session_exec_t, cockpit_session_exec_t)
+read_lnk_files_pattern(cockpit_session_t, cockpit_session_exec_t, cockpit_session_exec_t)
+
+# Run /usr/bin/env and /usr/bin/ruby
+corecmd_exec_bin(cockpit_ws_t)
+
+# Connect to Foreman HTTP(s) port
+corenet_tcp_connect_http_port(cockpit_session_t)
+
+# Connect to remote Cockpit instance HTTP(s) port
+corenet_tcp_connect_websm_port(cockpit_session_t)
 
 #######################################
 #
