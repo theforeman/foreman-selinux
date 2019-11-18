@@ -19,6 +19,7 @@
   /usr/share/passenger/helper-scripts \
   /usr/lib{64,}/passenger/support-binaries \
   /usr/lib{64,}exec/passenger \
+  /usr/sbin/foreman-cockpit-session \
   /var/run/rubygem-passenger
 
 # relabel SCL mod_passenger and foreman plugins if SCL is found
