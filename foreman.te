@@ -368,8 +368,11 @@ corecmd_exec_bin(cockpit_ws_t)
 # Connect to Foreman HTTP(s) port
 corenet_tcp_connect_http_port(cockpit_session_t)
 
-# Connect to remote Cockpit instance HTTP(s) port
+# Connect to remote Cockpit instance HTTPS port
 corenet_tcp_connect_websm_port(cockpit_session_t)
+
+# Connect to Foreman Cockpit instance HTTPS port
+corenet_tcp_connect_websm_port(httpd_t)
 
 #######################################
 #
