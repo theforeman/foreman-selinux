@@ -200,6 +200,9 @@ optional_policy(`
     postgresql_stream_connect(passenger_t)
 ')
 
+# Allow Foreman to connect to Redis
+corenet_tcp_connect_redis_port(passenger_t)
+
 # Allow Foreman to access log files (but not delete or truncate them). Ideally
 # only create and append should be allowed, however rake tasks also fall into
 # the same domain and those tasks often simply writes to log files.
