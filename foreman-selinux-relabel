@@ -10,9 +10,11 @@
   /etc/puppet/node.rb \
   /etc/puppetlabs/puppet/node.rb \
   /etc/sysconfig/foreman* \
-  /etc/rc.d/init.d/foreman* \
+  /usr/lib/systemd/system/foreman* \
+  /etc/systemd/system/foreman* \
   /etc/logrotate.d/foreman* \
   /etc/cron.d/foreman* \
+  /usr/libexec/foreman \
   /usr/lib{64,}/ruby/gems/1.8/gems/passenger-* \
   /usr/lib{64,}/gems/ruby/passenger-*/agents \
   /usr/lib{64,}/ruby/site_ruby/1.8/x86_64-linux/agents \
