@@ -16,21 +16,26 @@
 # this program. If not, see http://www.gnu.org/licenses/.
 #
 
-# Foreman file contexts
+# Foreman and Ruby on Rails
 
-/etc/foreman(/.*)?                      gen_context(system_u:object_r:foreman_config_t,s0)
-/etc/puppet/node.rb                 --  gen_context(system_u:object_r:foreman_enc_t, s0)
-/etc/puppetlabs/puppet/node.rb      --  gen_context(system_u:object_r:foreman_enc_t, s0)
+/usr/lib/systemd/system/foreman.*               --  gen_context(system_u:object_r:foreman_rails_unit_file_t,s0)
+/etc/systemd/system/foreman.*                   --  gen_context(system_u:object_r:foreman_rails_unit_file_t,s0)
 
-/var/lib/foreman(/.*)?                  gen_context(system_u:object_r:foreman_lib_t,s0)
-/var/lib/foreman/db/(.*.sqlite3)?       gen_context(system_u:object_r:foreman_db_t,s0)
+/etc/foreman(/.*)?                                  gen_context(system_u:object_r:foreman_config_t,s0)
+/etc/puppet/node.rb                             --  gen_context(system_u:object_r:foreman_enc_t, s0)
+/etc/puppetlabs/puppet/node.rb                  --  gen_context(system_u:object_r:foreman_enc_t, s0)
 
-/var/log/foreman(/.*)?                  gen_context(system_u:object_r:foreman_log_t,s0)
+/var/lib/foreman(/.*)?                              gen_context(system_u:object_r:foreman_lib_t,s0)
 
-/var/run/foreman(/.*)?                  gen_context(system_u:object_r:foreman_var_run_t,s0)
+/var/log/foreman(/.*)?                              gen_context(system_u:object_r:foreman_log_t,s0)
 
-/usr/share/foreman/.ssh(/.*)?           gen_context(system_u:object_r:ssh_home_t,s0)
-/usr/share/foreman/extras/noVNC/websockify\.py gen_context(system_u:object_r:websockify_exec_t,s0)
+/var/run/foreman(/.*)?                              gen_context(system_u:object_r:foreman_var_run_t,s0)
+
+/usr/share/foreman/.ssh(/.*)?                       gen_context(system_u:object_r:ssh_home_t,s0)
+/usr/share/foreman/extras/noVNC/websockify\.py      gen_context(system_u:object_r:websockify_exec_t,s0)
+
+/usr/share/foreman/bin/rails                    --  gen_context(system_u:object_r:foreman_rails_exec_t,s0)
+/usr/libexec/foreman/.*-selinux                 --  gen_context(system_u:object_r:foreman_rails_exec_t,s0)
 
 # Passenger non-SCL file contexts
 
