@@ -22,45 +22,35 @@ policy_module(foreman, @@VERSION@@)
 #
 # Declarations
 #
-# Note: Some mod_passanger 4.0+ processes are running under httpd_t domain,
-# therefore we need to keep two domains: passenger_t and httpd_t.
-#
 
 ## <desc>
 ## <p>
-## Allow passenger to run foreman.
+## Allow Ruby on Rails to run foreman (deprecated).
 ## </p>
 ## </desc>
-gen_tunable(passenger_run_foreman, true)
-
-## <desc>
-### <p>
-### Allow passenger to run the puppetmaster.
-### </p>
-### </desc>
-gen_tunable(passenger_run_puppetmaster, true)
+gen_tunable(passenger_run_foreman, false)
 
 ## <desc>
 ## <p>
-## Allow passenger (httpd_t domain) to run foreman.
+## Determine whether Ruby on Rails can listen/bind any port.
 ## </p>
 ## </desc>
-gen_tunable(httpd_run_foreman, true)
+gen_tunable(foreman_rails_can_listen_any, false)
 
 ## <desc>
 ## <p>
-## Determine whether passenger can connect to LDAP ports.
+## Determine whether Ruby on Rails can connect to LDAP ports.
 ## </p>
 ## </desc>
-gen_tunable(passenger_can_connect_ldap, true)
+gen_tunable(foreman_rails_can_connect_ldap, true)
 
 ## <desc>
 ## <p>
-## Determine whether passenger can connect to TCP ports
+## Determine whether Ruby on Rails can connect to TCP ports
 ## other than specified in the policy.
 ## </p>
 ## </desc>
-gen_tunable(passenger_can_connect_all, false)
+gen_tunable(foreman_rails_can_connect_all, false)
 
 ## <desc>
 ## <p>
@@ -71,55 +61,68 @@ gen_tunable(websockify_can_connect_all, false)
 
 ## <desc>
 ## <p>
-## Determine whether passenger can connect to Docker via local socket
+## Determine whether Ruby on Rails can connect to Docker via local socket
 ## </p>
 ## </desc>
-gen_tunable(passenger_can_connect_container_unix, true)
+gen_tunable(foreman_rails_can_connect_container_unix, true)
 
 ## <desc>
 ## <p>
-## Determine whether passenger can connect to OpenStack
+## Determine whether Ruby on Rails can connect to OpenStack
 ## </p>
 ## </desc>
-gen_tunable(passenger_can_connect_openstack, true)
+gen_tunable(foreman_rails_can_connect_openstack, true)
 
 ## <desc>
 ## <p>
-## Determine whether passenger can execute ssh (needed for qemu+ssh libvirt connection).
+## Determine whether Ruby on Rails can execute ssh (needed for qemu+ssh libvirt connection).
 ## </p>
 ## </desc>
-gen_tunable(passenger_can_spawn_ssh, true)
+gen_tunable(foreman_rails_can_spawn_ssh, true)
 
 ## <desc>
 ## <p>
-## Determine whether passenger can connect to http_port_t when preloading app.
+## Determine whether Ruby on Rails can connect to http_port_t when preloading app.
 ## </p>
 ## </desc>
-gen_tunable(passenger_can_connect_http, true)
+gen_tunable(foreman_rails_can_connect_http, true)
 
 ## <desc>
 ## <p>
-## Determine whether passenger can connect to puppet_port_t when preloading app.
+## Determine whether Ruby on Rails can connect to local or remote libvirt.
 ## </p>
 ## </desc>
-gen_tunable(passenger_can_connect_puppetmaster, true)
+gen_tunable(foreman_rails_can_connect_libvirt, true)
 
 ## <desc>
 ## <p>
-## Determine whether passenger can connect to local or remote libvirt.
+## Determine whether Ruby on Rails can connect to remote SMTP services
 ## </p>
 ## </desc>
-gen_tunable(passenger_can_connect_libvirt, true)
+gen_tunable(foreman_rails_can_connect_smtp, true)
 
-## <desc>
-## <p>
-## Determine whether passenger can connect to remote SMTP services
-## </p>
-## </desc>
-gen_tunable(passenger_can_connect_smtp, true)
+######################################
+#
+# Temporary fixes for RHEL base policy
+#
 
-# Some basic aliases for different aspects of the filesystem to make things
-# more clear.
+# RHBZ#1527522: logrotate does not allow signals
+gen_require(`
+    type logrotate_t;
+')
+systemd_config_generic_services(logrotate_t)
+
+ ###############
+#
+# Types
+#
+
+type foreman_rails_t;
+type foreman_rails_exec_t;
+
+type foreman_rails_unit_file_t;
+systemd_unit_file(foreman_rails_unit_file_t)
+
 require{
     type etc_t;
 }
@@ -171,189 +174,133 @@ require{
     type cockpit_session_exec_t;
 }
 
-#######################################
+######################
 #
-# Passanger/httpd local policy
+# Ruby on Rails policy
 #
 
-# https://bugzilla.redhat.com/show_bug.cgi?id=1716944
-allow passenger_t self:capability dac_override;
-allow passenger_t self:capability sys_resource;
-allow passenger_t self:process signull;
-allow passenger_t self:tcp_socket listen;
+# Service transition
+init_daemon_domain(foreman_rails_t, foreman_rails_exec_t)
 
-# rubygem FFI is used in foreman-tasks (BZ#1670109 / RM#26951)
-allow passenger_t self:process execmem;
+# Generic domain rules
+auth_read_passwd(foreman_rails_t)
+dev_list_sysfs(foreman_rails_t)
+dev_read_sysfs(foreman_rails_t)
+hostname_exec(foreman_rails_t)
+ipa_filetrans_named_content(foreman_rails_t)
+kernel_read_network_state(foreman_rails_t)
+kernel_read_system_state(foreman_rails_t)
+sysnet_read_config(foreman_rails_t)
 
-miscfiles_read_localization(passenger_t)
+# Certificates (Foreman uses puppet certificates as well)
+miscfiles_read_certs(foreman_rails_t)
+puppet_read_config(foreman_rails_t)
 
-# Allow Foreman to connect to Foreman Proxy on port 9090 (Katello)
-# or to connect to remote Cockpit instance (via Remote Execution)
-allow passenger_t websm_port_t:tcp_socket name_connect;
+# It is not possible to do transition into SCL application
+# without calling a shell: https://github.com/sclorg/scl-utils/issues/31
+corecmd_exec_shell(foreman_rails_t)
+corecmd_exec_ls(foreman_rails_t)
+# The following is needed for "scl enable" which creates temporary
+# shell script /var/tmp/xxxxxxx and a subprocess.
+files_manage_generic_tmp_files(foreman_rails_t)
 
-# Allow Foreman to connect to Foreman Proxy on a defined port
-allow passenger_t foreman_proxy_port_t:tcp_socket name_connect;
+# General files read and write
+admin_pattern(foreman_rails_t, foreman_lib_t, foreman_lib_t)
+admin_pattern(foreman_rails_t, foreman_var_run_t, foreman_var_run_t)
+admin_pattern(foreman_rails_t, passenger_tmp_t, passenger_tmp_t)
 
-# Allow Foreman to connect to PostgreSQL
-corenet_tcp_connect_postgresql_port(passenger_t)
-optional_policy(`
-    postgresql_stream_connect(passenger_t)
-')
+# Gettext support
+miscfiles_read_localization(foreman_rails_t)
 
-# Allow Foreman to connect to Redis
-corenet_tcp_connect_redis_port(passenger_t)
+# The read the code (and potentially modules) from /usr/share.
+files_read_usr_files(foreman_rails_t)
 
 # Allow Foreman to access log files (but not delete or truncate them). Ideally
 # only create and append should be allowed, however rake tasks also fall into
 # the same domain and those tasks often simply writes to log files.
-logging_search_logs(passenger_t)
-logging_list_logs(passenger_t)
-write_files_pattern(passenger_t, foreman_log_t, foreman_log_t)
-allow passenger_t foreman_log_t:dir { create_file_perms append_file_perms list_dir_perms search_dir_perms };
-allow passenger_t foreman_log_t:file { create_file_perms append_file_perms };
+logging_search_logs(foreman_rails_t)
+logging_list_logs(foreman_rails_t)
+write_files_pattern(foreman_rails_t, foreman_log_t, foreman_log_t)
+allow foreman_rails_t foreman_log_t:dir { create_file_perms append_file_perms list_dir_perms search_dir_perms };
+allow foreman_rails_t foreman_log_t:file { create_file_perms append_file_perms };
 
-# Allow Foreman to connect anywhere when bool is set
-tunable_policy(`passenger_can_connect_all',`
-    corenet_tcp_connect_all_ports(passenger_t)
+# Allow "logger" command for debugging
+kernel_dgram_send(foreman_rails_t)
+logging_create_devlog_dev(foreman_rails_t)
+
+# Systemd socket activation (Puma called with LISTEN_FDS environmental variable)
+allow foreman_rails_t self:netlink_route_socket { all_netlink_route_socket_perms };
+allow foreman_rails_t self:tcp_socket { all_tcp_socket_perms };
+allow foreman_rails_t self:udp_socket { all_udp_socket_perms };
+allow foreman_rails_t self:unix_dgram_socket { all_unix_dgram_socket_perms };
+corenet_tcp_bind_generic_node(foreman_rails_t)
+
+# Listening for HTTP communication on port 3000
+corenet_tcp_bind_ntop_port(foreman_rails_t)
+corenet_tcp_connect_ntop_port(foreman_rails_t)
+
+# Listening for HTTP communication on HTTP(s) port range
+corenet_tcp_bind_http_port(foreman_rails_t)
+corenet_tcp_connect_http_port(foreman_rails_t)
+
+# Listening for HTTP communication on any port
+tunable_policy(`foreman_rails_can_listen_any', `
+    corenet_tcp_bind_generic_node(foreman_rails_t)
 ')
 
-# The read the code (and potentially modules) from /usr/share.
-files_read_usr_files(passenger_t)
+# Allow the app server to preload itself
+corenet_tcp_connect_http_port(foreman_rails_t)
 
 # Allow access to pseudo terminal devices to connect to local virt.
-term_search_ptys(passenger_t)
+term_search_ptys(foreman_rails_t)
 
-# For memory-statistics script which executes /usr/bin/free
-files_exec_usr_files(passenger_t)
+# Connecting to hosts and guests
+corenet_tcp_connect_virt_port(foreman_rails_t)
+corenet_tcp_connect_ssh_port(foreman_rails_t)
 
-# For memory-statistics and agent which executes /bin/ps (#3465)
-dev_read_sysfs(passenger_t)
-dev_search_sysfs(passenger_t)
-dev_read_rand(passenger_t)
+# Allow Foreman to do DNS queries via Ruby stdlib net package
+# https://projects.theforeman.org/issues/8030
+corenet_udp_bind_generic_port(foreman_rails_t)
 
-# Passenger 6 is setting socket context explicitly in
-# https://github.com/phusion/passenger/blob/master/src/agent/Core/CoreMain.cpp#L376-L406
-allow passenger_t self:process setsockcreate;
+# rubygem FFI is used in foreman-tasks (BZ#1670109 / RM#26951)
+allow foreman_rails_t self:process execmem;
 
-# Passenger 6 reads and writes in /etc/pki/nssdb
-miscfiles_manage_cert_dirs(passenger_t)
-miscfiles_manage_generic_cert_files(passenger_t)
+# Connecting to remote Cockpit instance (via Remote Execution)
+# or to Foreman Proxy on port 9090 (Katello)
+allow foreman_rails_t websm_port_t:tcp_socket name_connect;
 
-# Passenger 6 compiles and executes during start file named
-# /tmp/passenger-native-support-XXXXXX/passenger_native_support.so
-can_exec(passenger_t, passenger_tmp_t)
+# Connecting to Foreman Proxy on a defined port
+allow foreman_rails_t foreman_proxy_port_t:tcp_socket name_connect;
 
-# Logrotate in RHEL7 does not allow signals, RHBZ#1527522
-gen_require(`
-    type logrotate_t;
-')
-systemd_config_generic_services(logrotate_t)
-
+# Connecting to PostgreSQL
+corenet_tcp_connect_postgresql_port(foreman_rails_t)
 optional_policy(`
-    tunable_policy(`passenger_run_foreman', `
-        admin_pattern(httpd_t, foreman_lib_t, foreman_lib_t)
-        admin_pattern(passenger_t, foreman_lib_t, foreman_lib_t)
-        admin_pattern(passenger_t, foreman_var_run_t, foreman_var_run_t)
+    postgresql_stream_connect(foreman_rails_t)
+')
 
-        # Allow Foreman to connect to hosts and guests
-        corenet_tcp_connect_virt_port(passenger_t)
-        corenet_tcp_connect_ssh_port(passenger_t)
+# Connecting to Redis
+corenet_tcp_connect_redis_port(foreman_rails_t)
 
-        # Allow Foreman to write to the SQlite databases
-        read_files_pattern(passenger_t, foreman_db_t, foreman_db_t)
-        write_files_pattern(passenger_t, foreman_db_t, foreman_db_t)
+# Sending of email reports via sendmail
+optional_policy(`
+    mta_send_mail(foreman_rails_t)
+')
 
-        # Allow Foreman to do DNS queries via Ruby stdlib net package
-        # http://projects.theforeman.org/issues/8030
-        corenet_udp_bind_generic_port(passenger_t)
+# Sending of email reports via SMTP directly
+tunable_policy(`foreman_rails_can_connect_smtp',`
+    corenet_tcp_connect_smtp_port(foreman_rails_t)
+')
 
-        admin_pattern(passenger_t, passenger_tmp_t, passenger_tmp_t)
+# Connecting to LDAP
+optional_policy(`
+    tunable_policy(`foreman_rails_can_connect_ldap', `
+        corenet_tcp_connect_ldap_port(foreman_rails_t)
     ')
 ')
 
-optional_policy(`
-    tunable_policy(`passenger_run_foreman', `
-        allow passenger_t self:process getsession;
-        fs_rw_anon_inodefs_files(passenger_t)
-        allow passenger_t httpd_t:unix_stream_socket { read write getattr };
-        fs_getattr_xattr_fs(passenger_t)
-        allow passenger_t self:capability2 block_suspend;
-    ')
-')
-
-tunable_policy(`httpd_run_foreman', `
-    admin_pattern(httpd_t, passenger_tmp_t, passenger_tmp_t)
-    admin_pattern(passenger_t, httpd_tmp_t, httpd_tmp_t)
-')
-
-optional_policy(`
-    tunable_policy(`passenger_run_puppetmaster', `
-        allow passenger_t foreman_enc_t:file { read getattr open ioctl execute execute_no_trans };
-        allow passenger_t ifconfig_exec_t:file { read getattr open execute execute_no_trans };
-        allow passenger_t init_t:unix_stream_socket { getattr ioctl };
-        allow passenger_t proc_net_t:file { read getattr open };
-        allow passenger_t puppet_log_t:file { write relabelfrom relabelto setattr };
-        allow passenger_t puppet_var_lib_t:dir { relabelfrom relabelto create rmdir setattr };
-        allow passenger_t puppet_var_lib_t:file { relabelfrom relabelto };
-        allow passenger_t sysctl_net_t:dir search;
-        read_lnk_files_pattern(passenger_t, puppet_etc_t, puppet_etc_t)
-        # Allow basic httpd processes to access puppet_etc_t and
-        # puppet_port_t before passenger is initialized.
-        read_files_pattern(httpd_t, puppet_etc_t, puppet_etc_t)
-        read_lnk_files_pattern(httpd_t, puppet_etc_t, puppet_etc_t)
-        # http://projects.theforeman.org/issues/9805
-        selinux_validate_context(passenger_t)
-    ')
-')
-
-optional_policy(`
-    tunable_policy(`passenger_can_connect_puppetmaster', `
-        corenet_tcp_connect_puppet_port(httpd_t)
-        corenet_tcp_connect_puppet_port(passenger_t)
-    ')
-')
-
-optional_policy(`
-    tunable_policy(`passenger_can_connect_http', `
-        corenet_tcp_connect_http_port(httpd_t)
-        corenet_tcp_connect_http_port(passenger_t)
-    ')
-')
-
-# Puppetmaster touches file contexts of some files which causes issues when apache2 httpd
-# is started from command line (under unconfined_u). This rule makes sure it does not
-# go into unconfined_u. This is only needed for RHEL6 (upstart). This rule MUST NOT be
-# in an optional_policy block!
-domain_obj_id_change_exemption(passenger_t)
-
-optional_policy(`
-    # Allow sending of email reports.
-    mta_send_mail(passenger_t)
-')
-
-tunable_policy(`passenger_can_connect_smtp',`
-    corenet_tcp_connect_smtp_port(passenger_t)
-')
-
-optional_policy(`
-    mysql_stream_connect(passenger_t)
-    mysql_list_db(passenger_t)
-')
-
-optional_policy(`
-    hostname_exec(passenger_t)
-')
-
-optional_policy(`
-    # Transition to puppet_master
-    corecmd_search_bin(passenger_t)
-    domtrans_pattern(passenger_t, puppetmaster_exec_t, puppetmaster_t)
-')
-
-optional_policy(`
-    tunable_policy(`passenger_can_connect_ldap', `
-        corenet_tcp_connect_ldap_port(passenger_t)
-    ')
+# General "connect everywhere" rule (disabled by default)
+tunable_policy(`foreman_rails_can_connect_all',`
+    corenet_tcp_connect_all_ports(foreman_rails_t)
 ')
 
 #######################################
@@ -380,18 +327,19 @@ corenet_tcp_connect_websm_port(cockpit_ws_t)
 # Connect to Foreman Cockpit instance HTTPS port
 corenet_tcp_connect_websm_port(httpd_t)
 
+
 #######################################
 #
 # OpenStack Compute Resource
 #
 
-tunable_policy(`passenger_can_connect_openstack',`
+tunable_policy(`foreman_rails_can_connect_openstack',`
     # keystone (identity service)
-    corenet_tcp_connect_commplex_main_port(passenger_t)
+    corenet_tcp_connect_commplex_main_port(foreman_rails_t)
     # nova (compute service)
-    corenet_tcp_connect_osapi_compute_port(passenger_t)
+    corenet_tcp_connect_osapi_compute_port(foreman_rails_t)
     # neutron (network service)
-    corenet_tcp_connect_neutron_port(passenger_t)
+    corenet_tcp_connect_neutron_port(foreman_rails_t)
 ')
 
 #######################################
@@ -400,22 +348,22 @@ tunable_policy(`passenger_can_connect_openstack',`
 #
 
 optional_policy(`
-    tunable_policy(`passenger_can_spawn_ssh',`
+    tunable_policy(`foreman_rails_can_spawn_ssh',`
         require {
             class process { getcap setcap };
         }
-        allow passenger_t self:process { getcap setcap };
+        allow foreman_rails_t self:process { getcap setcap };
 
-        ssh_exec(passenger_t)
-        ssh_read_user_home_files(passenger_t)
+        ssh_exec(foreman_rails_t)
+        ssh_read_user_home_files(foreman_rails_t)
     ')
 ')
 
 optional_policy(`
-    tunable_policy(`passenger_can_connect_libvirt',`
-        virt_getattr_exec(passenger_t)
-        virt_read_pid_symlinks(passenger_t)
-        virt_stream_connect(passenger_t)
+    tunable_policy(`foreman_rails_can_connect_libvirt',`
+        virt_getattr_exec(foreman_rails_t)
+        virt_read_pid_symlinks(foreman_rails_t)
+        virt_stream_connect(foreman_rails_t)
     ')
 ')
 
@@ -429,7 +377,7 @@ type websockify_exec_t;
 role system_r types websockify_t;
 
 application_domain(websockify_t, websockify_exec_t)
-domtrans_pattern(passenger_t, websockify_exec_t, websockify_t)
+domtrans_pattern(foreman_rails_t, websockify_exec_t, websockify_t)
 
 require {
     type vnc_port_t;
@@ -439,13 +387,13 @@ require {
 allow websockify_t self:netlink_route_socket { all_netlink_route_socket_perms };
 allow websockify_t self:tcp_socket { all_tcp_socket_perms };
 allow websockify_t self:udp_socket { all_udp_socket_perms };
-allow passenger_t websockify_t:process { siginh noatsecure rlimitinh };
+allow foreman_rails_t websockify_t:process { siginh noatsecure rlimitinh };
 
 apache_search_config(websockify_t)
 corenet_tcp_bind_generic_node(websockify_t)
 corenet_tcp_connect_vnc_port(websockify_t)
 corenet_tcp_bind_vnc_port(websockify_t)
-corenet_tcp_bind_vnc_port(passenger_t)
+corenet_tcp_bind_vnc_port(foreman_rails_t)
 dev_read_urand(websockify_t)
 kernel_read_system_state(websockify_t)
 logging_send_syslog_msg(websockify_t)
@@ -466,10 +414,189 @@ tunable_policy(`websockify_can_connect_all',`
 # Container / Docker
 #
 
-allow passenger_t foreman_container_port_t:tcp_socket name_connect;
+allow foreman_rails_t foreman_container_port_t:tcp_socket name_connect;
 
 optional_policy(`
-    tunable_policy(`passenger_can_connect_container_unix',`
+    tunable_policy(`foreman_rails_can_connect_container_unix',`
+        ifdef(`has_container', `
+            container_stream_connect(foreman_rails_t)
+            container_spc_stream_connect(foreman_rails_t)
+        ')
+        ifdef(`has_docker', `
+            docker_stream_connect(foreman_rails_t)
+            #docker_spc_stream_connect(foreman_rails_t)
+            gen_require(`
+                type spc_t, spc_var_run_t;
+                attribute pidfile;
+            ')
+            files_search_pids(foreman_rails_t)
+            allow foreman_rails_t pidfile:sock_file write_sock_file_perms;
+            allow foreman_rails_t spc_t:unix_stream_socket connectto;
+        ')
+    ')
+')
+
+######################################
+#
+# Foreman Hooks plugin
+#
+
+typealias bin_t alias foreman_hook_t;
+
+######################################
+#
+# Foreman Tasks plugin
+#
+
+# the plugin daemon uses daemon gem for the backround job
+type foreman_tasks_exec_t;
+init_daemon_domain(foreman_rails_t, foreman_tasks_exec_t)
+
+######################################
+#
+# Foreman Memcache plugin
+#
+
+optional_policy(`
+    tunable_policy(`passenger_run_foreman', `
+        corenet_tcp_connect_memcache_port(foreman_rails_t)
+    ')
+')
+
+##############################################
+#
+# Passenger/httpd temporary policy
+#
+# This is a squashed version of passenger implementation which we ended
+# up on over the past years. We plan to remove this completely from the
+# policy in the near future.
+
+domain_obj_id_change_exemption(passenger_t)
+tunable_policy(`passenger_run_foreman', `
+    allow passenger_t self:capability dac_override;
+    allow passenger_t self:capability sys_resource;
+    allow passenger_t self:process signull;
+    allow passenger_t self:tcp_socket listen;
+    allow passenger_t self:process execmem;
+    miscfiles_read_localization(passenger_t)
+    allow passenger_t websm_port_t:tcp_socket name_connect;
+    allow passenger_t foreman_proxy_port_t:tcp_socket name_connect;
+    corenet_tcp_connect_postgresql_port(passenger_t)
+    corenet_tcp_connect_redis_port(passenger_t)
+    logging_search_logs(passenger_t)
+    logging_list_logs(passenger_t)
+    write_files_pattern(passenger_t, foreman_log_t, foreman_log_t)
+    allow passenger_t foreman_log_t:dir { create_file_perms append_file_perms list_dir_perms search_dir_perms };
+    allow passenger_t foreman_log_t:file { create_file_perms append_file_perms };
+    corenet_tcp_connect_all_ports(passenger_t)
+    files_read_usr_files(passenger_t)
+    term_search_ptys(passenger_t)
+    files_exec_usr_files(passenger_t)
+    dev_read_sysfs(passenger_t)
+    dev_search_sysfs(passenger_t)
+    dev_read_rand(passenger_t)
+    allow passenger_t self:process setsockcreate;
+    miscfiles_manage_cert_dirs(passenger_t)
+    miscfiles_manage_generic_cert_files(passenger_t)
+    can_exec(passenger_t, passenger_tmp_t)
+    admin_pattern(httpd_t, passenger_tmp_t, passenger_tmp_t)
+    admin_pattern(passenger_t, httpd_tmp_t, httpd_tmp_t)
+    corenet_tcp_connect_smtp_port(passenger_t)
+')
+optional_policy(`
+    tunable_policy(`passenger_run_foreman', `
+        postgresql_stream_connect(passenger_t)
+    ')
+')
+optional_policy(`
+    tunable_policy(`passenger_run_foreman', `
+        admin_pattern(httpd_t, foreman_lib_t, foreman_lib_t)
+        admin_pattern(passenger_t, foreman_lib_t, foreman_lib_t)
+        admin_pattern(passenger_t, foreman_var_run_t, foreman_var_run_t)
+        corenet_tcp_connect_virt_port(passenger_t)
+        corenet_tcp_connect_ssh_port(passenger_t)
+        read_files_pattern(passenger_t, foreman_db_t, foreman_db_t)
+        write_files_pattern(passenger_t, foreman_db_t, foreman_db_t)
+        corenet_udp_bind_generic_port(passenger_t)
+        admin_pattern(passenger_t, passenger_tmp_t, passenger_tmp_t)
+    ')
+')
+optional_policy(`
+    tunable_policy(`passenger_run_foreman', `
+        allow passenger_t self:process getsession;
+        fs_rw_anon_inodefs_files(passenger_t)
+        allow passenger_t httpd_t:unix_stream_socket { read write getattr };
+        fs_getattr_xattr_fs(passenger_t)
+        allow passenger_t self:capability2 block_suspend;
+    ')
+')
+optional_policy(`
+    tunable_policy(`passenger_run_foreman', `
+        corenet_tcp_connect_puppet_port(httpd_t)
+        corenet_tcp_connect_puppet_port(passenger_t)
+    ')
+')
+optional_policy(`
+    tunable_policy(`passenger_run_foreman', `
+        corenet_tcp_connect_http_port(httpd_t)
+        corenet_tcp_connect_http_port(passenger_t)
+    ')
+')
+optional_policy(`
+    tunable_policy(`passenger_run_foreman', `
+        mta_send_mail(passenger_t)
+    ')
+')
+optional_policy(`
+    tunable_policy(`passenger_run_foreman', `
+        hostname_exec(passenger_t)
+    ')
+')
+optional_policy(`
+    tunable_policy(`passenger_run_foreman', `
+        corecmd_search_bin(passenger_t)
+        domtrans_pattern(passenger_t, puppetmaster_exec_t, puppetmaster_t)
+    ')
+')
+optional_policy(`
+    tunable_policy(`passenger_run_foreman', `
+        corenet_tcp_connect_ldap_port(passenger_t)
+    ')
+')
+
+# Plugins and external programs
+read_lnk_files_pattern(cockpit_ws_t, cockpit_session_exec_t, cockpit_session_exec_t)
+read_lnk_files_pattern(cockpit_session_t, cockpit_session_exec_t, cockpit_session_exec_t)
+corecmd_exec_bin(cockpit_ws_t)
+corenet_tcp_connect_http_port(cockpit_session_t)
+corenet_tcp_connect_websm_port(cockpit_session_t)
+corenet_tcp_connect_websm_port(httpd_t)
+corenet_tcp_connect_commplex_main_port(passenger_t)
+corenet_tcp_connect_osapi_compute_port(passenger_t)
+corenet_tcp_connect_neutron_port(passenger_t)
+optional_policy(`
+    tunable_policy(`passenger_run_foreman',`
+        require {
+            class process { getcap setcap };
+        }
+        allow passenger_t self:process { getcap setcap };
+
+        ssh_exec(passenger_t)
+        ssh_read_user_home_files(passenger_t)
+    ')
+')
+optional_policy(`
+    tunable_policy(`passenger_run_foreman',`
+        virt_getattr_exec(passenger_t)
+        virt_read_pid_symlinks(passenger_t)
+        virt_stream_connect(passenger_t)
+    ')
+')
+allow passenger_t websockify_t:process { siginh noatsecure rlimitinh };
+corenet_tcp_bind_vnc_port(passenger_t)
+allow passenger_t foreman_container_port_t:tcp_socket name_connect;
+optional_policy(`
+    tunable_policy(`passenger_run_foreman',`
         ifdef(`has_container', `
             container_stream_connect(passenger_t)
             container_spc_stream_connect(passenger_t)
@@ -487,51 +614,8 @@ optional_policy(`
         ')
     ')
 ')
-
-######################################
-#
-# Foreman Bootdisk plugin
-#
-
-# no rules necessary
-
-######################################
-#
-# Foreman Hooks plugin
-#
-
-typealias bin_t alias foreman_hook_t;
-
-######################################
-#
-# Foreman Setup plugin
-#
-
-# no rules necessary
-
-######################################
-#
-# Foreman Discovery plugin
-#
-
-# no rules necessary
-
-######################################
-#
-# Foreman Tasks plugin
-#
-
-# the plugin daemon uses daemon gem for the backround job
-type foreman_tasks_exec_t;
-init_daemon_domain(passenger_t, foreman_tasks_exec_t)
-
-######################################
-#
-# Foreman Memcache plugin
-#
-
 optional_policy(`
-    tunable_policy(`passenger_run_foreman', `
+    tunable_policy(`passenger_run_foreman',`
         corenet_tcp_connect_memcache_port(passenger_t)
     ')
 ')

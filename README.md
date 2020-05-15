@@ -19,12 +19,19 @@ Make sure you provide the correct distribution. Possible values are:
 
 There's a target to do compile and load policy on a remote system via ssh:
 
-    make remote-load host=my.host.lan distro=rhel7 name=foreman
+    make remote-load HOST=foreman.example.com DISTRO=rhel7 NAME=foreman
 
 Often it is necessary to relabel relevant files and directories:
 
     ssh my.host.lan
     my# ./foreman-selinux-relabel
+
+Debugging CIL
+-------------
+
+From time to time, SELinux spills out a cryptic error. To generate CLI source from te/pp file, do:
+
+    cat foreman.pp | /usr/libexec/selinux/hll/pp > /tmp/foreman.cil
 
 License
 -------
