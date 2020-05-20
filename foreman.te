@@ -367,12 +367,15 @@ read_lnk_files_pattern(cockpit_session_t, cockpit_session_exec_t, cockpit_sessio
 
 # Run /usr/bin/env and /usr/bin/ruby
 corecmd_exec_bin(cockpit_ws_t)
+kernel_read_system_state(cockpit_ws_t)
 
 # Connect to Foreman HTTP(s) port
 corenet_tcp_connect_http_port(cockpit_session_t)
+corenet_tcp_connect_http_port(cockpit_ws_t)
 
 # Connect to remote Cockpit instance HTTPS port
 corenet_tcp_connect_websm_port(cockpit_session_t)
+corenet_tcp_connect_websm_port(cockpit_ws_t)
 
 # Connect to Foreman Cockpit instance HTTPS port
 corenet_tcp_connect_websm_port(httpd_t)
