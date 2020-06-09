@@ -101,18 +101,7 @@ gen_tunable(foreman_rails_can_connect_libvirt, true)
 ## </desc>
 gen_tunable(foreman_rails_can_connect_smtp, true)
 
-######################################
-#
-# Temporary fixes for RHEL base policy
-#
-
-# RHBZ#1527522: logrotate does not allow signals
-gen_require(`
-    type logrotate_t;
-')
-systemd_config_generic_services(logrotate_t)
-
- ###############
+###############
 #
 # Types
 #
@@ -203,6 +192,7 @@ corecmd_exec_ls(foreman_rails_t)
 # The following is needed for "scl enable" which creates temporary
 # shell script /var/tmp/xxxxxxx and a subprocess.
 files_manage_generic_tmp_files(foreman_rails_t)
+files_manage_generic_tmp_dirs(foreman_rails_t)
 
 # General files read and write
 admin_pattern(foreman_rails_t, foreman_lib_t, foreman_lib_t)
@@ -261,6 +251,7 @@ corenet_tcp_connect_ssh_port(foreman_rails_t)
 # Allow Foreman to do DNS queries via Ruby stdlib net package
 # https://projects.theforeman.org/issues/8030
 corenet_udp_bind_generic_port(foreman_rails_t)
+corenet_udp_bind_generic_node(foreman_rails_t)
 
 # rubygem FFI is used in foreman-tasks (BZ#1670109 / RM#26951)
 allow foreman_rails_t self:process execmem;
@@ -302,6 +293,32 @@ optional_policy(`
 tunable_policy(`foreman_rails_can_connect_all',`
     corenet_tcp_connect_all_ports(foreman_rails_t)
 ')
+
+######################################
+#
+# Logrotate and cron
+#
+
+gen_require(`
+    type logrotate_t;
+    type system_cronjob_tmp_t;
+')
+
+# Allow sending signals in logrotate scripts
+allow logrotate_t foreman_rails_unit_file_t:file read_file_perms;
+allow logrotate_t foreman_rails_unit_file_t:service manage_service_perms;
+
+# RHBZ#1527522: logrotate does not allow exec of systemctl and signals
+# because we do carry some unconfined service logrotation script
+# /etc/logrotate.d/foreman-proxy with logs as var_log_t
+files_list_var(logrotate_t)
+systemd_config_generic_services(logrotate_t)
+
+# When Foreman cronjob is started before Ruby on Rails, /tmp/bundler
+# is created with system_u:object_r:system_cronjob_tmp_t:s0 label denying
+# access to the web process
+manage_files_pattern(foreman_rails_t, system_cronjob_tmp_t, system_cronjob_tmp_t)
+manage_dirs_pattern(foreman_rails_t, system_cronjob_tmp_t, system_cronjob_tmp_t)
 
 #######################################
 #
@@ -462,6 +479,15 @@ optional_policy(`
         corenet_tcp_connect_memcache_port(foreman_rails_t)
     ')
 ')
+
+######################################
+#
+# Apache httpd server
+#
+
+# Apache httpd reads puppet certs
+read_files_pattern(httpd_t, puppet_etc_t, puppet_etc_t)
+read_lnk_files_pattern(httpd_t, puppet_etc_t, puppet_etc_t)
 
 ##############################################
 #
