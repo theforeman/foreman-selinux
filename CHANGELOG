@@ -1,3 +1,16 @@
+2020-06-18	Tomer Brisker <tbrisker@gmail.com>
+	* Release 2.1.0-rc3
+
+2020-06-18	Lukas Zapletal <lzap+git@redhat.com>
+	* Refs #30147 - allow accept to unconfined service
+	* Fixes #30147 - allow connection to unconfined service
+
+2020-06-15	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #30069 - allow reading puppet certs to httpd
+
+2020-06-08	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #29778 - puma policy, passenger optional
+
 2020-06-02	Tomer Brisker <tbrisker@gmail.com>
 	* Release 2.1.0-rc2
 
