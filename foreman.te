@@ -89,6 +89,13 @@ gen_tunable(foreman_rails_can_connect_http, true)
 
 ## <desc>
 ## <p>
+## Determine whether Ruby on Rails can connect to http_cache_port_t and squid_port_t.
+## </p>
+## </desc>
+gen_tunable(foreman_rails_can_connect_http_proxy, true)
+
+## <desc>
+## <p>
 ## Determine whether Ruby on Rails can connect to local or remote libvirt.
 ## </p>
 ## </desc>
@@ -162,6 +169,8 @@ require{
     type cockpit_session_t;
     type cockpit_session_exec_t;
     type unconfined_service_t;
+    type http_cache_port_t;
+    type squid_port_t;
 }
 
 ######################
@@ -268,6 +277,12 @@ allow foreman_rails_t websm_port_t:tcp_socket name_connect;
 
 # Connecting to Foreman Proxy on a defined port
 allow foreman_rails_t foreman_proxy_port_t:tcp_socket name_connect;
+
+# Connecting to HTTP(s) proxy
+tunable_policy(`foreman_rails_can_connect_http_proxy',`
+    allow foreman_rails_t http_cache_port_t:tcp_socket name_connect;
+    allow foreman_rails_t squid_port_t:tcp_socket name_connect;
+')
 
 # Connecting to PostgreSQL
 corenet_tcp_connect_postgresql_port(foreman_rails_t)
