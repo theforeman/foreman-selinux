@@ -483,6 +483,13 @@ typealias bin_t alias foreman_hook_t;
 
 ######################################
 #
+# Foreman Red Hat Cloud plugin
+#
+
+typealias bin_t alias foreman_uploader_bin_t;
+
+######################################
+#
 # Foreman Tasks plugin
 #
 
