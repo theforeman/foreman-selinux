@@ -476,6 +476,22 @@ optional_policy(`
 
 ######################################
 #
+# Foreman Bootdisk plugin
+#
+
+# read grubx64.efi
+tftp_read_content(foreman_rails_t)
+tftp_read_rw_content(foreman_rails_t)
+tftp_search_rw_content(foreman_rails_t)
+
+# execute mkfs.msdos
+fstools_exec(foreman_rails_t)
+
+# isohybrid reads random
+dev_read_rand(foreman_rails_t)
+
+######################################
+#
 # Foreman Hooks plugin
 #
 
