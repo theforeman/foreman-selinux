@@ -1,3 +1,12 @@
+2020-08-03	Tomer Brisker <tbrisker@gmail.com>
+	* Release 2.1.1
+
+2020-07-20	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #30422 - Bootdisk EFI mkfs.msdos call
+
+2020-07-02	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #30279 - allow http(s) proxy ports by default
+
 2020-07-01	Tomer Brisker <tbrisker@gmail.com>
 	* Release 2.1.0
 
