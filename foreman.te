@@ -442,6 +442,7 @@ files_search_var_lib(websockify_t)
 read_files_pattern(websockify_t, puppet_var_lib_t, puppet_var_lib_t)
 files_search_etc(websockify_t)
 read_files_pattern(websockify_t, puppet_etc_t, puppet_etc_t)
+corecmd_exec_ls(websockify_t)
 
 tunable_policy(`websockify_can_connect_all',`
     corenet_tcp_connect_all_ports(websockify_t)
