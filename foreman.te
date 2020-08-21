@@ -187,6 +187,7 @@ init_daemon_domain(foreman_rails_t, foreman_rails_exec_t)
 allow foreman_rails_t unconfined_service_t:tcp_socket { connected_stream_socket_perms };
 
 # Generic domain rules
+kerberos_read_config(foreman_rails_t)
 auth_read_passwd(foreman_rails_t)
 dev_list_sysfs(foreman_rails_t)
 dev_read_sysfs(foreman_rails_t)
@@ -314,6 +315,10 @@ optional_policy(`
 tunable_policy(`foreman_rails_can_connect_all',`
     corenet_tcp_connect_all_ports(foreman_rails_t)
 ')
+
+# Allow executing rpm in the About page for diagnostics
+rpm_exec(foreman_rails_t)
+rpm_read_db(foreman_rails_t)
 
 ######################################
 #
