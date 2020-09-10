@@ -186,6 +186,9 @@ init_daemon_domain(foreman_rails_t, foreman_rails_exec_t)
 # https://community.theforeman.org/t/foreman-nightly-rpm-pipeline-611-failed/19179
 allow foreman_rails_t unconfined_service_t:tcp_socket { connected_stream_socket_perms };
 
+# Socket and PID files transition
+files_pid_filetrans(foreman_rails_t, foreman_var_run_t, { file dir sock_file })
+
 # Generic domain rules
 kerberos_read_config(foreman_rails_t)
 auth_read_passwd(foreman_rails_t)
@@ -535,6 +538,10 @@ optional_policy(`
 # Apache httpd reads puppet certs
 read_files_pattern(httpd_t, puppet_etc_t, puppet_etc_t)
 read_lnk_files_pattern(httpd_t, puppet_etc_t, puppet_etc_t)
+
+# Allow Apache access to the Unix socket
+files_search_pids(httpd_t)
+stream_connect_pattern(httpd_t, foreman_var_run_t, foreman_var_run_t, foreman_rails_t)
 
 ##############################################
 #
