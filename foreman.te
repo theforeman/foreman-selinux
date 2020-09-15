@@ -269,6 +269,10 @@ corenet_tcp_connect_ssh_port(foreman_rails_t)
 corenet_udp_bind_generic_port(foreman_rails_t)
 corenet_udp_bind_generic_node(foreman_rails_t)
 
+# Allow to perform TCP DNS search when response is too big (BZ#1877443)
+# The following macro incudes corenet_tcp_connect_dns_port(foreman_rails_t)
+sysnet_dns_name_resolve(foreman_rails_t)
+
 # rubygem FFI is used in foreman-tasks (BZ#1670109 / RM#26951)
 allow foreman_rails_t self:process execmem;
 
