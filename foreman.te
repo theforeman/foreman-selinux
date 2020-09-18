@@ -28,7 +28,7 @@ policy_module(foreman, @@VERSION@@)
 ## Allow Ruby on Rails to run foreman (deprecated).
 ## </p>
 ## </desc>
-gen_tunable(passenger_run_foreman, false)
+gen_tunable(passenger_run_foreman, true)
 
 ## <desc>
 ## <p>
@@ -543,7 +543,11 @@ read_lnk_files_pattern(httpd_t, puppet_etc_t, puppet_etc_t)
 # up on over the past years. We plan to remove this completely from the
 # policy in the near future.
 
+# Rules which cannot be in an optional block
 domain_obj_id_change_exemption(passenger_t)
+sysnet_dns_name_resolve(passenger_t)
+# End of rules
+
 tunable_policy(`passenger_run_foreman', `
     allow passenger_t self:capability dac_override;
     allow passenger_t self:capability sys_resource;
@@ -574,6 +578,42 @@ tunable_policy(`passenger_run_foreman', `
     admin_pattern(httpd_t, passenger_tmp_t, passenger_tmp_t)
     admin_pattern(passenger_t, httpd_tmp_t, httpd_tmp_t)
     corenet_tcp_connect_smtp_port(passenger_t)
+')
+optional_policy(`
+    tunable_policy(`passenger_run_foreman', `
+        files_manage_generic_tmp_files(passenger_t)
+        files_manage_generic_tmp_dirs(passenger_t)
+    ')
+')
+optional_policy(`
+    tunable_policy(`passenger_run_foreman', `
+        manage_files_pattern(passenger_t, system_cronjob_tmp_t, system_cronjob_tmp_t)
+        manage_dirs_pattern(passenger_t, system_cronjob_tmp_t, system_cronjob_tmp_t)
+        read_files_pattern(httpd_t, puppet_etc_t, puppet_etc_t)
+        read_lnk_files_pattern(httpd_t, puppet_etc_t, puppet_etc_t)
+    ')
+')
+optional_policy(`
+    tunable_policy(`passenger_run_foreman', `
+        allow passenger_t http_cache_port_t:tcp_socket name_connect;
+        allow passenger_t squid_port_t:tcp_socket name_connect;
+    ')
+')
+optional_policy(`
+    tunable_policy(`passenger_run_foreman', `
+        tftp_read_content(passenger_t)
+        tftp_read_rw_content(passenger_t)
+        tftp_search_rw_content(passenger_t)
+        fstools_exec(passenger_t)
+        dev_read_rand(passenger_t)
+        kerberos_read_config(passenger_t)
+    ')
+')
+optional_policy(`
+    tunable_policy(`passenger_run_foreman', `
+        rpm_exec(passenger_t)
+        rpm_read_db(passenger_t)
+    ')
 ')
 optional_policy(`
     tunable_policy(`passenger_run_foreman', `
