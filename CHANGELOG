@@ -1,3 +1,13 @@
+2020-09-24	Tomer Brisker <tbrisker@gmail.com>
+	* Release 2.1.3
+
+2020-09-21	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #30866 - enable and backport passenger rules
+	* Fixes #30845 - allow DNS over TCP
+
+2020-08-25	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #30675 - allow readonly RPM commands
+
 2020-08-20	Tomer Brisker <tbrisker@gmail.com>
 	* Release 2.1.2
 
