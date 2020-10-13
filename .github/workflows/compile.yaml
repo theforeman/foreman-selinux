@@ -1,17 +1,28 @@
 ---
 name: Compile policy
 
-on: [pull_request]
+on:
+  - pull_request
+  - push
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        centos: ["7", "8"]
+    container:
+      image: centos:${{ matrix.centos }}
 
     steps:
       - uses: actions/checkout@v2
 
       - name: Install SELinux
-        run: sudo apt-get install policycoreutils selinux-utils selinux-basics
+        run: yum install -y selinux-policy-devel policycoreutils bzip2 perl
 
-      - name: Compile policy for RHEL7
-        run: make DISTO=rhel7
+      - name: Compile policy
+        run: make DISTRO=rhel${{ matrix.centos }}
+
+      - name: Check syntax of shell scripts
+        run: bash -n *-relabel *-enable *-disable
