@@ -1,0 +1,17 @@
+---
+name: Compile policy
+
+on: [pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install SELinux
+        run: sudo apt-get install policycoreutils selinux-utils selinux-basics
+
+      - name: Compile policy for RHEL7
+        run: make DISTO=rhel7
