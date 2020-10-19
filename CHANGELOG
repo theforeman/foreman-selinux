@@ -1,3 +1,11 @@
+2020-10-19	Tomer Brisker <tbrisker@gmail.com>
+	* Release 2.2.0-rc4
+
+2020-09-21	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #30866 - enable and backport passenger rules
+	* Fixes #30845 - allow DNS over TCP
+	* Fixes #30657 - allow websockify to list bin
+
 2020-09-14	Tomer Brisker <tbrisker@gmail.com>
 	* Release 2.2.0-rc3
 
