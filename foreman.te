@@ -353,6 +353,18 @@ systemd_config_generic_services(logrotate_t)
 manage_files_pattern(foreman_rails_t, system_cronjob_tmp_t, system_cronjob_tmp_t)
 manage_dirs_pattern(foreman_rails_t, system_cronjob_tmp_t, system_cronjob_tmp_t)
 
+######################################
+#
+# RPM temp workaround
+# https://community.theforeman.org/t/foreman-nightly-rpm-pipeline-946-failed/
+
+gen_require(`
+    type rpm_script_tmp_t;
+')
+
+manage_files_pattern(foreman_rails_t, rpm_script_tmp_t, rpm_script_tmp_t)
+manage_dirs_pattern(foreman_rails_t, rpm_script_tmp_t, rpm_script_tmp_t)
+
 #######################################
 #
 # Remote Execution
