@@ -327,6 +327,21 @@ tunable_policy(`foreman_rails_can_connect_all',`
 rpm_exec(foreman_rails_t)
 rpm_read_db(foreman_rails_t)
 
+# Disregard denials for CVE-2019-3881 where bundler creates files in
+# /tmp/bundler if the home is not writable
+# This needs to be done for any type which can create /tmp/bundler
+gen_require(`
+    type rpm_script_tmp_t;
+    type system_cronjob_tmp_t;
+')
+
+dontaudit foreman_rails_t rpm_script_tmp_t:dir manage_dir_perms;
+dontaudit foreman_rails_t rpm_script_tmp_t:dir rw_dir_perms;
+dontaudit foreman_rails_t rpm_script_tmp_t:file manage_file_perms;
+dontaudit foreman_rails_t system_cronjob_tmp_t:dir manage_dir_perms;
+dontaudit foreman_rails_t system_cronjob_tmp_t:dir rw_dir_perms;
+dontaudit foreman_rails_t system_cronjob_tmp_t:file manage_file_perms;
+
 ######################################
 #
 # Logrotate and cron
@@ -334,7 +349,6 @@ rpm_read_db(foreman_rails_t)
 
 gen_require(`
     type logrotate_t;
-    type system_cronjob_tmp_t;
 ')
 
 # Allow sending signals in logrotate scripts
@@ -346,12 +360,6 @@ allow logrotate_t foreman_rails_unit_file_t:service manage_service_perms;
 # /etc/logrotate.d/foreman-proxy with logs as var_log_t
 files_list_var(logrotate_t)
 systemd_config_generic_services(logrotate_t)
-
-# When Foreman cronjob is started before Ruby on Rails, /tmp/bundler
-# is created with system_u:object_r:system_cronjob_tmp_t:s0 label denying
-# access to the web process
-manage_files_pattern(foreman_rails_t, system_cronjob_tmp_t, system_cronjob_tmp_t)
-manage_dirs_pattern(foreman_rails_t, system_cronjob_tmp_t, system_cronjob_tmp_t)
 
 #######################################
 #
