@@ -157,10 +157,6 @@ require{
     type passenger_t;
     type passenger_tmp_t;
     type proc_net_t;
-    type puppet_etc_t;
-    type puppet_log_t;
-    type puppet_port_t;
-    type puppet_var_lib_t;
     type puppetmaster_exec_t;
     type puppetmaster_t;
     type sysctl_net_t;
@@ -204,7 +200,9 @@ sysnet_read_config(foreman_rails_t)
 
 # Certificates (Foreman uses puppet certificates as well)
 miscfiles_read_certs(foreman_rails_t)
-puppet_read_config(foreman_rails_t)
+optional_policy(`
+    puppet_read_config(foreman_rails_t)
+')
 
 # It is not possible to do transition into SCL application
 # without calling a shell: https://github.com/sclorg/scl-utils/issues/31
@@ -229,15 +227,18 @@ files_read_usr_files(foreman_rails_t)
 # Allow Foreman to access log files (but not delete or truncate them). Ideally
 # only create and append should be allowed, however rake tasks also fall into
 # the same domain and those tasks often simply writes to log files.
-logging_search_logs(foreman_rails_t)
-logging_list_logs(foreman_rails_t)
+optional_policy(`
+    logging_list_logs(foreman_rails_t)
+')
 write_files_pattern(foreman_rails_t, foreman_log_t, foreman_log_t)
 allow foreman_rails_t foreman_log_t:dir { create_file_perms append_file_perms list_dir_perms search_dir_perms };
 allow foreman_rails_t foreman_log_t:file { create_file_perms append_file_perms };
 
 # Allow "logger" command for debugging
 kernel_dgram_send(foreman_rails_t)
-logging_create_devlog_dev(foreman_rails_t)
+optional_policy(`
+    logging_create_devlog_dev(foreman_rails_t)
+')
 
 # Systemd socket activation (Puma called with LISTEN_FDS environmental variable)
 allow foreman_rails_t self:netlink_route_socket { all_netlink_route_socket_perms };
@@ -448,14 +449,20 @@ corenet_tcp_bind_vnc_port(websockify_t)
 corenet_tcp_bind_vnc_port(foreman_rails_t)
 dev_read_urand(websockify_t)
 kernel_read_system_state(websockify_t)
-logging_send_syslog_msg(websockify_t)
+optional_policy(`
+    logging_send_syslog_msg(websockify_t)
+')
+optional_policy(`
+    abrt_stream_connect(websockify_t)
+')
 miscfiles_read_localization(websockify_t)
 sysnet_read_config(websockify_t)
-abrt_stream_connect(websockify_t)
 files_search_var_lib(websockify_t)
-read_files_pattern(websockify_t, puppet_var_lib_t, puppet_var_lib_t)
+optional_policy(`
+    puppet_read_lib(websockify_t)
+    puppet_read_config(websockify_t)
+')
 files_search_etc(websockify_t)
-read_files_pattern(websockify_t, puppet_etc_t, puppet_etc_t)
 corecmd_exec_ls(websockify_t)
 
 tunable_policy(`websockify_can_connect_all',`
@@ -495,9 +502,11 @@ optional_policy(`
 #
 
 # read grubx64.efi
-tftp_read_content(foreman_rails_t)
-tftp_read_rw_content(foreman_rails_t)
-tftp_search_rw_content(foreman_rails_t)
+optional_policy(`
+    tftp_read_content(foreman_rails_t)
+    tftp_read_rw_content(foreman_rails_t)
+    tftp_search_rw_content(foreman_rails_t)
+')
 
 # execute mkfs.msdos
 fstools_exec(foreman_rails_t)
@@ -538,8 +547,9 @@ optional_policy(`
 #
 
 # Apache httpd reads puppet certs
-read_files_pattern(httpd_t, puppet_etc_t, puppet_etc_t)
-read_lnk_files_pattern(httpd_t, puppet_etc_t, puppet_etc_t)
+optional_policy(`
+    puppet_read_config(httpd_t)
+')
 
 # Allow Apache access to the Unix socket
 files_search_pids(httpd_t)
@@ -569,7 +579,6 @@ tunable_policy(`passenger_run_foreman', `
     allow passenger_t foreman_proxy_port_t:tcp_socket name_connect;
     corenet_tcp_connect_postgresql_port(passenger_t)
     corenet_tcp_connect_redis_port(passenger_t)
-    logging_search_logs(passenger_t)
     logging_list_logs(passenger_t)
     write_files_pattern(passenger_t, foreman_log_t, foreman_log_t)
     allow passenger_t foreman_log_t:dir { create_file_perms append_file_perms list_dir_perms search_dir_perms };
@@ -593,14 +602,15 @@ optional_policy(`
     tunable_policy(`passenger_run_foreman', `
         files_manage_generic_tmp_files(passenger_t)
         files_manage_generic_tmp_dirs(passenger_t)
+        logging_search_logs(passenger_t)
+        logging_list_logs(passenger_t)
     ')
 ')
 optional_policy(`
     tunable_policy(`passenger_run_foreman', `
         manage_files_pattern(passenger_t, system_cronjob_tmp_t, system_cronjob_tmp_t)
         manage_dirs_pattern(passenger_t, system_cronjob_tmp_t, system_cronjob_tmp_t)
-        read_files_pattern(httpd_t, puppet_etc_t, puppet_etc_t)
-        read_lnk_files_pattern(httpd_t, puppet_etc_t, puppet_etc_t)
+        puppet_read_config(httpd_t)
     ')
 ')
 optional_policy(`
