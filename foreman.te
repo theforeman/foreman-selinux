@@ -695,6 +695,11 @@ optional_policy(`
         corenet_tcp_connect_ldap_port(passenger_t)
     ')
 ')
+optional_policy(`
+    tunable_policy(`passenger_run_foreman', `
+        domtrans_pattern(passenger_t, websockify_exec_t, websockify_t)
+    ')
+')
 
 # Plugins and external programs
 read_lnk_files_pattern(cockpit_ws_t, cockpit_session_exec_t, cockpit_session_exec_t)
