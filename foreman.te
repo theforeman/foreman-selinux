@@ -25,13 +25,6 @@ policy_module(foreman, @@VERSION@@)
 
 ## <desc>
 ## <p>
-## Allow Ruby on Rails to run foreman (deprecated).
-## </p>
-## </desc>
-gen_tunable(passenger_run_foreman, true)
-
-## <desc>
-## <p>
 ## Determine whether Ruby on Rails can listen/bind any port.
 ## </p>
 ## </desc>
@@ -154,8 +147,6 @@ require{
     type httpd_tmp_t;
     type ifconfig_exec_t;
     type init_t;
-    type passenger_t;
-    type passenger_tmp_t;
     type proc_net_t;
     type puppetmaster_exec_t;
     type puppetmaster_t;
@@ -216,7 +207,6 @@ files_manage_generic_tmp_dirs(foreman_rails_t)
 # General files read and write
 admin_pattern(foreman_rails_t, foreman_lib_t, foreman_lib_t)
 admin_pattern(foreman_rails_t, foreman_var_run_t, foreman_var_run_t)
-admin_pattern(foreman_rails_t, passenger_tmp_t, passenger_tmp_t)
 
 # Gettext support
 miscfiles_read_localization(foreman_rails_t)
@@ -536,9 +526,7 @@ init_daemon_domain(foreman_rails_t, foreman_tasks_exec_t)
 #
 
 optional_policy(`
-    tunable_policy(`passenger_run_foreman', `
-        corenet_tcp_connect_memcache_port(foreman_rails_t)
-    ')
+    corenet_tcp_connect_memcache_port(foreman_rails_t)
 ')
 
 ######################################
@@ -554,205 +542,3 @@ optional_policy(`
 # Allow Apache access to the Unix socket
 files_search_pids(httpd_t)
 stream_connect_pattern(httpd_t, foreman_var_run_t, foreman_var_run_t, foreman_rails_t)
-
-##############################################
-#
-# Passenger/httpd temporary policy
-#
-# This is a squashed version of passenger implementation which we ended
-# up on over the past years. We plan to remove this completely from the
-# policy in the near future.
-
-# Rules which cannot be in an optional block
-domain_obj_id_change_exemption(passenger_t)
-sysnet_dns_name_resolve(passenger_t)
-# End of rules
-
-tunable_policy(`passenger_run_foreman', `
-    allow passenger_t self:capability dac_override;
-    allow passenger_t self:capability sys_resource;
-    allow passenger_t self:process signull;
-    allow passenger_t self:tcp_socket listen;
-    allow passenger_t self:process execmem;
-    miscfiles_read_localization(passenger_t)
-    allow passenger_t websm_port_t:tcp_socket name_connect;
-    allow passenger_t foreman_proxy_port_t:tcp_socket name_connect;
-    corenet_tcp_connect_postgresql_port(passenger_t)
-    corenet_tcp_connect_redis_port(passenger_t)
-    logging_list_logs(passenger_t)
-    write_files_pattern(passenger_t, foreman_log_t, foreman_log_t)
-    allow passenger_t foreman_log_t:dir { create_file_perms append_file_perms list_dir_perms search_dir_perms };
-    allow passenger_t foreman_log_t:file { create_file_perms append_file_perms };
-    corenet_tcp_connect_all_ports(passenger_t)
-    files_read_usr_files(passenger_t)
-    term_search_ptys(passenger_t)
-    files_exec_usr_files(passenger_t)
-    dev_read_sysfs(passenger_t)
-    dev_search_sysfs(passenger_t)
-    dev_read_rand(passenger_t)
-    allow passenger_t self:process setsockcreate;
-    miscfiles_manage_cert_dirs(passenger_t)
-    miscfiles_manage_generic_cert_files(passenger_t)
-    can_exec(passenger_t, passenger_tmp_t)
-    admin_pattern(httpd_t, passenger_tmp_t, passenger_tmp_t)
-    admin_pattern(passenger_t, httpd_tmp_t, httpd_tmp_t)
-    corenet_tcp_connect_smtp_port(passenger_t)
-')
-optional_policy(`
-    tunable_policy(`passenger_run_foreman', `
-        files_manage_generic_tmp_files(passenger_t)
-        files_manage_generic_tmp_dirs(passenger_t)
-        logging_search_logs(passenger_t)
-        logging_list_logs(passenger_t)
-    ')
-')
-optional_policy(`
-    tunable_policy(`passenger_run_foreman', `
-        manage_files_pattern(passenger_t, system_cronjob_tmp_t, system_cronjob_tmp_t)
-        manage_dirs_pattern(passenger_t, system_cronjob_tmp_t, system_cronjob_tmp_t)
-        puppet_read_config(httpd_t)
-    ')
-')
-optional_policy(`
-    tunable_policy(`passenger_run_foreman', `
-        allow passenger_t http_cache_port_t:tcp_socket name_connect;
-        allow passenger_t squid_port_t:tcp_socket name_connect;
-    ')
-')
-optional_policy(`
-    tunable_policy(`passenger_run_foreman', `
-        tftp_read_content(passenger_t)
-        tftp_read_rw_content(passenger_t)
-        tftp_search_rw_content(passenger_t)
-        fstools_exec(passenger_t)
-        dev_read_rand(passenger_t)
-        kerberos_read_config(passenger_t)
-    ')
-')
-optional_policy(`
-    tunable_policy(`passenger_run_foreman', `
-        rpm_exec(passenger_t)
-        rpm_read_db(passenger_t)
-    ')
-')
-optional_policy(`
-    tunable_policy(`passenger_run_foreman', `
-        postgresql_stream_connect(passenger_t)
-    ')
-')
-optional_policy(`
-    tunable_policy(`passenger_run_foreman', `
-        admin_pattern(httpd_t, foreman_lib_t, foreman_lib_t)
-        admin_pattern(passenger_t, foreman_lib_t, foreman_lib_t)
-        admin_pattern(passenger_t, foreman_var_run_t, foreman_var_run_t)
-        corenet_tcp_connect_virt_port(passenger_t)
-        corenet_tcp_connect_ssh_port(passenger_t)
-        read_files_pattern(passenger_t, foreman_db_t, foreman_db_t)
-        write_files_pattern(passenger_t, foreman_db_t, foreman_db_t)
-        corenet_udp_bind_generic_port(passenger_t)
-        admin_pattern(passenger_t, passenger_tmp_t, passenger_tmp_t)
-    ')
-')
-optional_policy(`
-    tunable_policy(`passenger_run_foreman', `
-        allow passenger_t self:process getsession;
-        fs_rw_anon_inodefs_files(passenger_t)
-        allow passenger_t httpd_t:unix_stream_socket { read write getattr };
-        fs_getattr_xattr_fs(passenger_t)
-        allow passenger_t self:capability2 block_suspend;
-    ')
-')
-optional_policy(`
-    tunable_policy(`passenger_run_foreman', `
-        corenet_tcp_connect_puppet_port(httpd_t)
-        corenet_tcp_connect_puppet_port(passenger_t)
-    ')
-')
-optional_policy(`
-    tunable_policy(`passenger_run_foreman', `
-        corenet_tcp_connect_http_port(httpd_t)
-        corenet_tcp_connect_http_port(passenger_t)
-    ')
-')
-optional_policy(`
-    tunable_policy(`passenger_run_foreman', `
-        mta_send_mail(passenger_t)
-    ')
-')
-optional_policy(`
-    tunable_policy(`passenger_run_foreman', `
-        hostname_exec(passenger_t)
-    ')
-')
-optional_policy(`
-    tunable_policy(`passenger_run_foreman', `
-        corecmd_search_bin(passenger_t)
-        domtrans_pattern(passenger_t, puppetmaster_exec_t, puppetmaster_t)
-    ')
-')
-optional_policy(`
-    tunable_policy(`passenger_run_foreman', `
-        corenet_tcp_connect_ldap_port(passenger_t)
-    ')
-')
-optional_policy(`
-    tunable_policy(`passenger_run_foreman', `
-        domtrans_pattern(passenger_t, websockify_exec_t, websockify_t)
-    ')
-')
-
-# Plugins and external programs
-read_lnk_files_pattern(cockpit_ws_t, cockpit_session_exec_t, cockpit_session_exec_t)
-read_lnk_files_pattern(cockpit_session_t, cockpit_session_exec_t, cockpit_session_exec_t)
-corecmd_exec_bin(cockpit_ws_t)
-corenet_tcp_connect_http_port(cockpit_session_t)
-corenet_tcp_connect_websm_port(cockpit_session_t)
-corenet_tcp_connect_websm_port(httpd_t)
-corenet_tcp_connect_commplex_main_port(passenger_t)
-corenet_tcp_connect_osapi_compute_port(passenger_t)
-corenet_tcp_connect_neutron_port(passenger_t)
-optional_policy(`
-    tunable_policy(`passenger_run_foreman',`
-        require {
-            class process { getcap setcap };
-        }
-        allow passenger_t self:process { getcap setcap };
-
-        ssh_exec(passenger_t)
-        ssh_read_user_home_files(passenger_t)
-    ')
-')
-optional_policy(`
-    tunable_policy(`passenger_run_foreman',`
-        virt_getattr_exec(passenger_t)
-        virt_read_pid_symlinks(passenger_t)
-        virt_stream_connect(passenger_t)
-    ')
-')
-allow passenger_t websockify_t:process { siginh noatsecure rlimitinh };
-corenet_tcp_bind_vnc_port(passenger_t)
-allow passenger_t foreman_container_port_t:tcp_socket name_connect;
-optional_policy(`
-    tunable_policy(`passenger_run_foreman',`
-        ifdef(`has_container', `
-            container_stream_connect(passenger_t)
-            container_spc_stream_connect(passenger_t)
-        ')
-        ifdef(`has_docker', `
-            docker_stream_connect(passenger_t)
-            #docker_spc_stream_connect(passenger_t)
-            gen_require(`
-                type spc_t, spc_var_run_t;
-                attribute pidfile;
-            ')
-            files_search_pids(passenger_t)
-            allow passenger_t pidfile:sock_file write_sock_file_perms;
-            allow passenger_t spc_t:unix_stream_socket connectto;
-        ')
-    ')
-')
-optional_policy(`
-    tunable_policy(`passenger_run_foreman',`
-        corenet_tcp_connect_memcache_port(passenger_t)
-    ')
-')

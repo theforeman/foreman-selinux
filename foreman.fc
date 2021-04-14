@@ -38,22 +38,6 @@
 /usr/share/foreman/bin/rails                    --  gen_context(system_u:object_r:foreman_rails_exec_t,s0)
 /usr/libexec/foreman/.*-selinux                 --  gen_context(system_u:object_r:foreman_rails_exec_t,s0)
 
-# Passenger non-SCL file contexts
-
-/usr/libexec/passenger/.* -- gen_context(system_u:object_r:passenger_exec_t,s0)
-
-/usr/share/passenger/helper-scripts/prespawn -- gen_context(system_u:object_r:passenger_exec_t,s0)
-
-/usr/lib6?4?/passenger/support-binaries/.* -- gen_context(system_u:object_r:passenger_exec_t,s0)
-
-/var/run/rubygem-passenger(.*)?         gen_context(system_u:object_r:passenger_var_run_t,s0)
-
-# Passenger SCL file contexts (/opt/*/root prefix is distribution equivalence)
-
-/usr/share/gems/gems/passenger-.*/agents/.* -- gen_context(system_u:object_r:passenger_exec_t,s0)
-/usr/share/gems/gems/passenger-.*/helper-scripts/prespawn -- gen_context(system_u:object_r:passenger_exec_t,s0)
-/usr/lib6?4?/gems/(exts|ruby)/passenger-.*/agents/.* -- gen_context(system_u:object_r:passenger_exec_t,s0)
-
 # Foreman Remote Execution
 
 /usr/sbin/foreman-cockpit-session       gen_context(system_u:object_r:cockpit_session_exec_t,s0)
