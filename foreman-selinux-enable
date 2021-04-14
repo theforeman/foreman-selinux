@@ -46,9 +46,6 @@ do
     grep -qE 'tcp 19090' $TMP_PORTS || \
       echo "port -a -t websm_port_t -p tcp 19090" >> $TMP_EXEC_AFTER
 
-    # Set flags for passenger
-    echo "boolean -m --on httpd_setrlimit" >> $TMP_EXEC_AFTER
-
     # Commit changes
     test -s $TMP_EXEC_AFTER && /usr/sbin/semanage -S $selinuxvariant -i $TMP_EXEC_AFTER
 
