@@ -1,4 +1,130 @@
-2018-10-16	Tomer Brisker <tbrisker@gmail.com>
+2021-08-06	Ewoud Kohl van Wijngaarden <ewoud@kohlvanwijngaarden.nl>
+	* Release 3.0.0-rc1
+
+2021-07-22	Tomer Brisker <tbrisker@gmail.com>
+	* Bump version to 3.0-develop
+
+2021-05-04	Tomer Brisker <tbrisker@gmail.com>
+	* bump version to 2.6-develop
+
+2021-04-14	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #32316 - drop all passenger-related rules
+
+2021-03-16	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #32110 - add passenger websockify transition
+	* Fixes #32023 - logging, puppet, tftp, abrt optional
+	* Fixes #32023 - make ipa macro optional
+
+2021-03-08	Ewoud Kohl van Wijngaarden <ewoud@kohlvanwijngaarden.nl>
+	* Refs #32022 - Remove Ruby 1.8 paths
+
+2021-02-01	Amit Upadhye <upadhyeammit@gmail.com>
+	* Bump version to 2.5.0-develop
+
+2020-11-26	Evgeni Golov <evgeni@golov.de>
+	* match /var/run, not /run
+	* make /run/foreman.sock match ALL files, not only regular
+
+2020-11-03	Tomer Brisker <tbrisker@gmail.com>
+	* Bump version to 2.4-develop
+
+2020-10-13	Lukas Zapletal <lzap+git@redhat.com>
+	* Update compilation GH action
+	* Add compilation GH action
+
+2020-10-13	Eric D. Helms <ericdhelms@gmail.com>
+	* Refs #30803: Allow Apache to connect to Unix socket
+
+2020-09-18	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #30866 - enable and backport passenger rules
+
+2020-09-15	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #30845 - allow DNS over TCP
+
+2020-08-31	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #30657 - allow websockify to list bin
+
+2020-08-21	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #30675 - allow readonly RPM commands
+
+2020-08-11	Tomer Brisker <tbrisker@gmail.com>
+	* Bump version to 2.3-develop
+
+2020-07-20	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #30422 - Bootdisk EFI mkfs.msdos call
+
+2020-07-01	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #30279 - allow http(s) proxy ports by default
+
+2020-06-18	Lukas Zapletal <lzap+git@redhat.com>
+	* Refs #30147 - allow accept to unconfined service
+
+2020-06-17	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #30147 - allow connection to unconfined service
+
+2020-06-09	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #30069 - allow reading puppet certs to httpd
+
+2020-06-03	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #29778 - puma policy, passenger optional
+
+2020-05-27	Lukáš Zapletal <lzap+git@redhat.com>
+	* Fixes #29882 - allow cockpit connections (#101)
+
+2020-05-13	Tomer Brisker <tbrisker@gmail.com>
+	* Bump version to 2.2-develop
+
+2020-02-13	Tomer Brisker <tbrisker@gmail.com>
+	* bump version to 2.1-develop
+
+2020-01-27	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #28847 - allow connections to Redis
+
+2020-01-06	Tomer Brisker <tbrisker@gmail.com>
+	* bump version to 2.0-develop
+
+2019-11-29	Lukas Zapletal <lzap+git@redhat.com>
+	* Refs #28252 - allow httpd_t to connect to cockpit session
+
+2019-11-19	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #28252 - rules for foreman cockpit session
+
+2019-10-29	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #28115 - policy for foreman-cockpit service
+
+2019-10-28	Tomer Brisker <tbrisker@gmail.com>
+	* bump version to 1.25-develop
+
+2019-07-30	Tomer Brisker <tbrisker@gmail.com>
+	* bump version to 1.24-develop
+
+2019-06-26	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #19053 - allow logrotate to send signals
+
+2019-06-06	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #26951 - allow execmem in passenger too
+	* Fixes #26948 - added dac_override capability back
+
+2019-05-09	Evgeni Golov <evgeni@golov.de>
+	* Drop RHEL6 statements, EL7+ only
+	* Fixes #26762 - move auth_read_passwd ouside the tunable_policy
+
+2019-04-18	Tomer Brisker <tbrisker@gmail.com>
+	* Bump version to 1.23-develop
+
+2019-04-09	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #26534 - policy is now passenger6 compatible
+
+2019-04-03	Lukas Zapletal <lzap+git@redhat.com>
+	* Fixes #16273 - allow execmem
+
+2019-01-14	Tomer Brisker <tbrisker@gmail.com>
+	* Bump version to 1.22-develop
+
+2019-01-08	Ben Meekhof <bmeekhof@users.noreply.github.com>
+	* Fixes #25783: Allow websockify to read puppet_etc_t
+
+2018-10-17	Tomer Brisker <tbrisker@gmail.com>
 	* Bump version to 1.21-develop
 
 2018-09-21	Ewoud Kohl van Wijngaarden <ewoud@kohlvanwijngaarden.nl>
