@@ -75,13 +75,6 @@ gen_tunable(foreman_rails_can_spawn_ssh, true)
 
 ## <desc>
 ## <p>
-## Determine whether Ruby on Rails can connect to http_port_t when preloading app.
-## </p>
-## </desc>
-gen_tunable(foreman_rails_can_connect_http, true)
-
-## <desc>
-## <p>
 ## Determine whether Ruby on Rails can connect to http_cache_port_t and squid_port_t.
 ## </p>
 ## </desc>
