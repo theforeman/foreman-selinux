@@ -13,7 +13,7 @@ jobs:
       matrix:
         centos: ["7", "8"]
     container:
-      image: centos:${{ matrix.centos }}
+      image: quay.io/centos/centos:${{ matrix.centos }}
 
     steps:
       - uses: actions/checkout@v2
