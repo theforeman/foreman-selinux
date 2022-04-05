@@ -535,3 +535,13 @@ optional_policy(`
 # Allow Apache access to the Unix socket
 files_search_pids(httpd_t)
 stream_connect_pattern(httpd_t, foreman_var_run_t, foreman_var_run_t, foreman_rails_t)
+
+######################################
+#
+# Foreman Templates plugin
+#
+
+# The plugin spawns git which needs be able to map files from /tmp into memory
+# and manage links
+allow foreman_rails_t tmp_t:file map;
+allow foreman_rails_t tmp_t:lnk_file { create unlink };
