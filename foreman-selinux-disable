@@ -19,9 +19,8 @@ do
     echo "$(date) $0" >> $LOG
 
     # Remove all user defined ports (including the default one)
-    # (docker and elastic can be removed in future release)
     /usr/sbin/semanage port -E | \
-      grep -E '(elasticsearch|docker|foreman_.*)_port_t' | \
+      grep 'foreman_proxy_port_t' | \
       sed s/-a/-d/g | \
       tee -a $LOG | \
       /usr/sbin/semanage -S $selinuxvariant -i -

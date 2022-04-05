@@ -11,14 +11,6 @@ ifndef DISTRO
 $(error *** Set the DISTRO variable e.g. rhel7 or fedora21 ***)
 endif
 
-ifneq ("$(wildcard /usr/share/selinux/devel/include/*/docker.if)","")
-export M4PARAM += -D has_docker
-else ifneq ("$(wildcard /usr/share/selinux/devel/include/*/container.if)","")
-export M4PARAM += -D has_container
-else ifneq ($(DISTRO),rhel6)
-$(error *** Interface container.if or docker.if not present, cannot continue ***)
-endif
-
 all: policies all-data
 
 load: \

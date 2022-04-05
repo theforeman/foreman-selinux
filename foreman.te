@@ -54,13 +54,6 @@ gen_tunable(websockify_can_connect_all, false)
 
 ## <desc>
 ## <p>
-## Determine whether Ruby on Rails can connect to Docker via local socket
-## </p>
-## </desc>
-gen_tunable(foreman_rails_can_connect_container_unix, true)
-
-## <desc>
-## <p>
 ## Determine whether Ruby on Rails can connect to OpenStack
 ## </p>
 ## </desc>
@@ -130,9 +123,6 @@ corenet_port(foreman_proxy_port_t)
 
 type foreman_osapi_compute_port_t;
 corenet_port(foreman_osapi_compute_port_t)
-
-type foreman_container_port_t;
-corenet_port(foreman_container_port_t)
 
 require{
     type bin_t;
@@ -450,33 +440,6 @@ corecmd_exec_ls(websockify_t)
 
 tunable_policy(`websockify_can_connect_all',`
     corenet_tcp_connect_all_ports(websockify_t)
-')
-
-######################################
-#
-# Container / Docker
-#
-
-allow foreman_rails_t foreman_container_port_t:tcp_socket name_connect;
-
-optional_policy(`
-    tunable_policy(`foreman_rails_can_connect_container_unix',`
-        ifdef(`has_container', `
-            container_stream_connect(foreman_rails_t)
-            container_spc_stream_connect(foreman_rails_t)
-        ')
-        ifdef(`has_docker', `
-            docker_stream_connect(foreman_rails_t)
-            #docker_spc_stream_connect(foreman_rails_t)
-            gen_require(`
-                type spc_t, spc_var_run_t;
-                attribute pidfile;
-            ')
-            files_search_pids(foreman_rails_t)
-            allow foreman_rails_t pidfile:sock_file write_sock_file_perms;
-            allow foreman_rails_t spc_t:unix_stream_socket connectto;
-        ')
-    ')
 ')
 
 ######################################

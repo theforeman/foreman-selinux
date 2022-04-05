@@ -24,10 +24,6 @@ jobs:
       - name: Install SELinux
         run: yum install -y selinux-policy-devel policycoreutils bzip2 perl
 
-      - name: Install container-selinux
-        run: dnf install -y container-selinux
-        if: matrix.centos == 'stream8'
-
       - name: Compile policy
         run: make DISTRO=rhel$(rpm --eval '%rhel')
 
