@@ -127,13 +127,6 @@ corenet_port(foreman_osapi_compute_port_t)
 require{
     type bin_t;
     type httpd_t;
-    type httpd_tmp_t;
-    type ifconfig_exec_t;
-    type init_t;
-    type proc_net_t;
-    type puppetmaster_exec_t;
-    type puppetmaster_t;
-    type sysctl_net_t;
     type websm_port_t;
     type cockpit_ws_t;
     type cockpit_session_t;
