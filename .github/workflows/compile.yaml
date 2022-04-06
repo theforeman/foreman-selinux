@@ -11,7 +11,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        centos: ["7", "stream8"]
+        centos:
+          - "7"
+          - "stream8"
+          - "stream9"
     container:
       image: quay.io/centos/centos:${{ matrix.centos }}
 
