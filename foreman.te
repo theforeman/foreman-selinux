@@ -245,6 +245,9 @@ corenet_udp_bind_generic_node(foreman_rails_t)
 # The following macro incudes corenet_tcp_connect_dns_port(foreman_rails_t)
 sysnet_dns_name_resolve(foreman_rails_t)
 
+# Allow reading /etc/resolv.conf when using systemd-resolved
+allow foreman_rails_t net_conf_t:lnk_file read;
+
 # rubygem FFI is used in foreman-tasks (BZ#1670109 / RM#26951)
 allow foreman_rails_t self:process execmem;
 
