@@ -26,7 +26,6 @@
 /etc/puppetlabs/puppet/node.rb                  --  gen_context(system_u:object_r:foreman_enc_t, s0)
 
 /var/lib/foreman(/.*)?                              gen_context(system_u:object_r:foreman_lib_t,s0)
-/var/lib/foreman/public(/.*)?                       gen_context(system_u:object_r:httpd_sys_content_t,s0)
 
 /var/log/foreman(/.*)?                              gen_context(system_u:object_r:foreman_log_t,s0)
 
