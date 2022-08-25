@@ -497,6 +497,7 @@ stream_connect_pattern(httpd_t, foreman_var_run_t, foreman_var_run_t, foreman_ra
 
 # Allow Apache access to static assets
 allow httpd_t foreman_lib_t:file { getattr map open read };
+allow httpd_t foreman_lib_t:lnk_file { getattr read };
 
 ######################################
 #
