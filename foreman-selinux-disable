@@ -25,7 +25,7 @@ do
       tee -a $LOG | \
       /usr/sbin/semanage -S $selinuxvariant -i -
     # Unload policy
-    /usr/sbin/semodule -s $selinuxvariant -r foreman
+    /usr/sbin/semodule -X 200 -s $selinuxvariant -r foreman
   fi
 done
 
