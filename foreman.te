@@ -206,6 +206,9 @@ optional_policy(`
     logging_create_devlog_dev(foreman_rails_t)
 ')
 
+# Allow Foreman to connect to the syslog socket
+logging_stream_connect_syslog(foreman_rails_t)
+
 # Systemd socket activation (Puma called with LISTEN_FDS environmental variable)
 allow foreman_rails_t self:netlink_route_socket { all_netlink_route_socket_perms };
 allow foreman_rails_t self:tcp_socket { all_tcp_socket_perms };
