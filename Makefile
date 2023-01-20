@@ -7,10 +7,6 @@ VERSION=99.999
 MANCHAPTER=Foreman
 TMPDIR=local-tmp-foreman
 
-ifndef DISTRO
-$(error *** Set the DISTRO variable e.g. rhel7 or fedora21 ***)
-endif
-
 all: policies all-data
 
 load: \
@@ -70,7 +66,7 @@ foreman-proxy-selinux-disable: common/selinux-disable.sh
 	-mkdir ${TMPDIR} 2>/dev/null
 	cp $< ${<:.te=.fc} ${<:.te=.if} ${TMPDIR}/
 	sed -i 's/@@VERSION@@/${VERSION}/' ${TMPDIR}/*.te
-	$(MAKE) -C ${TMPDIR} -f /usr/share/selinux/devel/Makefile NAME=${VARIANT} DISTRO=$(DISTRO)
+	$(MAKE) -C ${TMPDIR} -f /usr/share/selinux/devel/Makefile NAME=${VARIANT}
 	mv ${TMPDIR}/$@ .
 
 %.pp.load.tmp: %.pp
@@ -110,7 +106,7 @@ consolidate-installation:
 remote-load:
 ifdef HOST
 	-rsync -qrav . --delete -e ssh --exclude .git ${HOST}:${TMPDIR}/
-	ssh ${HOST} 'cd ${TMPDIR} && sed -i s/@@VERSION@@/${VERSION}/ *.te && make reload DISTRO=${DISTRO}'
+	ssh ${HOST} 'cd ${TMPDIR} && sed -i s/@@VERSION@@/${VERSION}/ *.te && make reload'
 else
 	$(error You need to define your remote ssh hostname as HOST)
 endif
