@@ -8,7 +8,6 @@
   /run/foreman.sock \
   /var/log/foreman \
   /etc/foreman \
-  /etc/puppet/node.rb \
   /etc/puppetlabs/puppet/node.rb \
   /etc/sysconfig/foreman* \
   /usr/lib/systemd/system/foreman* \
