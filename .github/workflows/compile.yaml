@@ -25,7 +25,7 @@ jobs:
         run: yum install -y selinux-policy-devel policycoreutils bzip2 perl
 
       - name: Compile policy
-        run: make DISTRO=rhel$(rpm --eval '%rhel')
+        run: make
 
       - name: Check syntax of shell scripts
         run: bash -n *-relabel *-enable *-disable
