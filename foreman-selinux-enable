@@ -32,8 +32,11 @@ do
     # Commit changes of deleting the ports
     test -s $TMP_EXEC_BEFORE && /usr/sbin/semanage -S $selinuxvariant -i $TMP_EXEC_BEFORE
 
+    # Remove old module on priority 400 if it exists
+    /usr/sbin/semodule -s $selinuxvariant -r foreman &>/dev/null || :
+
     # Load new policy
-    /usr/sbin/semanage module -S $selinuxvariant -a /usr/share/selinux/${selinuxvariant}/foreman.pp.bz2
+    /usr/sbin/semodule -X 200 -s $selinuxvariant -i /usr/share/selinux/packages/${selinuxvariant}/foreman.pp.bz2
 
     # Create port list cache
     /usr/sbin/semanage port -E > $TMP_PORTS

@@ -8,7 +8,7 @@ for selinuxvariant in targeted
 do
   if /usr/sbin/semodule -s \$selinuxvariant -l >/dev/null; then
     # Unload policy
-    /usr/sbin/semodule -s \$selinuxvariant -r $MODULE
+    /usr/sbin/semodule -X 200 -s \$selinuxvariant -r $MODULE
   fi
 done
 EOF
