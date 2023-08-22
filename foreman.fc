@@ -50,4 +50,3 @@
 # Foreman Tasks plugin
 
 /usr/share/gems/gems/foreman-tasks-.*/bin/foreman-tasks -- gen_context(system_u:object_r:foreman_tasks_exec_t,s0)
-/opt/theforeman/tfm/root/usr/share/gems/gems/foreman-tasks-.*/bin/foreman-tasks -- gen_context(system_u:object_r:foreman_tasks_exec_t,s0)
