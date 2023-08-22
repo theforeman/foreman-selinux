@@ -18,8 +18,4 @@
   /usr/libexec/foreman \
   /usr/sbin/foreman-cockpit-session
 
-# relabel SCL
-[ -d /opt/theforeman/tfm/ ] && /sbin/restorecon -ri \
-  /opt/theforeman/tfm/root/usr/share/gems/gems/foreman*
-
 exit 0
