@@ -12,7 +12,6 @@ jobs:
       fail-fast: false
       matrix:
         centos:
-          - "7"
           - "stream8"
           - "stream9"
     container:
