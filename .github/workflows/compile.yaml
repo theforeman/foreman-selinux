@@ -18,7 +18,7 @@ jobs:
       image: quay.io/centos/centos:${{ matrix.centos }}
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Install SELinux
         run: yum install -y selinux-policy-devel policycoreutils bzip2 perl
