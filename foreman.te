@@ -333,10 +333,6 @@ manage_dirs_pattern(foreman_rails_t, system_cronjob_tmp_t, system_cronjob_tmp_t)
 # Remote Execution
 #
 
-# File /usr/sbin/foreman-cockpit-session is a symlink
-read_lnk_files_pattern(cockpit_ws_t, cockpit_session_exec_t, cockpit_session_exec_t)
-read_lnk_files_pattern(cockpit_session_t, cockpit_session_exec_t, cockpit_session_exec_t)
-
 # Run /usr/bin/env and /usr/bin/ruby
 corecmd_exec_bin(cockpit_ws_t)
 kernel_read_system_state(cockpit_ws_t)

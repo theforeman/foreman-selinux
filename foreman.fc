@@ -41,7 +41,6 @@
 # Foreman Remote Execution
 
 /usr/sbin/foreman-cockpit-session       gen_context(system_u:object_r:cockpit_session_exec_t,s0)
-/usr/share/gems/gems/foreman_remote_execution-.*/extra/cockpit/foreman-cockpit-session -- gen_context(system_u:object_r:cockpit_session_exec_t,s0)
 
 # Foreman Hooks plugin
 
