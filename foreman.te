@@ -518,3 +518,15 @@ allow httpd_t foreman_lib_t:lnk_file { getattr read };
 # and manage links
 allow foreman_rails_t tmp_t:file map;
 allow foreman_rails_t tmp_t:lnk_file { create unlink };
+
+######################################
+#
+# Foreman Bootdisk plugin
+#
+
+# The plugin spawns genisoimage which needs access to /dev/shm
+require {
+  type fs_t;
+}
+allow foreman_rails_t tmpfs_t:filesystem getattr;
+allow foreman_rails_t fs_t:filesystem getattr;
