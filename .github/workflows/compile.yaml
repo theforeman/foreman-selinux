@@ -11,11 +11,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        centos:
-          - "stream8"
-          - "stream9"
+        container:
+          - "docker.io/almalinux:8"
+          - "docker.io/almalinux:9"
+          - "quay.io/centos/centos:stream9"
     container:
-      image: quay.io/centos/centos:${{ matrix.centos }}
+      image: ${{ matrix.container }}
 
     steps:
       - uses: actions/checkout@v4
