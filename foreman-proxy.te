@@ -101,6 +101,12 @@ manage_dirs_pattern(foreman_proxy_t, foreman_proxy_spool_t, foreman_proxy_spool_
 manage_files_pattern(foreman_proxy_t, foreman_proxy_spool_t, foreman_proxy_spool_t)
 files_spool_filetrans(foreman_proxy_t, foreman_proxy_spool_t, { dir file })
 
+
+# etc files support
+type foreman_proxy_etc_t;
+files_type(foreman_proxy_etc_t)
+read_files_pattern(foreman_proxy_t, foreman_proxy_etc_t, foreman_proxy_etc_t)
+
 # starting via /bin/env
 corecmd_read_bin_symlinks(foreman_proxy_t)
 

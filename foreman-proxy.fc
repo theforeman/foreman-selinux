@@ -23,3 +23,5 @@
 /var/run/foreman-proxy(/.*)? gen_context(system_u:object_r:foreman_proxy_var_run_t,s0)
 
 /var/spool/foreman-proxy(/.*)? gen_context(system_u:object_r:foreman_proxy_spool_t,s0)
+
+/etc/foreman-proxy(/.*)? gen_context(system_u:object_r:foreman_proxy_etc_t,s0)
