@@ -16,6 +16,7 @@
   /etc/logrotate.d/foreman* \
   /etc/cron.d/foreman* \
   /usr/libexec/foreman \
-  /usr/sbin/foreman-cockpit-session
+  /usr/sbin/foreman-cockpit-session \
+  /usr/bin/websockify
 
 exit 0
