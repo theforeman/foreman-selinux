@@ -33,7 +33,7 @@
 /var/run/foreman\.sock                              gen_context(system_u:object_r:foreman_var_run_t,s0)
 
 /usr/share/foreman/.ssh(/.*)?                       gen_context(system_u:object_r:ssh_home_t,s0)
-/usr/share/foreman/extras/noVNC/websockify\.py      gen_context(system_u:object_r:websockify_exec_t,s0)
+/usr/bin/websockify                                 gen_context(system_u:object_r:websockify_exec_t,s0)
 
 /usr/share/foreman/bin/rails                    --  gen_context(system_u:object_r:foreman_rails_exec_t,s0)
 /usr/libexec/foreman/.*-selinux                 --  gen_context(system_u:object_r:foreman_rails_exec_t,s0)
