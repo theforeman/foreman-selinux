@@ -128,7 +128,6 @@ require{
     type bin_t;
     type httpd_t;
     type websm_port_t;
-    type unconfined_service_t;
     type http_cache_port_t;
     type squid_port_t;
 }
@@ -144,7 +143,12 @@ init_daemon_domain(foreman_rails_t, foreman_rails_exec_t)
 # Temporary rule to prevent dontaudit denial during start caused
 # by socket activation:
 # https://community.theforeman.org/t/foreman-nightly-rpm-pipeline-611-failed/19179
-allow foreman_rails_t unconfined_service_t:tcp_socket { connected_stream_socket_perms };
+optional_policy(`
+    require{
+        type unconfined_service_t;
+    }
+    allow foreman_rails_t unconfined_service_t:tcp_socket { connected_stream_socket_perms };
+')
 
 # Socket and PID files transition
 files_pid_filetrans(foreman_rails_t, foreman_var_run_t, { file dir sock_file })
