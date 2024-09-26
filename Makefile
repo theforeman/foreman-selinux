@@ -83,8 +83,8 @@ install: install-policies \
 	install-data
 
 install-policies: policies consolidate-installation
-	install -d ${INSTPREFIX}/usr/share/selinux/${VARIANT}
-	install -p -m 644 *.pp.bz2 ${INSTPREFIX}/usr/share/selinux/${VARIANT}/
+	install -d ${INSTPREFIX}/usr/share/selinux/packages/${VARIANT}
+	install -p -m 644 *.pp.bz2 ${INSTPREFIX}/usr/share/selinux/packages/${VARIANT}/
 
 install-data: man-pages scripts install-interfaces install-scripts install-manpages
 
@@ -101,7 +101,7 @@ install-manpages:
 	install -m 0644 *.8 ${INSTPREFIX}/usr/share/man/man8/
 
 consolidate-installation:
-	hardlink -c ${INSTPREFIX}/usr/share/selinux/${VARIANT}/
+	hardlink -c ${INSTPREFIX}/usr/share/selinux/packages/${VARIANT}/
 
 remote-load:
 ifdef HOST
