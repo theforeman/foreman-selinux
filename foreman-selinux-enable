@@ -19,38 +19,36 @@ fi
 # Do not forget to edit counterpart file (disable) when updating this script.
 # Remember this will be run on upgrade too.
 #
-for selinuxvariant in targeted
-do
-  if /usr/sbin/semodule -s $selinuxvariant -l >/dev/null; then
-    # Create port list cache
-    /usr/sbin/semanage port -E > $TMP_PORTS
+selinuxvariant=targeted
+if /usr/sbin/semodule -s $selinuxvariant -l >/dev/null; then
+  # Create port list cache
+  /usr/sbin/semanage port -E > $TMP_PORTS
 
-    # Remove previously defined container port
-    # We need to remove the port first before we stop assigning it
-    grep -E 'foreman_container_port_t' $TMP_PORTS | sed s/-a/-d/g >> $TMP_EXEC_BEFORE
+  # Remove previously defined container port
+  # We need to remove the port first before we stop assigning it
+  grep -E 'foreman_container_port_t' $TMP_PORTS | sed s/-a/-d/g >> $TMP_EXEC_BEFORE
 
-    # Commit changes of deleting the ports
-    test -s $TMP_EXEC_BEFORE && /usr/sbin/semanage -S $selinuxvariant -i $TMP_EXEC_BEFORE
+  # Commit changes of deleting the ports
+  test -s $TMP_EXEC_BEFORE && /usr/sbin/semanage -S $selinuxvariant -i $TMP_EXEC_BEFORE
 
-    # Load new policy
-    /usr/sbin/semanage module -S $selinuxvariant -a /usr/share/selinux/${selinuxvariant}/foreman.pp.bz2
+  # Load new policy
+  /usr/sbin/semanage module -S $selinuxvariant -a /usr/share/selinux/${selinuxvariant}/foreman.pp.bz2
 
-    # Create port list cache
-    /usr/sbin/semanage port -E > $TMP_PORTS
+  # Create port list cache
+  /usr/sbin/semanage port -E > $TMP_PORTS
 
-    # Assign base policy ports
-    grep -qE 'tcp 19090' $TMP_PORTS || \
-      echo "port -a -t websm_port_t -p tcp 19090" >> $TMP_EXEC_AFTER
+  # Assign base policy ports
+  grep -qE 'tcp 19090' $TMP_PORTS || \
+    echo "port -a -t websm_port_t -p tcp 19090" >> $TMP_EXEC_AFTER
 
-    # Commit changes
-    test -s $TMP_EXEC_AFTER && /usr/sbin/semanage -S $selinuxvariant -i $TMP_EXEC_AFTER
+  # Commit changes
+  test -s $TMP_EXEC_AFTER && /usr/sbin/semanage -S $selinuxvariant -i $TMP_EXEC_AFTER
 
-    # Append to log file
-    echo "$(date) $0" >> $LOG
-    cat $TMP_EXEC_BEFORE >> $LOG
-    cat $TMP_EXEC_AFTER >> $LOG
-  fi
-done
+  # Append to log file
+  echo "$(date) $0" >> $LOG
+  cat $TMP_EXEC_BEFORE >> $LOG
+  cat $TMP_EXEC_AFTER >> $LOG
+fi
 
 # Run hooks
 if [[ -d $LIBEXEC_DIR ]] ; then

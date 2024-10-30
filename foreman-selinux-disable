@@ -12,22 +12,20 @@ fi
 # Unload foreman policy and set booleans. Dependant booleans must be managed in
 # a separate transaction. Do not forget to edit countepart file
 # (enable/disable) when updating this script.
-for selinuxvariant in targeted
-do
-  if /usr/sbin/semodule -s $selinuxvariant -l >/dev/null; then
-    # Create log entry
-    echo "$(date) $0" >> $LOG
+selinuxvariant=targeted
+if /usr/sbin/semodule -s $selinuxvariant -l >/dev/null; then
+  # Create log entry
+  echo "$(date) $0" >> $LOG
 
-    # Remove all user defined ports (including the default one)
-    /usr/sbin/semanage port -E | \
-      grep 'foreman_proxy_port_t' | \
-      sed s/-a/-d/g | \
-      tee -a $LOG | \
-      /usr/sbin/semanage -S $selinuxvariant -i -
-    # Unload policy
-    /usr/sbin/semodule -s $selinuxvariant -r foreman
-  fi
-done
+  # Remove all user defined ports (including the default one)
+  /usr/sbin/semanage port -E | \
+    grep 'foreman_proxy_port_t' | \
+    sed s/-a/-d/g | \
+    tee -a $LOG | \
+    /usr/sbin/semanage -S $selinuxvariant -i -
+  # Unload policy
+  /usr/sbin/semodule -s $selinuxvariant -r foreman
+fi
 
 # Run hooks
 if [[ -d $LIBEXEC_DIR ]] ; then
