@@ -15,6 +15,7 @@ jobs:
           - "docker.io/almalinux:8"
           - "docker.io/almalinux:9"
           - "quay.io/centos/centos:stream9"
+          - "quay.io/centos/centos:stream10"
     container:
       image: ${{ matrix.container }}
 
