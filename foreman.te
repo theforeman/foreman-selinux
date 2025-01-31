@@ -534,3 +534,14 @@ require {
 }
 allow foreman_rails_t tmpfs_t:filesystem getattr;
 allow foreman_rails_t fs_t:filesystem getattr;
+
+######################################
+#
+# Foreman RH Cloud plugin
+#
+
+# The plugin makes connections to the local IOP Advisor Engine
+type foreman_iop_advisor_engine_port_t;
+corenet_port(foreman_iop_advisor_engine_port_t)
+
+allow foreman_rails_t foreman_iop_advisor_engine_port_t:tcp_socket name_connect;

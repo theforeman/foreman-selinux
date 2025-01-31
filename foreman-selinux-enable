@@ -41,6 +41,10 @@ if /usr/sbin/semodule -s $selinuxvariant -l >/dev/null; then
   grep -qE 'tcp 19090' $TMP_PORTS || \
     echo "port -a -t websm_port_t -p tcp 19090" >> $TMP_EXEC_AFTER
 
+  # Assign iop_advisor_engine custom port
+  grep -qE 'tcp 24443' $TMP_PORTS || \
+    echo "port -a -t foreman_iop_advisor_engine_port_t -p tcp 24443" >> $TMP_EXEC_AFTER
+
   # Commit changes
   test -s $TMP_EXEC_AFTER && /usr/sbin/semanage -S $selinuxvariant -i $TMP_EXEC_AFTER
 
