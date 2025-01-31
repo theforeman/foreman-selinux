@@ -50,8 +50,8 @@ if /usr/sbin/semodule -s $selinuxvariant -l >/dev/null; then
 
   # Append to log file
   echo "$(date) $0" >> $LOG
-  cat $TMP_EXEC_BEFORE >> $LOG
-  cat $TMP_EXEC_AFTER >> $LOG
+  cat "$TMP_EXEC_BEFORE" >> $LOG
+  cat "$TMP_EXEC_AFTER" >> $LOG
 fi
 
 # Run hooks
