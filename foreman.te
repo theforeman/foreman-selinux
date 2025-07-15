@@ -274,6 +274,14 @@ optional_policy(`
     postgresql_stream_connect(foreman_rails_t)
 ')
 
+# Allow containers to connect to PostgreSQL
+optional_policy(`
+    gen_require(`
+        type container_t;
+    ')
+    postgresql_stream_connect(container_t)
+')
+
 # Connecting to Redis
 corenet_tcp_connect_redis_port(foreman_rails_t)
 
