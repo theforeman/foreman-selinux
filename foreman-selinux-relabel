@@ -17,6 +17,7 @@
   /etc/cron.d/foreman* \
   /usr/libexec/foreman \
   /usr/sbin/foreman-cockpit-session \
-  /usr/bin/websockify
+  /usr/bin/websockify \
+  /var/lib/kafka
 
 exit 0
