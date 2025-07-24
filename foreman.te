@@ -400,6 +400,11 @@ optional_policy(`
 
         ssh_exec(foreman_rails_t)
         ssh_read_user_home_files(foreman_rails_t)
+        # ssh_domtrans_ssh(foreman_rails_t) is EL10+
+        gen_require(`
+          type ssh_t, ssh_exec_t;
+        ')
+        domtrans_pattern(foreman_rails_t, ssh_exec_t, ssh_t)
     ')
 ')
 
