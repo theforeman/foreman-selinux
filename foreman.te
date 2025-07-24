@@ -400,6 +400,12 @@ optional_policy(`
 
         ssh_exec(foreman_rails_t)
         ssh_read_user_home_files(foreman_rails_t)
+        ssh_manage_home_files(foreman_rails_t)
+        gen_require(`
+          type ssh_home_t;
+        ')
+        manage_sock_files_pattern(foreman_rails_t, ssh_home_t, ssh_home_t)
+        allow foreman_rails_t self:unix_stream_socket connectto;
     ')
 ')
 
