@@ -22,7 +22,8 @@ actions:
     - "sed 's/-develop//' VERSION"
 
 jobs:
-  - job: copr_build
+  - &copr
+    job: copr_build
     trigger: pull_request
     targets:
       rhel-9:
@@ -30,6 +31,16 @@ jobs:
           - https://yum.theforeman.org/releases/nightly/el9/x86_64/
       centos-stream-10: {}
     module_hotfixes: true
+
+  - <<: *copr
+    trigger: commit
+    branch: develop
+    owner: '@theforeman'
+    project: develop
+    targets:
+      rhel-9:
+        additional_repos:
+          - https://yum.theforeman.org/releases/nightly/el9/x86_64/
 
 srpm_build_deps:
   - wget
