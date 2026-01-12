@@ -542,3 +542,22 @@ require {
 }
 allow foreman_rails_t tmpfs_t:filesystem getattr;
 allow foreman_rails_t fs_t:filesystem getattr;
+
+######################################
+#
+# Foreman KubeVirt plugin
+#
+
+type foreman_openshift_api_port_t;
+corenet_port(foreman_openshift_api_port_t)
+
+## <desc>
+## <p>
+## Determine whether Ruby on Rails can connect to OpenShift
+## </p>
+## </desc>
+gen_tunable(foreman_rails_can_connect_openshift, true)
+
+tunable_policy(`foreman_rails_can_connect_openshift',`
+    allow foreman_rails_t foreman_openshift_api_port_t:tcp_socket name_connect;
+')
