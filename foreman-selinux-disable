@@ -19,7 +19,7 @@ if /usr/sbin/semodule -s $selinuxvariant -l >/dev/null; then
 
   # Remove all user defined ports (including the default one)
   /usr/sbin/semanage port -E | \
-    grep 'foreman_proxy_port_t' | \
+    grep 'foreman_.*_port_t' | \
     sed s/-a/-d/g | \
     tee -a $LOG | \
     /usr/sbin/semanage -S $selinuxvariant -i -
