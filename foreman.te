@@ -167,7 +167,7 @@ kernel_read_system_state(foreman_rails_t)
 sysnet_read_config(foreman_rails_t)
 
 # Certificates (Foreman uses puppet certificates as well)
-miscfiles_read_certs(foreman_rails_t)
+miscfiles_read_generic_certs(foreman_rails_t)
 optional_policy(`
     puppet_read_config(foreman_rails_t)
 ')
@@ -175,7 +175,7 @@ optional_policy(`
 # It is not possible to do transition into SCL application
 # without calling a shell: https://github.com/sclorg/scl-utils/issues/31
 corecmd_exec_shell(foreman_rails_t)
-corecmd_exec_ls(foreman_rails_t)
+corecmd_exec_bin(foreman_rails_t)
 # The following is needed for "scl enable" which creates temporary
 # shell script /var/tmp/xxxxxxx and a subprocess.
 files_manage_generic_tmp_files(foreman_rails_t)
@@ -454,7 +454,7 @@ optional_policy(`
     puppet_read_config(websockify_t)
 ')
 files_search_etc(websockify_t)
-corecmd_exec_ls(websockify_t)
+corecmd_exec_bin(websockify_t)
 
 tunable_policy(`websockify_can_connect_all',`
     corenet_tcp_connect_all_ports(websockify_t)
