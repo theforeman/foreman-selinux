@@ -203,7 +203,6 @@ tunable_policy(`foreman_proxy_manage_puppetca', `
     allow foreman_proxy_t puppet_log_t:dir search_dir_perms;
     allow foreman_proxy_t puppet_var_run_t:dir search_dir_perms;
     kernel_read_kernel_sysctls(foreman_proxy_t)
-    corecmd_exec_bin(foreman_proxy_t)
     corecmd_exec_shell(foreman_proxy_t)
     dev_read_urand(foreman_proxy_t)
     dev_search_sysfs(foreman_proxy_t)
