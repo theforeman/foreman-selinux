@@ -61,7 +61,7 @@ gen_tunable(foreman_rails_can_connect_openstack, true)
 
 ## <desc>
 ## <p>
-## Determine whether Ruby on Rails can execute ssh (needed for qemu+ssh libvirt connection).
+## Determine whether Ruby on Rails can execute ssh (needed for qemu+ssh libvirt connection and SSH provisioning).
 ## </p>
 ## </desc>
 gen_tunable(foreman_rails_can_spawn_ssh, true)
@@ -405,6 +405,10 @@ optional_policy(`
 
         ssh_exec(foreman_rails_t)
         ssh_read_user_home_files(foreman_rails_t)
+
+        # sshpass needs pty for password authentication
+        term_use_ptmx(foreman_rails_t)
+        term_use_generic_ptys(foreman_rails_t)
     ')
 ')
 
