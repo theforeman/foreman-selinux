@@ -181,6 +181,11 @@ corecmd_exec_bin(foreman_rails_t)
 files_manage_generic_tmp_files(foreman_rails_t)
 files_manage_generic_tmp_dirs(foreman_rails_t)
 
+# ssh-keygen (ssh_keygen_exec_t, not bin_t) is used to fingerprint, validate
+# and generate SSH public keys. Run it in the foreman_rails_t domain so it can
+# read and write the key pair in the temporary directory Foreman manages above.
+ssh_exec_keygen(foreman_rails_t)
+
 # General files read and write
 admin_pattern(foreman_rails_t, foreman_lib_t, foreman_lib_t)
 admin_pattern(foreman_rails_t, foreman_var_run_t, foreman_var_run_t)
