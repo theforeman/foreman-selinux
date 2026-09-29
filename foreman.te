@@ -267,6 +267,9 @@ allow foreman_rails_t websm_port_t:tcp_socket name_connect;
 # Connecting to Foreman Proxy on a defined port
 allow foreman_rails_t foreman_proxy_port_t:tcp_socket name_connect;
 
+# Connecting to Foreman Proxy HTTP service on port 8000
+corenet_tcp_connect_soundd_port(foreman_rails_t)
+
 # Connecting to HTTP(s) proxy
 tunable_policy(`foreman_rails_can_connect_http_proxy',`
     allow foreman_rails_t http_cache_port_t:tcp_socket name_connect;
